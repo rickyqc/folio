@@ -1,0 +1,287 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #fbfbfd;
+    --bg-alt: #f5f5f7;
+    --surface: #ffffff;
+    --text: #1d1d1f;
+    --muted: #6e6e73;
+    --hairline: rgb(0 0 0 / 0.1);
+    --accent: #0066cc;
+    --button-bg: #0071e3;
+    --button-bg-hover: #0077ed;
+    --button-text: #ffffff;
+    --nav-bg: rgb(251 251 253 / 0.72);
+    --code-bg: #1d1d1f;
+    --code-text: #f5f5f7;
+    --code-muted: #a1a1a6;
+    --code-key: #6cb6ff;
+    --code-accent: #ffb86b;
+    --ok: #1a7f37;
+    --error: #d70015;
+
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, system-ui, sans-serif;
+    --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --wide: 1024px;
+    --gutter: 16px;
+
+    color-scheme: light dark;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #000000;
+      --bg-alt: #0d0d0f;
+      --surface: #1c1c1e;
+      --text: #f5f5f7;
+      --muted: #a1a1a6;
+      --hairline: rgb(255 255 255 / 0.14);
+      --accent: #2997ff;
+      --nav-bg: rgb(0 0 0 / 0.72);
+      --code-bg: #1c1c1e;
+      --ok: #3fb950;
+      --error: #ff6961;
+    }
+  }
+
+  @media (min-width: 640px) {
+    :root {
+      --gutter: 24px;
+    }
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 64px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 17px;
+    line-height: 1.47;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    margin: 0;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.07;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  code,
+  pre {
+    font-family: var(--mono);
+  }
+
+  .skip-link {
+    position: absolute;
+    left: var(--gutter);
+    top: -48px;
+    z-index: 100;
+    padding: 8px 16px;
+    border-radius: 980px;
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  .skip-link:focus {
+    top: 8px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: calc(var(--wide) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .section {
+    padding-block: clamp(80px, 12vw, 140px);
+  }
+
+  .section--alt {
+    background: var(--bg-alt);
+  }
+
+  .eyebrow {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: -0.01em;
+  }
+
+  .headline {
+    font-size: clamp(40px, 6.4vw, 64px);
+  }
+
+  .lede {
+    font-size: clamp(19px, 2.2vw, 24px);
+    line-height: 1.38;
+    color: var(--muted);
+    letter-spacing: -0.015em;
+  }
+
+  .section-head {
+    display: grid;
+    gap: 16px;
+    max-width: 880px;
+    margin: 0 auto clamp(48px, 7vw, 80px);
+    text-align: center;
+  }
+
+  /* Buttons: pill, 17px medium, no shadows or gradients. */
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 24px;
+    border-radius: 980px;
+    background: var(--button-bg);
+    color: var(--button-text);
+    font-size: 17px;
+    font-weight: 500;
+    transition:
+      background-color 200ms var(--ease),
+      transform 200ms var(--ease);
+  }
+
+  .button:hover {
+    background: var(--button-bg-hover);
+    text-decoration: none;
+  }
+
+  .button:active {
+    transform: scale(0.98);
+  }
+
+  .button--quiet {
+    background: transparent;
+    color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  .button--quiet:hover {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+
+  .more::after {
+    content: ' ›';
+  }
+
+  /* Motion: fade and rise once. Scroll reveals only where CSS scroll timelines exist. */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+
+  .rise {
+    animation: rise 700ms var(--ease) both;
+  }
+
+  .rise-2 {
+    animation-delay: 100ms;
+  }
+
+  .rise-3 {
+    animation-delay: 200ms;
+  }
+
+  .rise-4 {
+    animation-delay: 320ms;
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>

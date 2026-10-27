@@ -1,0 +1,879 @@
+---
+import PhonePreview from '../components/PhonePreview.astro';
+import Layout from '../layouts/Layout.astro';
+import { CLONE_URL, ISSUES_URL, LICENSE_URL, REPO_URL, SPEC_URL, TEMPLATE_URL } from '../site';
+
+const steps = [
+  {
+    title: 'Use the template',
+    body: 'Click “Use this template” on GitHub. You get your own copy of Folio in one click.',
+  },
+  {
+    title: 'Deploy it',
+    body: 'Connect the new repo to Vercel, Netlify or GitHub Pages. All three are free.',
+  },
+  {
+    title: 'Make it yours',
+    body: 'Edit your name, bio and links in folio.config.yaml and commit. You’re live in about a minute.',
+  },
+];
+
+const comparison = [
+  ['Custom domain', 'Paid plan', 'Free, always'],
+  ['Your page lives on', 'Their URL', 'Your domain'],
+  ['Their logo on your page', 'Until you pay', 'Optional credit, off in one line'],
+  ['Tracking', 'Built in', 'None unless you opt in'],
+  ['If the company shuts down', 'Your link breaks', 'You still have the files'],
+];
+---
+
+<Layout
+  title="Folio · Your links. Your page. Your domain."
+  description="Folio is a free, open-source link-in-bio page you own outright. Edit one file, push to GitHub, and it’s live on your own domain."
+>
+  <header class="nav">
+    <nav class="container nav-inner" aria-label="Primary">
+      <a class="wordmark" href="/" aria-label="Folio home">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="currentColor"></rect>
+          <rect x="8" y="8" width="16" height="4" rx="2" fill="#2997ff"></rect>
+          <rect x="8" y="14" width="16" height="4" rx="2" fill="var(--bg)"></rect>
+          <rect x="8" y="20" width="16" height="4" rx="2" fill="var(--bg)" opacity=".55"></rect>
+        </svg>
+        Folio
+      </a>
+      <ul class="nav-links">
+        <li>
+          <a href="#how-it-works">How it works</a>
+        </li>
+        <li>
+          <a href="#features">Features</a>
+        </li>
+        <li>
+          <a href="#why">Why Folio</a>
+        </li>
+      </ul>
+      <a class="nav-github" href={REPO_URL}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"
+          ></path>
+        </svg>
+        GitHub
+      </a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero container" aria-labelledby="hero-title">
+      <p class="pill rise">Open source · MIT licensed · v1 in development</p>
+      <h1 id="hero-title" class="hero-title rise rise-2">
+        Your links.
+        <br />
+        Your page.
+        <br />
+        <span class="accent">Your domain.</span>
+      </h1>
+      <p class="lede hero-lede rise rise-3">
+        Folio is a free link-in-bio page you own outright. Edit one file, push to GitHub, and it’s
+        live on your own domain in five minutes.
+      </p>
+      <div class="cta-row rise rise-4">
+        <a class="button" href={TEMPLATE_URL}>
+          Use this template
+        </a>
+        <a class="more" href={REPO_URL}>
+          View on GitHub
+        </a>
+      </div>
+      <p class="fine rise rise-4">No account. No database. No monthly fee.</p>
+      <div class="hero-visual rise rise-4">
+        <PhonePreview />
+        <p class="caption">A sample Folio page, shown in your device’s light or dark setting.</p>
+      </div>
+    </section>
+
+    <!-- One file -->
+    <section class="section section--alt" aria-labelledby="one-file-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">How it’s built</p>
+          <h2 id="one-file-title" class="headline">
+            One file.
+            <br />
+            That’s the whole thing.
+          </h2>
+          <p class="lede">
+            Everything on your page lives in a single, readable config file. If it isn’t in the
+            file, it isn’t on the page.
+          </p>
+        </div>
+
+        <div class="split">
+          <figure class="code-card reveal">
+            <figcaption class="code-title">folio.config.yaml</figcaption>
+            <pre><code><span class="k">profile</span>:
+  <span class="k">name</span>: Jane Park
+  <span class="k">bio</span>: Product designer. Writing about craft and tools.
+  <span class="k">avatar</span>: ./avatar.jpg
+
+<span class="k">theme</span>:
+  <span class="k">mode</span>: auto          <span class="c"># light | dark | auto</span>
+  <span class="k">accent</span>: <span class="a">"#0071e3"</span>
+
+<span class="k">blocks</span>:
+  - <span class="k">type</span>: link
+    <span class="k">title</span>: Read my newsletter
+    <span class="k">url</span>: https://jane.substack.com
+    <span class="k">featured</span>: <span class="a">true</span>
+  - <span class="k">type</span>: header
+    <span class="k">title</span>: Work</code></pre>
+          </figure>
+
+          <div class="split-notes">
+            <div class="note reveal">
+              <h3>Edit it anywhere.</h3>
+              <p>
+                Change it in GitHub’s web editor. No terminal needed. Your editor autocompletes
+                every option as you type.
+              </p>
+            </div>
+            <div class="note reveal">
+              <h3>Mistakes, explained.</h3>
+              <p>A typo never ships a broken page. The build stops and tells you what to fix.</p>
+              <pre class="error-line"><span class="x">✗</span> Link #3 is missing a url.
+  Add one, e.g. url: https://jane.dev</pre>
+            </div>
+            <div class="note reveal">
+              <h3>Your copy, your history.</h3>
+              <p>Every change is a commit, so you can see what changed and undo anything.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how-it-works" class="section" aria-labelledby="how-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-title" class="headline">
+            Live in five minutes.
+          </h2>
+          <p class="lede">Three steps. No sign-up, no card, no server to run.</p>
+        </div>
+
+        <ol class="steps">
+          {steps.map((step, i) => (
+            <li class="step reveal">
+              <span class="step-number" aria-hidden="true">
+                {i + 1}
+              </span>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+            </li>
+          ))}
+        </ol>
+
+        <div class="dev reveal">
+          <div>
+            <h3>Prefer the terminal?</h3>
+            <p>Clone it, run it locally and see every change live.</p>
+          </div>
+          <pre class="terminal"><code><span class="p">$</span> git clone {CLONE_URL}
+<span class="p">$</span> cd folio && npm install
+<span class="p">$</span> npm run dev</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="section section--alt" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">What’s in v1</p>
+          <h2 id="features-title" class="headline">
+            Everything a link page needs.
+            <br />
+            Nothing it doesn’t.
+          </h2>
+        </div>
+
+        <div class="bento">
+          <article class="card card--wide reveal">
+            <h3>
+              Your domain.
+              <br />
+              Not ours.
+            </h3>
+            <p>
+              Point your own domain at it on Vercel, Netlify or GitHub Pages. Step-by-step guides
+              for each.
+            </p>
+            <div class="url-bar" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+              </svg>
+              jane.dev
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <p class="stat">0 KB</p>
+            <h3>of JavaScript.</h3>
+            <p>The whole page is under 50 KB, so it loads instantly, even on bad signal.</p>
+          </article>
+
+          <article class="card reveal">
+            <h3>Private by default.</h3>
+            <p>
+              No cookies. No trackers. Want visitor numbers? Turn on Plausible or Umami in one line.
+            </p>
+          </article>
+
+          <article class="card reveal">
+            <div class="swatches" aria-hidden="true">
+              <span class="swatch swatch--light"></span>
+              <span class="swatch swatch--dark"></span>
+              <span class="swatch swatch--auto"></span>
+            </div>
+            <h3>Light, dark or auto.</h3>
+            <p>
+              Pick an accent color and rounded or pill buttons. Every theme meets contrast rules.
+            </p>
+          </article>
+
+          <article class="card reveal">
+            <svg class="qr" viewBox="0 0 21 21" aria-hidden="true">
+              <path d="M0 0h7v7H0zM2 2v3h3V2zM14 0h7v7h-7zm2 2v3h3V2zM0 14h7v7H0zm2 2v3h3v-3zM9 0h2v2H9zm0 4h3v2H9zm-1 4h2v2H8zm4 0h2v3h-2zM0 9h2v2H0zm4 0h2v2H4zm11 0h3v2h-3zm4 0h2v4h-2zM9 12h2v2H9zm4 2h2v2h-2zm-4 2h3v2H9zm7 0h2v2h-2zm-6 3h2v2h-2zm5 0h6v2h-6z"></path>
+            </svg>
+            <h3>Made to be shared.</h3>
+            <p>A share preview image, a QR code and a “Save contact” button, all built for you.</p>
+          </article>
+
+          <article class="card reveal">
+            <h3>Three embeds. Done properly.</h3>
+            <p>YouTube, Spotify and image cards, inline wherever you put them in your config.</p>
+          </article>
+
+          <article class="card reveal">
+            <h3>Open source. MIT.</h3>
+            <p>
+              Fork it, version it, change anything. Every line is on GitHub, and it always will be.
+            </p>
+            <a class="more" href={REPO_URL}>
+              Browse the code
+            </a>
+          </article>
+
+          <article class="card reveal">
+            <h3>Built in the open.</h3>
+            <p>The full product spec is public. Read the plan, open an issue, or pitch in.</p>
+            <a class="more" href={SPEC_URL}>
+              Read the spec
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why -->
+    <section id="why" class="section" aria-labelledby="why-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Why Folio</p>
+          <h2 id="why-title" class="headline">
+            Owned, not rented.
+          </h2>
+          <p class="lede">
+            Hosted link pages charge rent for the basics, and your link breaks everywhere you posted
+            it if they shut down. Folio gives you the files.
+          </p>
+        </div>
+
+        <div class="compare reveal">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">
+                  <span class="visually-hidden">Feature</span>
+                </th>
+                <th scope="col">Hosted link tools</th>
+                <th scope="col" class="us">
+                  Folio
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparison.map(([feature, them, us]) => (
+                <tr>
+                  <th scope="row">{feature}</th>
+                  <td>{them}</td>
+                  <td class="us">{us}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="section section--alt closing" aria-labelledby="closing-title">
+      <div class="container closing-inner reveal">
+        <h2 id="closing-title" class="headline">
+          Your page is five minutes away.
+        </h2>
+        <p class="lede">Free forever. No account to create. No card to enter.</p>
+        <div class="cta-row">
+          <a class="button" href={TEMPLATE_URL}>
+            Use this template
+          </a>
+          <a class="button button--quiet" href={REPO_URL}>
+            Star on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>
+        <strong>Folio</strong> is open source under the <a href={LICENSE_URL}>MIT license</a>.
+      </p>
+      <ul>
+        <li>
+          <a href={REPO_URL}>GitHub</a>
+        </li>
+        <li>
+          <a href={SPEC_URL}>Spec</a>
+        </li>
+        <li>
+          <a href={ISSUES_URL}>Report an issue</a>
+        </li>
+      </ul>
+      <p class="copyright">© 2026 Ricky Chen</p>
+    </div>
+  </footer>
+</Layout>
+
+<style>
+  /* Nav */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--nav-bg);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .wordmark svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .wordmark:hover,
+  .nav-links a:hover,
+  .nav-github:hover {
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: none;
+    gap: 32px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    font-size: 14px;
+    transition: color 200ms var(--ease);
+  }
+
+  .nav-links a:hover {
+    color: var(--text);
+  }
+
+  .nav-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 14px;
+    border-radius: 980px;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .nav-github svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (min-width: 720px) {
+    .nav-links {
+      display: flex;
+    }
+  }
+
+  /* Hero */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: clamp(56px, 10vw, 112px);
+    padding-bottom: clamp(64px, 10vw, 120px);
+    text-align: center;
+  }
+
+  .pill {
+    padding: 6px 14px;
+    border-radius: 980px;
+    background: var(--bg-alt);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .hero-title {
+    margin-top: 24px;
+    font-size: clamp(52px, 11vw, 112px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .accent {
+    color: var(--accent);
+  }
+
+  .hero-lede {
+    max-width: 600px;
+    margin-top: 24px;
+  }
+
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px 24px;
+    margin-top: 32px;
+  }
+
+  .fine {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .hero-visual {
+    margin-top: clamp(48px, 8vw, 80px);
+  }
+
+  .caption {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  /* One file */
+  .split {
+    display: grid;
+    gap: 32px;
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .split {
+      grid-template-columns: 1.15fr 1fr;
+      gap: 56px;
+    }
+  }
+
+  .code-card {
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 24px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    box-shadow: 0 0 0 1px var(--hairline);
+  }
+
+  .code-title {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgb(255 255 255 / 0.1);
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--code-muted);
+  }
+
+  .code-card pre {
+    margin: 0;
+    padding: 20px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  .k {
+    color: var(--code-key);
+  }
+
+  .a {
+    color: var(--code-accent);
+  }
+
+  .c {
+    color: var(--code-muted);
+  }
+
+  .split-notes {
+    display: grid;
+    gap: 32px;
+  }
+
+  .note h3,
+  .step h3,
+  .dev h3 {
+    font-size: 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .note p,
+  .step p,
+  .dev p {
+    margin-top: 8px;
+    color: var(--muted);
+  }
+
+  .error-line {
+    margin: 16px 0 0;
+    padding: 14px 16px;
+    overflow-x: auto;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--error) 8%, var(--surface));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--error) 25%, transparent);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .x {
+    color: var(--error);
+    font-weight: 700;
+  }
+
+  /* Steps */
+  .steps {
+    display: grid;
+    gap: 40px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 800px) {
+    .steps {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+  }
+
+  .step-number {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 21px;
+    font-weight: 600;
+  }
+
+  .dev {
+    display: grid;
+    gap: 24px;
+    align-items: center;
+    margin-top: clamp(56px, 8vw, 88px);
+    padding: clamp(24px, 4vw, 40px);
+    border-radius: 28px;
+    background: var(--bg-alt);
+  }
+
+  @media (min-width: 800px) {
+    .dev {
+      grid-template-columns: 1fr 1.4fr;
+      gap: 40px;
+    }
+  }
+
+  .terminal {
+    margin: 0;
+    min-width: 0;
+    padding: 20px;
+    overflow-x: auto;
+    border-radius: 16px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .p {
+    color: var(--code-muted);
+    user-select: none;
+  }
+
+  /* Bento */
+  .bento {
+    display: grid;
+    gap: 16px;
+  }
+
+  @media (min-width: 720px) {
+    .bento {
+      grid-template-columns: repeat(6, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      grid-column: span 2;
+    }
+
+    .card--wide {
+      grid-column: span 4;
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding: clamp(28px, 4vw, 40px);
+    border-radius: 28px;
+    background: var(--surface);
+  }
+
+  .card h3 {
+    font-size: clamp(24px, 2.6vw, 28px);
+    letter-spacing: -0.025em;
+  }
+
+  .card p {
+    color: var(--muted);
+  }
+
+  .card .more {
+    margin-top: auto;
+    padding-top: 8px;
+  }
+
+  .card--wide h3 {
+    font-size: clamp(32px, 4.4vw, 48px);
+  }
+
+  .url-bar {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 8px;
+    margin-top: auto;
+    padding: 12px 22px;
+    border-radius: 14px;
+    background: var(--bg-alt);
+    font-size: clamp(20px, 2.6vw, 28px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .card--wide p {
+    max-width: 440px;
+    margin-bottom: 24px;
+  }
+
+  .url-bar svg {
+    width: 0.8em;
+    height: 0.8em;
+    fill: none;
+    stroke: var(--ok);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+
+  .stat {
+    font-size: clamp(56px, 7vw, 72px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    color: var(--accent) !important;
+  }
+
+  .swatches {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  .swatch--light {
+    background: #fbfbfd;
+  }
+
+  .swatch--dark {
+    background: #1d1d1f;
+  }
+
+  .swatch--auto {
+    background: conic-gradient(#1d1d1f 0 50%, #fbfbfd 0 100%);
+  }
+
+  .qr {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 14px;
+    fill: var(--text);
+  }
+
+  /* Compare */
+  .compare {
+    max-width: 820px;
+    margin-inline: auto;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 17px;
+  }
+
+  th,
+  td {
+    padding: 18px 12px;
+    border-bottom: 1px solid var(--hairline);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  thead th {
+    padding-top: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  tbody th {
+    font-weight: 600;
+  }
+
+  td {
+    color: var(--muted);
+  }
+
+  td.us {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  thead th.us {
+    color: var(--accent);
+  }
+
+  @media (max-width: 560px) {
+    table {
+      font-size: 15px;
+    }
+
+    th,
+    td {
+      padding: 14px 8px;
+    }
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Closing */
+  .closing-inner {
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .closing .cta-row {
+    margin-top: 16px;
+  }
+
+  /* Footer */
+  .footer {
+    padding-block: 32px;
+    border-top: 1px solid var(--hairline);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+  }
+
+  .footer ul {
+    display: flex;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer strong {
+    color: var(--text);
+  }
+</style>

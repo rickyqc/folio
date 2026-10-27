@@ -1,0 +1,208 @@
+---
+// A sample Folio page inside a generic phone frame. Pure HTML and CSS; it follows the
+// visitor's light or dark setting, the same way a Folio page in "auto" mode does.
+---
+
+<figure class="phone" aria-label="Example Folio page for Jane Park">
+  <div class="screen">
+    <div class="island" aria-hidden="true"></div>
+    <div class="page">
+      <div class="avatar" aria-hidden="true">
+        JP
+      </div>
+      <p class="name">
+        Jane Park
+        <svg class="badge" viewBox="0 0 24 24" aria-label="Verified" role="img">
+          <path
+            fill="currentColor"
+            d="M12 1.5l2.6 1.9 3.2-.1 1 3.1 2.6 1.9-1 3.1 1 3.1-2.6 1.9-1 3.1-3.2-.1L12 22.5l-2.6-1.9-3.2.1-1-3.1-2.6-1.9 1-3.1-1-3.1 2.6-1.9 1-3.1 3.2.1z"
+          ></path>
+          <path
+            d="M8 12.2l2.6 2.6L16.2 9"
+            fill="none"
+            stroke="#fff"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      </p>
+      <p class="bio">Product designer. Writing about craft and tools.</p>
+      <ul class="socials" aria-label="Social links">
+        <li>
+          <svg viewBox="0 0 24 24" aria-label="Instagram" role="img">
+            <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle>
+          </svg>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-label="YouTube" role="img">
+            <rect x="2" y="5" width="20" height="14" rx="4"></rect>
+            <path d="M10 9l5 3-5 3z"></path>
+          </svg>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-label="Code" role="img">
+            <path d="M8 7l-5 5 5 5M16 7l5 5-5 5"></path>
+          </svg>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" aria-label="Email" role="img">
+            <rect x="3" y="5" width="18" height="14" rx="3"></rect>
+            <path d="M3.5 7l8.5 6 8.5-6"></path>
+          </svg>
+        </li>
+      </ul>
+      <div class="link link--featured">Read my newsletter</div>
+      <p class="group">Work</p>
+      <div class="link">
+        Portfolio
+        <span class="sub">Selected projects 2022–2026</span>
+      </div>
+      <div class="link">Book a design review</div>
+      <p class="group">Listen</p>
+      <div class="link">Latest podcast episode</div>
+      <p class="foot">Save contact · Share</p>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .phone {
+    --screen-bg: var(--bg);
+    margin: 0 auto;
+    width: 300px;
+    height: 612px;
+    padding: 11px;
+    border-radius: 54px;
+    background: #1d1d1f;
+    box-shadow:
+      inset 0 0 0 2px #3a3a3c,
+      0 0 0 1px var(--hairline);
+  }
+
+  .screen {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 43px;
+    background: var(--screen-bg);
+  }
+
+  .island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    width: 86px;
+    height: 25px;
+    border-radius: 20px;
+    background: #000;
+    transform: translateX(-50%);
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 58px 18px 0;
+    text-align: center;
+  }
+
+  .avatar {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+    color: var(--accent);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .name {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 12px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .badge {
+    width: 16px;
+    height: 16px;
+    color: var(--button-bg);
+  }
+
+  .bio {
+    margin-top: 4px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+
+  .socials {
+    display: flex;
+    gap: 16px;
+    margin: 14px 0 18px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .socials svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .link {
+    display: grid;
+    place-content: center;
+    width: 100%;
+    min-height: 42px;
+    margin-bottom: 8px;
+    padding: 6px 12px;
+    border-radius: 11px;
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .link--featured {
+    background: var(--button-bg);
+    box-shadow: none;
+    color: #fff;
+  }
+
+  .sub {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .group {
+    align-self: flex-start;
+    margin: 10px 0 8px 2px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .foot {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+</style>
