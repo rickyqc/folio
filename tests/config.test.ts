@@ -27,11 +27,11 @@ function errorFor(yaml: string): string {
   throw new Error('Expected the config to be rejected');
 }
 
-describe('the sample config', () => {
+describe('folio.config.yaml', () => {
   it('loads without errors', () => {
+    // Runs against your own config too, so a mistake shows up as a failed check on GitHub.
     const config = loadConfig(resolve(import.meta.dirname, '..'));
-    expect(config.profile.name).toBe('Jane Park');
-    expect(config.blocks.length).toBeGreaterThan(0);
+    expect(config.profile.name.length).toBeGreaterThan(0);
   });
 
   it('matches the committed JSON Schema (run npm run schema if this fails)', () => {

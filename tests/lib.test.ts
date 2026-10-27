@@ -1,7 +1,9 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { contrast, expandHex, readableTextOn } from '../src/lib/color.ts';
 import { parseSpotify, parseYouTubeId, spotifyHeight } from '../src/lib/embeds.ts';
-import { resolveSocial } from '../src/lib/socials.ts';
+import { PLATFORM_IDS, resolveSocial } from '../src/lib/socials.ts';
 import { buildVCard } from '../src/lib/vcard.ts';
 
 describe('parseYouTubeId', () => {
@@ -133,5 +135,15 @@ describe('buildVCard', () => {
     const card = buildVCard({ name: 'Cher' });
     expect(card).toContain('N:;Cher;;;');
     expect(card).not.toContain('TEL');
+  });
+});
+
+describe('docs stay in sync', () => {
+  const read = (file: string) => readFileSync(resolve(import.meta.dirname, '..', file), 'utf8');
+
+  it.each(['docs/AI_PROMPT.md', 'docs/CONFIG.md'])('%s lists every social platform', (file) => {
+    const text = read(file);
+    const missing = PLATFORM_IDS.filter((id) => !new RegExp(`\\b${id}\\b`).test(text));
+    expect(missing).toEqual([]);
   });
 });

@@ -26,6 +26,9 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
-      - run: npm run site:build
       - name: Page budget (0 KB JS, under 50 KB)
         run: npm run budget
+      # Folio's own homepage. Copies of the template may delete website/.
+      - name: Build website
+        if: hashFiles('website/astro.config.mjs') != ''
+        run: npm run site:build && npm run budget:site

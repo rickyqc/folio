@@ -1,0 +1,4 @@
+# Netlify settings for your Folio page. Vercel needs no config file.
+[build]
+  command = "npm run build"
+  publish = "dist"

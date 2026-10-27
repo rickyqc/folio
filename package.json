@@ -21,9 +21,10 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "budget": "node scripts/check-budget.mjs dist && node scripts/check-budget.mjs website/dist",
-    "ci": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run site:build && npm run budget",
-    "schema": "node scripts/generate-schema.ts"
+    "budget": "node scripts/check-budget.mjs dist",
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run budget && (test ! -d website || (npm run site:build && npm run budget:site))",
+    "schema": "node scripts/generate-schema.ts",
+    "budget:site": "node scripts/check-budget.mjs website/dist"
   },
   "dependencies": {
     "astro": "^7.4.2",
