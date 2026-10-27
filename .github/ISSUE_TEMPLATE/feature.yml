@@ -1,0 +1,23 @@
+name: Feature idea
+description: Suggest something Folio should do.
+labels: ['idea']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Folio stays small on purpose ("fewer, better"). The most useful ideas explain the problem first. Check [the principles](https://github.com/rickyqc/folio/blob/main/docs/VISION.md#product-principles) before suggesting.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: The problem, not the solution. e.g. "I want people to book a call from my page."
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How could Folio help?
+  - type: textarea
+    id: workaround
+    attributes:
+      label: What do you do today instead?

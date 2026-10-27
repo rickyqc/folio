@@ -32,6 +32,11 @@ Astro + TypeScript (strictest), plain CSS with custom properties as design token
 - `website/`: Folio's homepage. Template copies may delete it, so CI and `npm run ci` skip it when absent.
 - `docs/AI_PROMPT.md` is the single source of the AI prompt; the website reads it at build time.
 
+## Releases and updates
+
+- Version lives in `package.json`; notes in `CHANGELOG.md` (add to "Unreleased" as you go). Release = tag `vX.Y.Z` + GitHub release; see CONTRIBUTING.md.
+- Copies update via `.github/workflows/update.yml` → `scripts/update-folio.sh`, which copies files from the latest release, never `folio.config.yaml`, `public/` or `.github/workflows/`. Breaking config changes need a major version and migration notes.
+
 ## Spec decisions made (2026-10-27)
 
 - Themes are light / dark / auto plus an accent color; no separate "accent theme".

@@ -44,6 +44,7 @@ blocks:
 - **[Config reference](docs/CONFIG.md):** every option, with examples.
 - **[Let AI write it](docs/AI_PROMPT.md):** paste a prompt into Claude or ChatGPT with your details and get a finished config back.
 - **[Use your own domain](docs/CUSTOM_DOMAIN.md):** step by step for Vercel and Netlify.
+- **[Getting updates](docs/UPDATING.md):** new versions arrive as a pull request you can preview first.
 
 **Made a mistake?** Your page won't break. Folio stops the update and tells you the line and the fix:
 
@@ -85,6 +86,12 @@ npm run test:e2e   # browser tests and screenshots (run npx playwright install c
 ```
 
 Folio is an [Astro](https://astro.build) static site. The config is validated with Zod ([`src/config/`](src/config/)); run `npm run schema` after changing the schema to update editor autocomplete. The product spec is in [docs/VISION.md](docs/VISION.md).
+
+## Made something?
+
+**[Show off your page](https://github.com/rickyqc/folio/discussions/categories/show-and-tell)** in Show and tell. We love seeing them.
+
+Stuck? [Ask for setup help](https://github.com/rickyqc/folio/issues/new?template=setup-help.yml). Want to help build Folio? Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the [good first issues](https://github.com/rickyqc/folio/labels/good%20first%20issue).
 
 ## License
 

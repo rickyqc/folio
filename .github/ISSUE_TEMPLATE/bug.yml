@@ -1,0 +1,26 @@
+name: Bug report
+description: Something on the page or in the build isn't working right.
+labels: ['bug']
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What's wrong?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: The relevant part of folio.config.yaml
+      description: Remove anything private, like phone numbers.
+      render: yaml
+  - type: input
+    id: url
+    attributes:
+      label: Link to your page (optional)
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: e.g. Safari on iPhone 16, Chrome on Windows

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Show off your page
+    url: https://github.com/rickyqc/folio/discussions/categories/show-and-tell
+    about: Share the page you made with Folio.
+  - name: Ask a question
+    url: https://github.com/rickyqc/folio/discussions/categories/q-a
+    about: Questions about using or customizing Folio.

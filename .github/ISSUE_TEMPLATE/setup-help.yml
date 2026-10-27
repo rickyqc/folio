@@ -1,0 +1,45 @@
+name: Setup help
+description: Stuck getting your page live? Tell us where.
+title: 'Setup help: '
+labels: ['setup feedback']
+body:
+  - type: markdown
+    attributes:
+      value: Sorry it's giving you trouble. A few details help us fix it for you and for the next person.
+  - type: dropdown
+    id: step
+    attributes:
+      label: Where did you get stuck?
+      options:
+        - Deploy button / making my copy
+        - Signing up or giving permissions
+        - Editing folio.config.yaml
+        - Adding my photo
+        - My page didn't update
+        - Custom domain
+        - Something else
+    validations:
+      required: true
+  - type: dropdown
+    id: host
+    attributes:
+      label: Where is your page hosted?
+      options:
+        - Vercel
+        - Netlify
+        - GitHub Pages
+        - Somewhere else
+        - Not sure
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you try, and what did you see instead?
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Error message
+      description: If the build failed, paste the part that starts with ✗.
+      render: text
