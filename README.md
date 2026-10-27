@@ -4,6 +4,8 @@
 
 Folio is a link-in-bio page you own outright. Edit one file, and it's live on your own domain. No Folio account, no monthly fee, no tracking.
 
+**[See a live example →](https://rickyqc.github.io/folio/)**
+
 ## Get your page in 5 minutes
 
 You'll need free **GitHub** and **Vercel** (or Netlify) accounts. Nothing to install.

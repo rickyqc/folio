@@ -10,3 +10,4 @@ export const CONFIG_DOCS_URL = `${REPO_URL}/blob/main/docs/CONFIG.md`;
 export const AI_PROMPT_URL = `${REPO_URL}/blob/main/docs/AI_PROMPT.md`;
 export const VERCEL_DEPLOY_URL = `https://vercel.com/new/clone?repository-url=${encodeURIComponent(REPO_URL)}&project-name=my-folio&repository-name=my-folio`;
 export const NETLIFY_DEPLOY_URL = `https://app.netlify.com/start/deploy?repository=${REPO_URL}`;
+export const DEMO_URL = 'https://rickyqc.github.io/folio/';
