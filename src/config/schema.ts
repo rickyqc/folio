@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { parseSpotify, parseYouTubeId } from '../lib/embeds.ts';
-import { PLATFORMS, PLATFORM_IDS, isPlatform, resolveSocial } from '../lib/socials.ts';
+import { PLATFORMS, PLATFORM_IDS, isEmoji, isPlatform, resolveSocial } from '../lib/socials.ts';
 
 const webUrl = z
   .string()
@@ -26,9 +26,14 @@ const linkBlock = z.strictObject({
   subtitle: text.optional().describe('A short second line under the title.'),
   icon: z
     .string()
-    .refine(isPlatform, { message: `must be a platform name, like youtube or instagram` })
+    .trim()
+    .refine((v) => isPlatform(v) || isEmoji(v), {
+      message: 'must be a platform name like youtube, or a single emoji in quotes like "🎨"',
+    })
     .optional()
-    .describe('Show a platform icon on the button, e.g. youtube.'),
+    .describe(
+      'An icon on the left of the button: a platform name (e.g. youtube) or an emoji (e.g. "🎨").',
+    ),
   featured: z.boolean().optional().describe('Make this your one highlighted link.'),
 });
 

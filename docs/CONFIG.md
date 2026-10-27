@@ -100,13 +100,13 @@ Your page, top to bottom. Each block starts with `- type:` followed by the type.
 
 A full-width button.
 
-| Option     | Default      | What it does                                                                          |
-| ---------- | ------------ | ------------------------------------------------------------------------------------- |
-| `title`    | **required** | The button text. Keep it short.                                                       |
-| `url`      | **required** | Where it goes. Must start with `https://`.                                            |
-| `subtitle` | none         | A smaller second line.                                                                |
-| `icon`     | none         | A platform icon on the left, using any name from [socials](#socials), e.g. `youtube`. |
-| `featured` | `false`      | Fills the button with your accent color. Only one link can be featured.               |
+| Option     | Default      | What it does                                                                                                       |
+| ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `title`    | **required** | The button text. Keep it short.                                                                                    |
+| `url`      | **required** | Where it goes. Must start with `https://`.                                                                         |
+| `subtitle` | none         | A smaller second line.                                                                                             |
+| `icon`     | none         | An icon on the left: any name from [socials](#socials) (e.g. `youtube`) or a single emoji in quotes (e.g. `"🎨"`). |
+| `featured` | `false`      | Fills the button with your accent color. Only one link can be featured.                                            |
 
 ```yaml
 blocks:
@@ -114,6 +114,7 @@ blocks:
     title: Shop my prints
     subtitle: New spring collection
     url: https://shop.jane.dev
+    icon: '🛍️'
     featured: true
 ```
 

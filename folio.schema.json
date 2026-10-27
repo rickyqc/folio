@@ -240,7 +240,7 @@
                 "minLength": 1
               },
               "icon": {
-                "description": "Show a platform icon on the button, e.g. youtube.",
+                "description": "An icon on the left of the button: a platform name (e.g. youtube) or an emoji (e.g. \"🎨\").",
                 "type": "string"
               },
               "featured": {

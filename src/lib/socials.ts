@@ -26,7 +26,18 @@ import {
 } from 'simple-icons';
 
 /** Brand icons are filled Simple Icons paths; generic ones are Lucide-style strokes. */
-export type Icon = { kind: 'fill'; path: string } | { kind: 'stroke'; path: string };
+export type Icon =
+  | { kind: 'fill'; path: string }
+  | { kind: 'stroke'; path: string }
+  | { kind: 'emoji'; char: string };
+
+/** True for exactly one emoji, including skin tones and combined ones like 👩‍🎨. */
+export function isEmoji(value: string): boolean {
+  const graphemes = [
+    ...new Intl.Segmenter('en', { granularity: 'grapheme' }).segment(value.trim()),
+  ];
+  return graphemes.length === 1 && /\p{Extended_Pictographic}/u.test(value);
+}
 
 interface Platform {
   label: string;

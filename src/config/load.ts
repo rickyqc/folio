@@ -171,7 +171,11 @@ function resolveConfig(config: FolioConfig): ResolvedConfig {
           url: b.url,
           featured: b.featured ?? false,
           ...(b.subtitle && { subtitle: b.subtitle }),
-          ...(b.icon && isPlatform(b.icon) && { icon: PLATFORMS[b.icon].icon }),
+          ...(b.icon && {
+            icon: isPlatform(b.icon)
+              ? PLATFORMS[b.icon].icon
+              : { kind: 'emoji' as const, char: b.icon },
+          }),
         };
       case 'header':
         return b;

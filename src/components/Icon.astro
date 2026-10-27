@@ -11,7 +11,17 @@ interface Props {
 const { icon, size = 24, label } = Astro.props;
 ---
 
-{icon.kind === 'fill' ? (
+{icon.kind === 'emoji' ? (
+  <span
+    class="emoji"
+    style={`font-size: ${Math.round(size * 0.9)}px`}
+    role={label ? 'img' : undefined}
+    aria-label={label}
+    aria-hidden={label ? undefined : 'true'}
+  >
+    {icon.char}
+  </span>
+) : icon.kind === 'fill' ? (
   <svg
     viewBox="0 0 24 24"
     width={size}
@@ -40,3 +50,10 @@ const { icon, size = 24, label } = Astro.props;
     <path d={icon.path} />
   </svg>
 )}
+
+<style>
+  .emoji {
+    display: inline-block;
+    line-height: 1;
+  }
+</style>

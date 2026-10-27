@@ -8,26 +8,11 @@
     <div class="island" aria-hidden="true"></div>
     <div class="page">
       <div class="avatar" aria-hidden="true">
-        JP
+        👩‍🎨
       </div>
-      <p class="name">
-        Jane Park
-        <svg class="badge" viewBox="0 0 24 24" aria-label="Verified" role="img">
-          <path
-            fill="currentColor"
-            d="M12 1.5l2.6 1.9 3.2-.1 1 3.1 2.6 1.9-1 3.1 1 3.1-2.6 1.9-1 3.1-3.2-.1L12 22.5l-2.6-1.9-3.2.1-1-3.1-2.6-1.9 1-3.1-1-3.1 2.6-1.9 1-3.1 3.2.1z"
-          ></path>
-          <path
-            d="M8 12.2l2.6 2.6L16.2 9"
-            fill="none"
-            stroke="#fff"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          ></path>
-        </svg>
-      </p>
+      <p class="name">Jane Park</p>
       <p class="bio">Product designer. Writing about craft and tools.</p>
+      <p class="loc">San Francisco, CA</p>
       <ul class="socials" aria-label="Social links">
         <li>
           <svg viewBox="0 0 24 24" aria-label="Instagram" role="img">
@@ -54,16 +39,34 @@
           </svg>
         </li>
       </ul>
-      <div class="link link--featured">Read my newsletter</div>
+      <div class="link link--featured">
+        <span class="ico" aria-hidden="true">
+          💌
+        </span>
+        Read my newsletter
+      </div>
       <p class="group">Work</p>
       <div class="link">
+        <span class="ico" aria-hidden="true">
+          🎨
+        </span>
         Portfolio
-        <span class="sub">Selected projects 2022–2026</span>
+        <span class="sub">Apps, brands and type, 2022–2026</span>
       </div>
-      <div class="link">Book a design review</div>
-      <p class="group">Listen</p>
-      <div class="link">Latest podcast episode</div>
-      <p class="foot">Save contact · Share</p>
+      <div class="link">
+        <span class="ico" aria-hidden="true">
+          ☕️
+        </span>
+        Book a design review
+        <span class="sub">30 minutes, free for students</span>
+      </div>
+      <div class="link">
+        <span class="ico" aria-hidden="true">
+          ✨
+        </span>
+        Shop my icon set
+      </div>
+      <p class="foot">Save contact · Made with Folio</p>
     </div>
   </div>
 </figure>
@@ -115,11 +118,9 @@
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: color-mix(in srgb, var(--accent) 16%, var(--surface));
-    color: var(--accent);
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    background: #fbcfe0;
+    font-size: 38px;
+    line-height: 1;
   }
 
   .name {
@@ -130,12 +131,6 @@
     font-size: 19px;
     font-weight: 600;
     letter-spacing: -0.02em;
-  }
-
-  .badge {
-    width: 16px;
-    height: 16px;
-    color: var(--button-bg);
   }
 
   .bio {
@@ -176,6 +171,24 @@
     font-size: 13px;
     font-weight: 500;
     line-height: 1.25;
+  }
+
+  .link {
+    position: relative;
+  }
+
+  .ico {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    font-size: 15px;
+    transform: translateY(-50%);
+  }
+
+  .loc {
+    margin-top: 2px;
+    font-size: 11px;
+    color: var(--muted);
   }
 
   .link--featured {

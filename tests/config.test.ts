@@ -62,6 +62,25 @@ describe('defaults', () => {
   });
 });
 
+describe('link icons', () => {
+  const link = (icon: string) =>
+    `${MINIMAL}blocks:\n  - type: link\n    title: Shop\n    url: https://a.com\n    icon: ${icon}\n`;
+
+  it('accepts a platform name or a single emoji', () => {
+    expect(parse(link('youtube')).blocks[0]).toMatchObject({ icon: { kind: 'fill' } });
+    expect(parse(link('"🎨"')).blocks[0]).toMatchObject({ icon: { kind: 'emoji', char: '🎨' } });
+    expect(parse(link('"👩‍🎨"')).blocks[0]).toMatchObject({ icon: { kind: 'emoji', char: '👩‍🎨' } });
+    expect(parse(link('"☕️"')).blocks[0]).toMatchObject({ icon: { kind: 'emoji' } });
+  });
+
+  it('explains anything else', () => {
+    expect(errorFor(link('calendar'))).toContain(
+      'must be a platform name like youtube, or a single emoji in quotes like "🎨"',
+    );
+    expect(errorFor(link('"🎨🎨"'))).toContain('a single emoji');
+  });
+});
+
 describe('embeds', () => {
   it('can load players only when tapped', () => {
     expect(parse(`${MINIMAL}embeds:\n  loadOnTap: true\n`).embeds.loadOnTap).toBe(true);

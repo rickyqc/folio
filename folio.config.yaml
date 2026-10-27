@@ -8,14 +8,14 @@ site:
   # Your page's address. Fill this in once you know it (e.g. https://jane.dev).
   # url: https://your-name.vercel.app
   title: Jane Park
-  description: Designer and writer in Oakland.
+  description: Product designer and writer in San Francisco.
 
 profile:
   name: Jane Park
   bio: Product designer. Writing about craft and tools.
   # Put your photo in the public folder and write its file name here.
   avatar: avatar.svg
-  location: Oakland, CA
+  location: San Francisco, CA
 
 theme:
   mode: auto # auto (follows the visitor's device) | light | dark
@@ -33,7 +33,9 @@ socials:
 blocks:
   - type: link
     title: Read my newsletter
+    subtitle: Notes on craft, every other Sunday
     url: https://example.com/newsletter
+    icon: "💌" # a platform name like youtube, or any emoji
     featured: true # your one highlighted link
 
   - type: header
@@ -41,12 +43,21 @@ blocks:
 
   - type: link
     title: Portfolio
-    subtitle: Selected projects 2022–2026
+    subtitle: Apps, brands and type, 2022–2026
     url: https://example.com/work
+    icon: "🎨"
 
   - type: link
     title: Book a design review
+    subtitle: 30 minutes, free for students
     url: https://example.com/book
+    icon: "☕️"
+
+  - type: link
+    title: Shop my icon set
+    subtitle: 400 hand-drawn icons for Figma
+    url: https://example.com/shop
+    icon: "✨"
 
   - type: header
     title: Watch and listen

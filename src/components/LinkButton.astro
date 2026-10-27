@@ -19,7 +19,11 @@ const { title, url, subtitle, icon, featured = false } = Astro.props;
   rel="noopener"
   target="_blank"
 >
-  {icon && <Icon icon={icon} size={22} />}
+  {icon && (
+    <span class="icon">
+      <Icon icon={icon} size={22} />
+    </span>
+  )}
   <span class="text">
     <span class="title">{title}</span>
     {subtitle && <span class="subtitle">{subtitle}</span>}
@@ -58,9 +62,12 @@ const { title, url, subtitle, icon, featured = false } = Astro.props;
     padding-inline: 52px;
   }
 
-  .has-icon :global(svg) {
+  .icon {
     position: absolute;
     left: 18px;
+    display: grid;
+    place-items: center;
+    width: 24px;
   }
 
   .text {

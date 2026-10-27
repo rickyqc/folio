@@ -15,7 +15,7 @@ Rules:
 - theme.mode is auto, light or dark (use auto unless I say otherwise). theme.accent is a hex color in double quotes, like "#0071e3". theme.buttons is rounded or pill.
 - socials: one line per platform, with my username (no @) or a full https:// link. Supported names: instagram, x, tiktok, youtube, github, linkedin, threads, bluesky, mastodon (full link), facebook, twitch, spotify (full link), applemusic (full link), soundcloud, discord (full link), substack, medium, pinterest, dribbble, behance, snapchat, patreon, kofi, whatsapp (phone number with country code, in quotes), telegram, email, website (full link).
 - blocks is my page from top to bottom. Each item starts with "- type:" and is one of:
-  - link: title, url (must start with https://), optional subtitle, optional icon (a platform name from the socials list), optional featured: true. Feature at most one link, the most important one.
+  - link: title, url (must start with https://), optional subtitle, optional icon (a platform name from the socials list, or one fitting emoji in double quotes), optional featured: true. Feature at most one link, the most important one.
   - header: title. Use short headers like "Listen" or "Shop" to group related links.
   - youtube: url (a YouTube video link), optional title.
   - spotify: url (a Spotify track, album, playlist, episode, show or artist link), optional title.
