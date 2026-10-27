@@ -37,7 +37,12 @@ excludes=(--exclude .git/ --exclude node_modules/ --exclude folio.config.yaml --
 
 rsync -a "${excludes[@]}" "$work/folio/" ./
 
-changed_workflows="$(diff -rq "$work/folio/.github/workflows" .github/workflows 2>/dev/null | sed 's#^#- #' || true)"
+changed_workflows=""
+for file in "$work/folio/.github/workflows/"*; do
+  name=".github/workflows/$(basename "$file")"
+  cmp -s "$file" "$name" 2>/dev/null || changed_workflows+="- \`$name\`"$'\n'
+done
+changed_workflows="${changed_workflows%$'\n'}"
 
 if [ -n "${DRY_RUN:-}" ]; then
   echo "Dry run: files changed:"
