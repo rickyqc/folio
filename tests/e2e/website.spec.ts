@@ -27,7 +27,12 @@ test('the config builder makes a file Folio accepts, with a live preview', async
   await builder.getByLabel('Name', { exact: true }).fill('Riley Chen');
   await builder.getByLabel(/One line about you/).fill('Barista: latte art & #coffee');
   await expect(preview).toContainText('Riley Chen');
+  // Starts on an emoji; initials and other emoji are one tap away.
+  await expect(preview.locator('.bp-avatar')).toHaveText('👩‍🎨');
+  await builder.getByRole('radio', { name: 'Your initials' }).check({ force: true });
   await expect(preview.locator('.bp-avatar')).toHaveText('RC');
+  await builder.getByRole('radio', { name: 'Cook 👨‍🍳' }).check({ force: true });
+  await expect(preview.locator('.bp-avatar')).toHaveText('👨‍🍳');
 
   await builder.getByRole('radio', { name: 'Dark' }).check({ force: true });
   await builder.getByRole('radio', { name: 'Pill' }).check({ force: true });
@@ -70,7 +75,11 @@ test('the config builder makes a file Folio accepts, with a live preview', async
   const yaml = await page.evaluate(() => navigator.clipboard.readText());
 
   const config = parseConfig(yaml, { publicDir });
-  expect(config.profile).toMatchObject({ name: 'Riley Chen', bio: 'Barista: latte art & #coffee' });
+  expect(config.profile).toMatchObject({
+    name: 'Riley Chen',
+    bio: 'Barista: latte art & #coffee',
+    emoji: '👨‍🍳',
+  });
   expect(config.theme).toEqual({ mode: 'dark', accent: '#ff375f', buttons: 'pill' });
   expect(config.socials.map((s) => s.url)).toEqual([
     'https://instagram.com/rileymakes',

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { parseConfig } from '../src/config/load.ts';
 import { PLATFORMS } from '../src/lib/socials.ts';
 import {
+  AVATARS,
   emptyState,
   scalar,
   toYaml,
@@ -35,7 +36,7 @@ describe('config builder output', () => {
         name: 'Riley Chen',
         bio: 'Barista & latte artist',
         location: 'Austin, TX',
-        avatar: 'avatar.svg',
+        avatar: '👨‍🍳',
         accent: '#ff375f',
         buttons: 'pill',
         mode: 'dark',
@@ -68,7 +69,7 @@ describe('config builder output', () => {
     expect(config.profile).toEqual({
       name: 'Riley Chen',
       bio: 'Barista & latte artist',
-      avatar: 'avatar.svg',
+      emoji: '👨‍🍳',
       location: 'Austin, TX',
     });
     expect(config.theme).toEqual({ mode: 'dark', accent: '#ff375f', buttons: 'pill' });
@@ -162,7 +163,15 @@ describe('builder checks', () => {
     expect(social('github', 'riley')).toEqual([]);
   });
 
-  it('only accepts photo file names it can use', () => {
+  it('accepts every offered emoji avatar, and initials', () => {
+    for (const [emoji] of AVATARS) {
+      expect(fields(state({ name: 'Sam', avatar: emoji }))).toEqual([]);
+      expect(build(state({ name: 'Sam', avatar: emoji })).profile.emoji).toBe(emoji);
+    }
+    expect(build(state({ name: 'Sam', avatar: '' })).profile).toEqual({ name: 'Sam' });
+  });
+
+  it('rejects an avatar that is neither an emoji nor a usable file', () => {
     expect(fields(state({ name: 'Sam', avatar: 'IMG_1.HEIC' }))).toEqual(['avatar']);
   });
 });

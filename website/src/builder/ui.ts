@@ -85,12 +85,17 @@ export function mountBuilder(root: HTMLElement): void {
   // Simple fields
   const text = (name: keyof BuilderState) =>
     form.elements.namedItem(name as string) as HTMLInputElement;
-  for (const key of ['name', 'bio', 'location', 'avatar'] as const) text(key).value = state[key];
+  for (const key of ['name', 'bio', 'location'] as const) text(key).value = state[key];
   const radio = (name: string, value: string) => {
     const input = form.querySelector<HTMLInputElement>(`input[name="${name}"][value="${value}"]`);
     if (input) input.checked = true;
     return !!input;
   };
+  if (!radio('avatar', state.avatar)) {
+    // A draft from before the emoji picker held a file name; fall back to the first emoji.
+    state.avatar = emptyState().avatar;
+    radio('avatar', state.avatar);
+  }
   radio('mode', state.mode);
   radio('buttons', state.buttons);
   if (!radio('accent', state.accent))
@@ -149,7 +154,10 @@ export function mountBuilder(root: HTMLElement): void {
     );
   }
 
+  const initialsChip = root.querySelector<HTMLElement>('[data-initials]');
+
   function renderPreview(): void {
+    if (initialsChip) initialsChip.textContent = state.name.trim() ? initials(state.name) : 'Aa';
     const accent = state.accent;
     preview.dataset['mode'] = state.mode;
     preview.dataset['buttons'] = state.buttons;
@@ -191,7 +199,7 @@ export function mountBuilder(root: HTMLElement): void {
       .join('');
 
     preview.innerHTML = `
-      <div class="bp-avatar">${escape(initials(name))}</div>
+      <div class="bp-avatar${state.avatar ? ' is-emoji' : ''}">${escape(state.avatar || initials(name))}</div>
       <p class="bp-name${name ? '' : ' bp-placeholder'}">${escape(name || 'Your name')}</p>
       ${state.bio.trim() ? `<p class="bp-bio">${escape(state.bio)}</p>` : name ? '' : '<p class="bp-bio bp-placeholder">One line about you</p>'}
       ${state.location.trim() ? `<p class="bp-loc">${escape(state.location)}</p>` : ''}
@@ -350,7 +358,8 @@ export function mountBuilder(root: HTMLElement): void {
       touched.clear();
       attempted = false;
       status.textContent = '';
-      for (const key of ['name', 'bio', 'location', 'avatar'] as const) text(key).value = '';
+      for (const key of ['name', 'bio', 'location'] as const) text(key).value = '';
+      radio('avatar', state.avatar);
       radio('mode', 'auto');
       radio('buttons', 'rounded');
       radio('accent', state.accent);

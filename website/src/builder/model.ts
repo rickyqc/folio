@@ -31,12 +31,36 @@ export interface BuilderState {
 
 export const ACCENTS = ['#0071e3', '#ff375f', '#34c759', '#ff9f0a', '#af52de', '#1d1d1f'] as const;
 
+/** Avatar choices: occupations, each as a woman and a man. All have Noto artwork for share cards. */
+export const AVATARS = [
+  ['👩‍🎨', 'Artist'],
+  ['👨‍🎨', 'Artist'],
+  ['👩‍💻', 'Technologist'],
+  ['👨‍💻', 'Technologist'],
+  ['👩‍🍳', 'Cook'],
+  ['👨‍🍳', 'Cook'],
+  ['👩‍🎤', 'Singer'],
+  ['👨‍🎤', 'Singer'],
+  ['👩‍🏫', 'Teacher'],
+  ['👨‍🏫', 'Teacher'],
+  ['👩‍🔬', 'Scientist'],
+  ['👨‍🔬', 'Scientist'],
+  ['👩‍💼', 'Office worker'],
+  ['👨‍💼', 'Office worker'],
+  ['👩‍⚕️', 'Health worker'],
+  ['👨‍⚕️', 'Health worker'],
+  ['👩‍🌾', 'Farmer'],
+  ['👨‍🌾', 'Farmer'],
+  ['👩‍🎓', 'Student'],
+  ['👨‍🎓', 'Student'],
+] as const;
+
 export function emptyState(): BuilderState {
   return {
     name: '',
     bio: '',
     location: '',
-    avatar: '',
+    avatar: '👩‍🎨',
     mode: 'auto',
     accent: '#0071e3',
     buttons: 'rounded',
@@ -64,8 +88,9 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
   const issues: Issue[] = [];
   if (!state.name.trim()) issues.push({ field: 'name', message: 'Add your name.' });
-  if (state.avatar.trim() && !/\.(jpe?g|png|webp|avif|gif|svg)$/i.test(state.avatar.trim())) {
-    issues.push({ field: 'avatar', message: 'Use the file name of a JPG or PNG, like me.jpg.' });
+  const avatar = state.avatar.trim();
+  if (avatar && !isEmoji(avatar) && !/\.(jpe?g|png|webp|avif|gif|svg)$/i.test(avatar)) {
+    issues.push({ field: 'avatar', message: 'Pick an emoji, or leave it on initials.' });
   }
 
   state.socials.forEach((s, i) => {
@@ -135,6 +160,7 @@ export function hasContent(item: Item): boolean {
 }
 
 export function toYaml(state: BuilderState): string {
+  const avatar = state.avatar.trim();
   const out: string[] = [
     '# yaml-language-server: $schema=./folio.schema.json',
     '# Made with the Folio config builder. Every option: docs/CONFIG.md',
@@ -143,7 +169,7 @@ export function toYaml(state: BuilderState): string {
     `  name: ${scalar(state.name || 'Your Name')}`,
   ];
   if (state.bio.trim()) out.push(`  bio: ${scalar(state.bio)}`);
-  if (state.avatar.trim()) out.push(`  avatar: ${scalar(state.avatar)}`);
+  if (avatar) out.push(`  avatar: ${isEmoji(avatar) ? JSON.stringify(avatar) : scalar(avatar)}`);
   if (state.location.trim()) out.push(`  location: ${scalar(state.location)}`);
 
   out.push(

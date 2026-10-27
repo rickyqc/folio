@@ -2,7 +2,7 @@
 // Fill in a form, watch a live preview, copy a finished folio.config.yaml.
 // Platform names, examples and icons come from Folio itself, so the builder can't drift.
 import { PLATFORMS } from '../../../src/lib/socials.ts';
-import { ACCENTS } from '../builder/model';
+import { ACCENTS, AVATARS } from '../builder/model';
 import { GUIDE_URL, VERCEL_DEPLOY_URL } from '../site';
 
 const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
@@ -41,28 +41,32 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
         </span>
         <input name="bio" placeholder="Product designer. Writing about craft and tools." />
       </label>
-      <div class="row">
-        <label class="field">
-          <span>
-            Location <em>optional</em>
-          </span>
-          <input name="location" autocomplete="address-level2" placeholder="San Francisco, CA" />
-        </label>
-        <div class="field" data-field="avatar">
-          <label for="b-avatar">
-            Photo file name <em>optional</em>
+      <label class="field">
+        <span>
+          Location <em>optional</em>
+        </span>
+        <input name="location" autocomplete="address-level2" placeholder="San Francisco, CA" />
+      </label>
+      <div class="field" data-field="avatar">
+        <span id="avatar-label">Picture</span>
+        <div class="avatars" role="radiogroup" aria-labelledby="avatar-label">
+          <label class="avatar-option" title="Your initials">
+            <input type="radio" name="avatar" value="" aria-label="Your initials" />
+            <span class="avatar-initials" data-initials>
+              Aa
+            </span>
           </label>
-          <input
-            id="b-avatar"
-            name="avatar"
-            placeholder="me.jpg"
-            aria-describedby="b-avatar-hint b-avatar-error"
-          />
-          <small id="b-avatar-hint" class="hint">
-            Upload it to the <b>public</b> folder later. Blank shows your initials.
-          </small>
-          <small id="b-avatar-error" class="error" aria-live="polite"></small>
+          {AVATARS.map(([emoji, label]) => (
+            <label class="avatar-option" title={label}>
+              <input type="radio" name="avatar" value={emoji} aria-label={`${label} ${emoji}`} />
+              <span aria-hidden="true">{emoji}</span>
+            </label>
+          ))}
         </div>
+        <small class="hint">
+          Want a real photo instead? You can add one later; the setup guide shows how.
+        </small>
+        <small class="error" aria-live="polite"></small>
       </div>
     </fieldset>
 
@@ -358,17 +362,6 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
     color: var(--muted);
   }
 
-  .row {
-    display: grid;
-    gap: 16px;
-  }
-
-  @media (min-width: 600px) {
-    .row {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
   input:not([type='radio'], [type='checkbox'], [type='color']),
   select {
     width: 100%;
@@ -383,6 +376,18 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
     font: inherit;
     font-size: 16px;
     font-weight: 400;
+  }
+
+  /* Our own arrow, with room for it, so it never runs into the rounded corner. */
+  select {
+    padding-right: 40px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%238e8e93' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 12px 8px;
+    text-overflow: ellipsis;
+    cursor: pointer;
   }
 
   input:focus-visible,
@@ -410,6 +415,55 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
 
   .error:empty {
     display: none;
+  }
+
+  /* Initials plus 20 emoji: three even rows of seven at any width. */
+  .avatars {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    max-width: 440px;
+  }
+
+  .avatar-option {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--bg-alt);
+    font-size: clamp(20px, 5.5vw, 28px);
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 200ms var(--ease);
+  }
+
+  .avatar-option:active {
+    transform: scale(0.94);
+  }
+
+  .avatar-option input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .avatar-option:has(input:checked) {
+    background: color-mix(in srgb, var(--button-bg) 18%, var(--surface));
+    box-shadow: 0 0 0 2px var(--button-bg);
+  }
+
+  .avatar-option:has(input:focus-visible) {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .avatar-initials {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--muted);
   }
 
   .segmented {
@@ -788,6 +842,11 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
     color: var(--p-accent);
     font-size: 26px;
     font-weight: 600;
+  }
+
+  .bp :global(.bp-avatar.is-emoji) {
+    font-size: 40px;
+    line-height: 1;
   }
 
   .bp :global(.bp-name) {
