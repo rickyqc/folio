@@ -16,9 +16,28 @@ Astro + TypeScript (strictest), plain CSS with custom properties as design token
 
 ## Commands
 
-- `npm run dev`: local dev server
-- `npm run ci`: everything CI runs (lint, format:check, typecheck, test, build, budget). Run before calling a milestone done.
+- `npm run dev`: the user's link page at localhost:4321, reloads when `folio.config.yaml` changes
+- `npm run site:dev`: Folio's own marketing site in `website/` (a separate Astro root; not shipped to users' pages)
+- `npm run ci`: everything CI runs. Run before calling work done.
+- `npm run schema`: regenerate `folio.schema.json` after changing `src/config/schema.ts` (a test fails if it's stale)
 - `npm run budget`: fails if `dist/` contains any JS or HTML + CSS + JS exceeds 50 KB
+
+## Layout
+
+- `src/config/`: Zod schema, YAML loader, friendly error formatting. Every error names the line, the block and the fix.
+- `src/lib/`: pure helpers (socials, embeds, color, vcard), unit tested in `tests/lib.test.ts`.
+- `src/components/`, `src/pages/`: the published page, plus `contact.vcf`, `sitemap.xml`, `robots.txt` routes.
+- `website/`: Folio's homepage. Template copies may delete it, so CI and `npm run ci` skip it when absent.
+- `docs/AI_PROMPT.md` is the single source of the AI prompt; the website reads it at build time.
+
+## Spec decisions made (2026-10-27)
+
+- Themes are light / dark / auto plus an accent color; no separate "accent theme".
+- At most one featured link (validated).
+- No verified badge (cut under "Fewer, better").
+- Embeds load on tap via a srcdoc placeholder: no third-party requests or JS until the visitor opts in.
+- Images resolve from `public/`; existence is checked case-sensitively at build time.
+- Share button, share image (Satori) and QR code are not built yet.
 
 ## Design language (summary; full table in VISION.md)
 
