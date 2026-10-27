@@ -5,6 +5,8 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : undefined;
+const shareImage = Astro.site ? new URL('og.png', Astro.site).toString() : undefined;
 ---
 
 <!doctype html>
@@ -20,6 +22,22 @@ const { title, description } = Astro.props;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Folio" />
+    {pageUrl && <meta property="og:url" content={pageUrl} />}
+    {pageUrl && <link rel="canonical" href={pageUrl} />}
+    {shareImage && (
+      <>
+        <meta property="og:image" content={shareImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+          property="og:image:alt"
+          content="Folio: Your links. Your page. Your domain. A phone showing a sample link page."
+        />
+      </>
+    )}
+    <meta name="twitter:card" content={shareImage ? 'summary_large_image' : 'summary'} />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
