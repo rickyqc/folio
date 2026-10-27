@@ -1,0 +1,110 @@
+---
+// Answers to the doubts that stop people from trying Folio. Native <details>, no script.
+import { CUSTOM_DOMAIN_URL, GUIDE_URL, REPO_URL, UPDATING_URL } from '../site';
+
+const faqs: { q: string; a: string }[] = [
+  {
+    q: 'Is it really free?',
+    a: 'Yes. Folio is open source under the MIT license, and Vercel, Netlify and GitHub Pages all host a page like this on their free plans. The only thing you might pay for is your own domain name, usually about $10–15 a year, and that’s optional.',
+  },
+  {
+    q: 'I’ve never used GitHub. Can I still do this?',
+    a: `Yes. Everything happens in your browser, with no installing and no terminal. The <a href="${GUIDE_URL}">step-by-step guide</a> walks through every click, and the builder above writes your config for you.`,
+  },
+  {
+    q: 'How is this different from Linktree and similar tools?',
+    a: 'You get your own domain, no ads, no logo you have to pay to remove, and no tracking, all for free. Your page is a set of files you own, not an account on someone else’s platform. The trade-off: you edit a file instead of dragging boxes around in an app, though the builder makes that close.',
+  },
+  {
+    q: 'What happens if Vercel changes its pricing or shuts down?',
+    a: 'Your page is plain files in your own GitHub account, so you can move it to Netlify or GitHub Pages in a few minutes, and your domain keeps working. Nobody can take your link away.',
+  },
+  {
+    q: 'Can I move my links over from Linktree?',
+    a: 'Yes. Copy each link’s title and address into the builder above (or ask an AI with the prompt above), paste the result into your repo, then point your Instagram or TikTok bio at your new page.',
+  },
+  {
+    q: 'Can I use my own domain?',
+    a: `Yes, like yourname.com. Add it in your host’s dashboard, and HTTPS is set up for you. <a href="${CUSTOM_DOMAIN_URL}">Here’s how</a>.`,
+  },
+  {
+    q: 'Does it track my visitors?',
+    a: 'No. Folio adds no cookies and no trackers. If you want to know how many people visit, you can turn on Plausible or Umami, two privacy-friendly analytics services, in one line.',
+  },
+  {
+    q: 'What if I make a mistake in the file?',
+    a: 'Your page doesn’t break. The update stops, your last working page stays online, and you get a message with the line number and how to fix it.',
+  },
+  {
+    q: 'How do I change my page later?',
+    a: `Edit the same file on GitHub and commit; your page updates in about a minute. When Folio itself improves, your copy gets a pull request you can preview and accept in one click (<a href="${UPDATING_URL}">how updates work</a>).`,
+  },
+  {
+    q: 'Can I change the design?',
+    a: `You pick light, dark or automatic, your accent color, and rounded or pill buttons. Folio keeps the rest consistent on purpose, so every page looks polished. Developers can <a href="${REPO_URL}">fork it</a> and change anything.`,
+  },
+];
+---
+
+<div class="faq">
+  {faqs.map(({ q, a }) => (
+    <details>
+      <summary>{q}</summary>
+      <p set:html={a} />
+    </details>
+  ))}
+</div>
+
+<style>
+  .faq {
+    max-width: 820px;
+    margin-inline: auto;
+    border-top: 1px solid var(--hairline);
+  }
+
+  details {
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 4px;
+    font-size: clamp(17px, 2vw, 21px);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::after {
+    flex: none;
+    content: '+';
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--muted);
+    transition: transform 200ms var(--ease);
+  }
+
+  details[open] summary::after {
+    transform: rotate(45deg);
+  }
+
+  summary:focus-visible {
+    outline-offset: -3px;
+  }
+
+  details p {
+    max-width: 680px;
+    margin: -6px 0 0;
+    padding: 0 4px 24px;
+    color: var(--muted);
+  }
+</style>
