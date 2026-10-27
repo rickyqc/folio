@@ -182,9 +182,11 @@ const ogImage = absolute('og.png');
   }
 
   /* Fade and rise once on load, slightly staggered. */
+  /* Starts at 0.01, not 0: Chrome doesn't count fully transparent content as painted,
+     which would hide the page from Largest Contentful Paint. Looks the same. */
   @keyframes enter {
     from {
-      opacity: 0;
+      opacity: 0.01;
       transform: translateY(8px);
     }
   }
