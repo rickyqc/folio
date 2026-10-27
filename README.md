@@ -81,6 +81,7 @@ git clone https://github.com/rickyqc/folio.git
 cd folio && npm install
 npm run dev        # your page at localhost:4321, reloads as you edit the config
 npm run ci         # lint, format, typecheck, tests, build, size budget
+npm run test:e2e   # browser tests and screenshots (run npx playwright install chromium once)
 ```
 
 Folio is an [Astro](https://astro.build) static site. The config is validated with Zod ([`src/config/`](src/config/)); run `npm run schema` after changing the schema to update editor autocomplete. The product spec is in [docs/VISION.md](docs/VISION.md).

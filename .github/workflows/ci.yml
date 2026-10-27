@@ -32,3 +32,33 @@ jobs:
       - name: Build website
         if: hashFiles('website/astro.config.mjs') != ''
         run: npm run site:build && npm run budget:site
+
+  # Folio's own quality gate: browser tests, screenshots and Lighthouse. Skipped in copies of
+  # the template, where the owner's content (not Folio's code) would decide the result.
+  browser:
+    if: github.repository == 'rickyqc/folio'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Browser tests (Playwright)
+        run: npm run test:e2e
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: screenshots
+          path: test-results/screenshots/
+          if-no-files-found: ignore
+      # The sample page's best-practices floor is 0.75, not 1: its Spotify player sets
+      # third-party cookies because embeds load with the page by default (embeds.loadOnTap: false).
+      - name: Lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true

@@ -21,6 +21,8 @@ Astro + TypeScript (strictest), plain CSS with custom properties as design token
 - `npm run ci`: everything CI runs. Run before calling work done.
 - `npm run schema`: regenerate `folio.schema.json` after changing `src/config/schema.ts` (a test fails if it's stale)
 - `npm run budget`: fails if `dist/` contains any JS or HTML + CSS + JS exceeds 50 KB
+- `npm run test:e2e`: builds the sample and `tests/fixtures/full.config.yaml` (every option on), runs Playwright and saves screenshots to `test-results/screenshots/`
+- Lighthouse runs in CI only (`lighthouserc.json`, treosh/lighthouse-ci-action), and only in this repo: copies of the template skip the `browser` job
 
 ## Layout
 

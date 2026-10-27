@@ -1,0 +1,39 @@
+# Every optional feature switched on, for the end-to-end tests.
+site:
+  title: Sam Rivera · Ceramics
+  description: Handmade ceramics from Portland.
+profile:
+  name: Sam Rivera
+  bio: Ceramicist. Small-batch mugs and planters.
+  avatar: avatar.svg
+  location: Portland, OR
+theme:
+  mode: dark
+  accent: '#ffd60a'
+  buttons: pill
+socials:
+  instagram: samrivera
+  email: hi@example.com
+blocks:
+  - type: link
+    title: Shop the spring batch
+    url: https://example.com/shop
+    icon: '🏺'
+    featured: true
+  - type: header
+    title: Watch
+  - type: youtube
+    url: https://youtu.be/aqz-KE-bpKQ
+    title: Throwing a mug
+  - type: image
+    src: avatar.svg
+    alt: Sam in the studio
+    caption: In the studio
+embeds:
+  loadOnTap: true
+contact:
+  vcard: true
+  organization: Rivera Ceramics
+footer:
+  share: true
+  credit: false

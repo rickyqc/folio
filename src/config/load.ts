@@ -250,9 +250,9 @@ export function hostUrl(env: NodeJS.ProcessEnv = process.env): string | undefine
   );
 }
 
-/** Reads folio.config.yaml from the project root. */
+/** Reads folio.config.yaml (or FOLIO_CONFIG, used by the end-to-end tests) from the project root. */
 export function loadConfig(root = process.cwd()): ResolvedConfig {
-  const file = resolve(root, CONFIG_FILE);
+  const file = resolve(root, process.env['FOLIO_CONFIG'] ?? CONFIG_FILE);
   if (!existsSync(file)) {
     throw new FolioConfigError(
       [

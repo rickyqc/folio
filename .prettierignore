@@ -4,3 +4,8 @@ node_modules/
 package-lock.json
 folio.schema.json
 folio.config.yaml
+dist-e2e/
+test-results/
+playwright-report/
+lighthouse-report/
+.lighthouseci/
