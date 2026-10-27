@@ -12,14 +12,17 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "site:dev": "astro dev --root website",
+    "site:build": "astro build --root website",
+    "site:preview": "astro preview --root website",
     "typecheck": "astro check",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "budget": "node scripts/check-budget.mjs dist",
-    "ci": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run budget"
+    "budget": "node scripts/check-budget.mjs dist && node scripts/check-budget.mjs website/dist",
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run site:build && npm run budget"
   },
   "dependencies": {
     "astro": "^7.4.2"
