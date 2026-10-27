@@ -72,7 +72,7 @@ test.describe('sample page', () => {
     await page.goto('/sample/');
     await page.keyboard.press('Tab');
     const first = page.locator(':focus');
-    await expect(first).toHaveAttribute('href', 'https://instagram.com/janepark');
+    await expect(first).toHaveAttribute('href', 'https://instagram.com/');
     await expect(first).toHaveCSS('outline-style', 'solid');
   });
 

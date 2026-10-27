@@ -24,10 +24,12 @@ theme:
   buttons: rounded # rounded | pill
 
 # Your username on each platform, or a full link. Delete the ones you don't use.
+# The samples below just point to each site's home page. Replace them with yours,
+# e.g.  instagram: your-username
 socials:
-  instagram: janepark
-  github: janepark
-  youtube: janepark
+  instagram: https://instagram.com
+  youtube: https://youtube.com
+  github: https://github.com/rickyqc/folio
   email: hi@example.com
 
 # Your page, top to bottom. Each item starts with "- type:".
