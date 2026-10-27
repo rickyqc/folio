@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=./folio.schema.json
+#
+# This is your whole page. Change the details below, then commit.
+# Lines starting with # are notes and are ignored.
+# Every option is explained in docs/CONFIG.md.
+
+site:
+  # Your page's address. Fill this in once you know it (e.g. https://jane.dev).
+  # url: https://your-name.vercel.app
+  title: Jane Park
+  description: Designer and writer in Oakland.
+
+profile:
+  name: Jane Park
+  bio: Product designer. Writing about craft and tools.
+  # Put your photo in the public folder and write its file name here.
+  avatar: avatar.svg
+  location: Oakland, CA
+
+theme:
+  mode: auto # auto (follows the visitor's device) | light | dark
+  accent: '#0071e3' # any hex color, in quotes
+  buttons: rounded # rounded | pill
+
+# Your username on each platform, or a full link. Delete the ones you don't use.
+socials:
+  instagram: janepark
+  github: janepark
+  youtube: janepark
+  email: hi@example.com
+
+# Your page, top to bottom. Each item starts with "- type:".
+blocks:
+  - type: link
+    title: Read my newsletter
+    url: https://example.com/newsletter
+    featured: true # your one highlighted link
+
+  - type: header
+    title: Work
+
+  - type: link
+    title: Portfolio
+    subtitle: Selected projects 2022–2026
+    url: https://example.com/work
+
+  - type: link
+    title: Book a design review
+    url: https://example.com/book
+
+  - type: header
+    title: Watch and listen
+
+  - type: youtube
+    url: https://www.youtube.com/watch?v=aqz-KE-bpKQ
+    title: Big Buck Bunny
+
+  - type: spotify
+    url: https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M
+
+  # An image card. Put the file in the public folder. "alt" describes it for screen readers.
+  # - type: image
+  #   src: poster.jpg
+  #   alt: Poster for my spring show
+  #   url: https://example.com/tickets
+
+contact:
+  vcard: true # show a "Save contact" button
+  # phone: "+1 555 0100"
+  # organization: Park Studio
+
+analytics:
+  provider: none # none | plausible | umami
+
+footer:
+  credit: true # small "Made with Folio" link

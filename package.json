@@ -22,10 +22,14 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "budget": "node scripts/check-budget.mjs dist && node scripts/check-budget.mjs website/dist",
-    "ci": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run site:build && npm run budget"
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run site:build && npm run budget",
+    "schema": "node scripts/generate-schema.ts"
   },
   "dependencies": {
-    "astro": "^7.4.2"
+    "astro": "^7.4.2",
+    "simple-icons": "^16.36.0",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
