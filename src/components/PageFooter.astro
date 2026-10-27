@@ -15,7 +15,7 @@ const vcardFile = `${name.replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '')
 {(vcard || credit) && (
   <footer class="footer">
     {vcard && (
-      <a class="save" href="/contact.vcf" download={vcardFile}>
+      <a class="save" href="contact.vcf" download={vcardFile}>
         <Icon icon={UI_ICONS.contact} size={20} />
         Save contact
       </a>

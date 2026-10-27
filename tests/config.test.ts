@@ -109,7 +109,7 @@ describe('resolving', () => {
   it('accepts avatar paths written several ways', () => {
     for (const avatar of ['me.jpg', './me.jpg', '/me.jpg', 'public/me.jpg']) {
       const config = parse(`profile:\n  name: Jane\n  avatar: ${avatar}\n`);
-      expect(config.profile.avatar).toBe('/me.jpg');
+      expect(config.profile.avatar).toBe('me.jpg');
     }
   });
 

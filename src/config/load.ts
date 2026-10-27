@@ -148,8 +148,9 @@ function sortByLine(problems: Problem[]): Problem[] {
   return [...problems].sort((a, b) => (a.line ?? Infinity) - (b.line ?? Infinity));
 }
 
+// Relative, so the page works at a domain root or under a subpath like GitHub Pages' /repo/.
 function imageUrl(src: string): string {
-  return isRemote(src) ? src : `/${publicPath(src)}`;
+  return isRemote(src) ? src : publicPath(src);
 }
 
 function resolveConfig(config: FolioConfig): ResolvedConfig {
