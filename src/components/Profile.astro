@@ -1,18 +1,28 @@
 ---
 import { UI_ICONS } from '../lib/socials.ts';
 import type { ResolvedConfig } from '../config/load.ts';
+import type { OptimizedImage } from '../lib/images.ts';
 import Icon from './Icon.astro';
 
 interface Props {
   profile: ResolvedConfig['profile'];
+  avatar?: OptimizedImage | undefined;
 }
 
-const { profile } = Astro.props;
+const { profile, avatar } = Astro.props;
 ---
 
 <header class="profile">
-  {profile.avatar && (
-    <img class="avatar" src={profile.avatar} alt={profile.name} width="96" height="96" />
+  {avatar && (
+    <img
+      class="avatar"
+      src={avatar.src}
+      srcset={avatar.srcset}
+      sizes={avatar.srcset ? '96px' : undefined}
+      alt={profile.name}
+      width="96"
+      height="96"
+    />
   )}
   <h1 class="name">{profile.name}</h1>
   {profile.bio && <p class="bio">{profile.bio}</p>}

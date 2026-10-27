@@ -6,13 +6,27 @@ import PageFooter from '../components/PageFooter.astro';
 import Profile from '../components/Profile.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import SocialRow from '../components/SocialRow.astro';
+import { resolve } from 'node:path';
 import { loadConfig } from '../config/load.ts';
 import { expandHex, readableTextOn } from '../lib/color.ts';
+import { optimize } from '../lib/images.ts';
 import '../themes/tokens.css';
 
 // Everything on this page comes from folio.config.yaml.
 const config = loadConfig();
 const { site, profile, theme, socials, blocks, embeds, contact, analytics, footer } = config;
+
+const publicDir = resolve('public');
+const avatar = profile.avatar ? await optimize(publicDir, profile.avatar, 'avatar') : undefined;
+const images = new Map(
+  await Promise.all(
+    blocks.flatMap((b) =>
+      b.type === 'image'
+        ? [optimize(publicDir, b.src, 'image').then((img) => [b.src, img] as const)]
+        : [],
+    ),
+  ),
+);
 
 const accent = expandHex(theme.accent);
 const absolute = (path: string) => (site.url ? new URL(path, site.url).toString() : undefined);
@@ -75,7 +89,7 @@ const ogImage = absolute('og.png');
   <body>
     <main class="page">
       <div class="enter" style="--i: 0">
-        <Profile profile={profile} />
+        <Profile profile={profile} avatar={avatar} />
       </div>
       {socials.length > 0 && (
         <div class="enter" style="--i: 1">
@@ -115,7 +129,12 @@ const ogImage = absolute('og.png');
               />
             )}
             {block.type === 'image' && (
-              <ImageCard src={block.src} alt={block.alt} url={block.url} caption={block.caption} />
+              <ImageCard
+                {...(images.get(block.src) ?? { src: block.src })}
+                alt={block.alt}
+                url={block.url}
+                caption={block.caption}
+              />
             )}
           </div>
         ))}

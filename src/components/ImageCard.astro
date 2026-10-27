@@ -4,15 +4,27 @@ interface Props {
   alt: string;
   url?: string | undefined;
   caption?: string | undefined;
+  srcset?: string | undefined;
+  width?: number | undefined;
+  height?: number | undefined;
 }
 
-const { src, alt, url, caption } = Astro.props;
+const { src, alt, url, caption, srcset, width, height } = Astro.props;
 const Wrapper = url ? 'a' : 'div';
 ---
 
 <figure class="image-card">
   <Wrapper class="frame" {...(url ? { href: url, rel: 'noopener', target: '_blank' } : {})}>
-    <img src={src} alt={alt} loading="lazy" decoding="async" />
+    <img
+      src={src}
+      srcset={srcset}
+      sizes={srcset ? '(max-width: 520px) calc(100vw - 40px), 480px' : undefined}
+      width={width}
+      height={height}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+    />
   </Wrapper>
   {caption && <figcaption>{caption}</figcaption>}
 </figure>

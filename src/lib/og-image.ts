@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import { extname, join } from 'node:path';
 import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
+import sharp from 'sharp';
 import { readableTextOn } from './color.ts';
 
 export interface OgInput {
@@ -25,25 +26,27 @@ function font(weight: 400 | 600): Buffer {
   return readFileSync(require.resolve(`@fontsource/inter/files/inter-latin-${weight}-normal.woff`));
 }
 
-const MIME: Record<string, string> = {
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-};
-
-/** Returns a data URI Satori can draw, rasterizing SVGs first. Undefined if unsupported. */
-function avatarDataUri(avatar: string | undefined, publicDir: string): string | undefined {
+/** Returns a PNG data URI Satori can draw: SVGs are rasterized, photos cropped square and shrunk. */
+async function avatarDataUri(
+  avatar: string | undefined,
+  publicDir: string,
+): Promise<string | undefined> {
   if (!avatar || /^https?:\/\//i.test(avatar)) return undefined;
   const file = join(publicDir, avatar);
   const ext = extname(file).toLowerCase();
+  let png: Buffer;
   if (ext === '.svg') {
-    const png = new Resvg(readFileSync(file), { fitTo: { mode: 'width', value: 400 } })
-      .render()
-      .asPng();
-    return `data:image/png;base64,${png.toString('base64')}`;
+    png = new Resvg(readFileSync(file), { fitTo: { mode: 'width', value: 440 } }).render().asPng();
+  } else if (/^\.(jpe?g|png|webp|avif|tiff?)$/.test(ext)) {
+    png = await sharp(file)
+      .rotate()
+      .resize({ width: 440, height: 440, fit: 'cover' })
+      .png()
+      .toBuffer();
+  } else {
+    return undefined;
   }
-  const mime = MIME[ext];
-  return mime ? `data:${mime};base64,${readFileSync(file).toString('base64')}` : undefined;
+  return `data:image/png;base64,${png.toString('base64')}`;
 }
 
 function initials(name: string): string {
@@ -62,7 +65,7 @@ const h = (type: string, style: Record<string, unknown>, children?: unknown, ext
 });
 
 export async function renderOgImage(input: OgInput): Promise<Buffer> {
-  const avatar = avatarDataUri(input.avatar, input.publicDir);
+  const avatar = await avatarDataUri(input.avatar, input.publicDir);
   const host = new URL(input.url).host + new URL(input.url).pathname.replace(/\/$/, '');
 
   const avatarNode = avatar
