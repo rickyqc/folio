@@ -35,8 +35,11 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - id: pages
+        uses: actions/configure-pages@v6
       - run: npm run build
-      - uses: actions/configure-pages@v6
+        env:
+          FOLIO_SITE_URL: ${{ steps.pages.outputs.base_url }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist

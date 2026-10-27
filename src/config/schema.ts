@@ -183,8 +183,14 @@ export const configSchema = z
     footer: z
       .strictObject({
         credit: z.boolean().default(true).describe('Show a small “Made with Folio” link.'),
+        share: z
+          .boolean()
+          .default(false)
+          .describe(
+            'Show a Share button (share sheet on phones, copy link on computers). Adds a tiny script.',
+          ),
       })
-      .default({ credit: true }),
+      .default({ credit: true, share: false }),
   })
   .superRefine((config, ctx) => {
     const featured = config.blocks.flatMap((b, i) => (b.type === 'link' && b.featured ? [i] : []));

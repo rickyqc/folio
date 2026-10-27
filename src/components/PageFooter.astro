@@ -1,24 +1,31 @@
 ---
 import { UI_ICONS } from '../lib/socials.ts';
 import Icon from './Icon.astro';
+import ShareButton from './ShareButton.astro';
 
 interface Props {
   name: string;
   vcard: boolean;
+  share: boolean;
   credit: boolean;
 }
 
-const { name, vcard, credit } = Astro.props;
+const { name, vcard, share, credit } = Astro.props;
 const vcardFile = `${name.replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || 'contact'}.vcf`;
 ---
 
-{(vcard || credit) && (
+{(vcard || share || credit) && (
   <footer class="footer">
-    {vcard && (
-      <a class="save" href="contact.vcf" download={vcardFile}>
-        <Icon icon={UI_ICONS.contact} size={20} />
-        Save contact
-      </a>
+    {(vcard || share) && (
+      <div class="actions">
+        {vcard && (
+          <a class="pill-button" href="contact.vcf" download={vcardFile}>
+            <Icon icon={UI_ICONS.contact} size={20} />
+            Save contact
+          </a>
+        )}
+        {share && <ShareButton />}
+      </div>
     )}
     {credit && (
       <p class="credit">
@@ -37,7 +44,15 @@ const vcardFile = `${name.replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '')
     margin-top: var(--section);
   }
 
-  .save {
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* Global so the Share button (its own component) matches. */
+  :global(.pill-button) {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -46,19 +61,27 @@ const vcardFile = `${name.replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '')
     border-radius: 999px;
     box-shadow: inset 0 0 0 1px var(--hairline);
     color: var(--text);
+    border: 0;
+    background: none;
+    font: inherit;
     font-size: 15px;
     font-weight: 500;
+    cursor: pointer;
     text-decoration: none;
     transition:
       background-color 200ms var(--ease),
       transform 200ms var(--ease);
   }
 
-  .save:hover {
+  :global(.pill-button[hidden]) {
+    display: none;
+  }
+
+  :global(.pill-button:hover) {
     background: var(--surface-press);
   }
 
-  .save:active {
+  :global(.pill-button:active) {
     transform: scale(0.98);
   }
 

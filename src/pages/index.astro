@@ -16,8 +16,7 @@ const { site, profile, theme, socials, blocks, embeds, contact, analytics, foote
 
 const accent = expandHex(theme.accent);
 const absolute = (path: string) => (site.url ? new URL(path, site.url).toString() : undefined);
-const ogImage =
-  profile.avatar && !profile.avatar.endsWith('.svg') ? absolute(profile.avatar) : undefined;
+const ogImage = absolute('og.png');
 ---
 
 <!doctype html>
@@ -38,7 +37,14 @@ const ogImage =
     {site.description && <meta property="og:description" content={site.description} />}
     {site.url && <meta property="og:url" content={site.url} />}
     {ogImage && <meta property="og:image" content={ogImage} />}
-    <meta name="twitter:card" content="summary" />
+    {ogImage && (
+      <>
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={`${profile.name}’s Folio page`} />
+      </>
+    )}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     {theme.mode === 'auto' ? (
       <>
         <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
@@ -114,7 +120,12 @@ const ogImage =
           </div>
         ))}
       </div>
-      <PageFooter name={profile.name} vcard={contact.vcard} credit={footer.credit} />
+      <PageFooter
+        name={profile.name}
+        vcard={contact.vcard}
+        share={footer.share}
+        credit={footer.credit}
+      />
     </main>
   </body>
 </html>

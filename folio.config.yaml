@@ -5,8 +5,9 @@
 # Every option is explained in docs/CONFIG.md.
 
 site:
-  # Your page's address. Fill this in once you know it (e.g. https://jane.dev).
-  # url: https://your-name.vercel.app
+  # Your page's address. Vercel, Netlify and GitHub Pages fill this in for you;
+  # set it when you add your own domain (e.g. https://jane.dev).
+  # url: https://jane.dev
   title: Jane Park
   description: Product designer and writer in San Francisco.
 
@@ -84,4 +85,5 @@ analytics:
   provider: none # none | plausible | umami
 
 footer:
+  share: false # true adds a Share button (uses a tiny script)
   credit: true # small "Made with Folio" link

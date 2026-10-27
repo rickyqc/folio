@@ -463,13 +463,19 @@
     },
     "footer": {
       "default": {
-        "credit": true
+        "credit": true,
+        "share": false
       },
       "type": "object",
       "properties": {
         "credit": {
           "default": true,
           "description": "Show a small “Made with Folio” link.",
+          "type": "boolean"
+        },
+        "share": {
+          "default": false,
+          "description": "Show a Share button (share sheet on phones, copy link on computers). Adds a tiny script.",
           "type": "boolean"
         }
       },

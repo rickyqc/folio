@@ -54,16 +54,13 @@ Every option is listed in the [config reference](CONFIG.md).
 4. Open `folio.config.yaml` again and set `avatar:` to your photo's exact file name, for example `avatar: me.jpg`. Capital letters must match: `Me.JPG` and `me.jpg` are different files.
 5. Commit.
 
-## 4. Tell Folio your address
+## 4. Share it
 
-Once you know your page's address, add it under `site:` so search engines and link previews use it:
+Your page comes with a few extras, made automatically:
 
-```yaml
-site:
-  url: https://my-folio-abc123.vercel.app
-```
-
-If you add your own domain later, change this to the new one.
+- **A preview card.** Paste your link into Messages, Slack or X and it shows your photo, name and bio.
+- **A QR code.** Open `your-page-address/qr.png` (e.g. `my-folio-abc123.vercel.app/qr.png`) and save it for business cards or posters.
+- **A Share button**, if you want one: set `share: true` under `footer:`.
 
 ## 5. Optional: use your own domain
 

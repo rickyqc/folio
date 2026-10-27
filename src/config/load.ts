@@ -91,7 +91,7 @@ function checkImage(
 /** Validates and resolves config text. Throws FolioConfigError with every problem found. */
 export function parseConfig(
   source: string,
-  options: { publicDir: string; fileName?: string },
+  options: { publicDir: string; fileName?: string; fallbackUrl?: string | undefined },
 ): ResolvedConfig {
   const fileName = options.fileName ?? CONFIG_FILE;
   const counter = new LineCounter();
@@ -141,7 +141,7 @@ export function parseConfig(
   ].filter((p): p is Problem => p !== undefined);
   if (imageProblems.length > 0) throw new FolioConfigError(imageProblems, fileName);
 
-  return resolveConfig(config);
+  return resolveConfig(config, options.fallbackUrl);
 }
 
 function sortByLine(problems: Problem[]): Problem[] {
@@ -153,7 +153,7 @@ function imageUrl(src: string): string {
   return isRemote(src) ? src : publicPath(src);
 }
 
-function resolveConfig(config: FolioConfig): ResolvedConfig {
+function resolveConfig(config: FolioConfig, fallbackUrl?: string): ResolvedConfig {
   const socials: Social[] = [];
   for (const [id, value] of Object.entries(config.socials)) {
     if (!isPlatform(id)) continue;
@@ -207,6 +207,7 @@ function resolveConfig(config: FolioConfig): ResolvedConfig {
     }
   });
 
+  const siteUrl = config.site.url ?? fallbackUrl;
   const emailFromSocials = config.socials['email']?.replace(/^mailto:/i, '');
   const description = config.site.description ?? config.profile.bio;
   const email = config.contact.email ?? emailFromSocials;
@@ -215,7 +216,7 @@ function resolveConfig(config: FolioConfig): ResolvedConfig {
     site: {
       title: config.site.title ?? config.profile.name,
       lang: config.site.lang,
-      ...(config.site.url && { url: config.site.url.replace(/\/?$/, '/') }),
+      ...(siteUrl && { url: siteUrl.replace(/\/?$/, '/') }),
       ...(description && { description }),
     },
     profile: {
@@ -234,6 +235,21 @@ function resolveConfig(config: FolioConfig): ResolvedConfig {
   };
 }
 
+/**
+ * The page's public address as reported by the host, used when site.url isn't set,
+ * so share images, QR codes and canonical links work without extra setup.
+ */
+export function hostUrl(env: NodeJS.ProcessEnv = process.env): string | undefined {
+  const candidates = [
+    env['FOLIO_SITE_URL'],
+    env['VERCEL_PROJECT_PRODUCTION_URL'] && `https://${env['VERCEL_PROJECT_PRODUCTION_URL']}`,
+    env['NETLIFY'] === 'true' ? env['URL'] : undefined,
+  ];
+  return candidates.find(
+    (url): url is string => !!url && URL.canParse(url) && /^https?:/.test(url),
+  );
+}
+
 /** Reads folio.config.yaml from the project root. */
 export function loadConfig(root = process.cwd()): ResolvedConfig {
   const file = resolve(root, CONFIG_FILE);
@@ -248,5 +264,8 @@ export function loadConfig(root = process.cwd()): ResolvedConfig {
       CONFIG_FILE,
     );
   }
-  return parseConfig(readFileSync(file, 'utf8'), { publicDir: resolve(root, 'public') });
+  return parseConfig(readFileSync(file, 'utf8'), {
+    publicDir: resolve(root, 'public'),
+    fallbackUrl: hostUrl(),
+  });
 }

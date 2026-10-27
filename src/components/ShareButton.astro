@@ -1,0 +1,41 @@
+---
+// The only script Folio can add to a page, and only when footer.share is on. Uses the
+// native share sheet where there is one (phones, Safari) and copies the link elsewhere.
+// Hidden until the script runs, so it never shows as a button that does nothing.
+import { UI_ICONS } from '../lib/socials.ts';
+import Icon from './Icon.astro';
+---
+
+<button class="pill-button" type="button" data-share hidden>
+  <Icon icon={UI_ICONS.share} size={20} />
+  <span data-share-label aria-live="polite">
+    Share
+  </span>
+</button>
+
+<script is:inline>
+  (() => {
+    const button = document.querySelector('[data-share]');
+    const label = document.querySelector('[data-share-label]');
+    if (!button || !label) return;
+    const url = document.querySelector('link[rel=canonical]')?.href || location.href;
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: document.title, url });
+        } catch {
+          // The visitor closed the share sheet.
+        }
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        label.textContent = 'Link copied';
+      } catch {
+        label.textContent = url;
+      }
+      setTimeout(() => (label.textContent = 'Share'), 2500);
+    });
+  })();
+</script>

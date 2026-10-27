@@ -61,7 +61,8 @@ blocks:
 - Profile, social icons, link buttons, section headers and one featured link
 - YouTube, Spotify and image embeds, with an optional tap-to-load mode for extra privacy
 - Light, dark or automatic theme, your accent color, rounded or pill buttons
-- "Save contact" button, search-friendly tags and a sitemap
+- A share preview card, a QR code for print, "Save contact" and an optional Share button
+- Search-friendly tags and a sitemap
 - 0 KB of JavaScript and about 15 KB in total, so it loads instantly even on a weak signal
 - No cookies or trackers; optional Plausible or Umami analytics
 

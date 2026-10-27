@@ -20,12 +20,12 @@ In VS Code with the [YAML extension](https://marketplace.visualstudio.com/items?
 
 How your page appears in search results, browser tabs and link previews.
 
-| Option        | Default   | What it does                                                                            |
-| ------------- | --------- | --------------------------------------------------------------------------------------- |
-| `url`         | none      | Your page's address, e.g. `https://jane.dev`. Needed for the sitemap and link previews. |
-| `title`       | your name | Browser tab and search result title.                                                    |
-| `description` | your bio  | Search result and link preview text.                                                    |
-| `lang`        | `en`      | The page's language code, e.g. `fr` or `pt-BR`.                                         |
+| Option        | Default             | What it does                                                                                                                                  |
+| ------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `url`         | your host's address | Your page's address, e.g. `https://jane.dev`. Vercel, Netlify and GitHub Pages fill it in automatically; set it when you use your own domain. |
+| `title`       | your name           | Browser tab and search result title.                                                                                                          |
+| `description` | your bio            | Search result and link preview text.                                                                                                          |
+| `lang`        | `en`                | The page's language code, e.g. `fr` or `pt-BR`.                                                                                               |
 
 ```yaml
 site:
@@ -216,7 +216,26 @@ Self-hosting either one? Add `src:` with your script's URL.
 
 ## footer
 
+| Option   | Default | What it does                                                                                                                                         |
+| -------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `share`  | `false` | Shows a **Share** button: the share sheet on phones, "copy link" on computers. This is the only option that adds a script to your page (under 1 KB). |
+| `credit` | `true`  | The small "Made with Folio" link.                                                                                                                    |
+
 ```yaml
 footer:
-  credit: false # hides the small "Made with Folio" link
+  share: true
+  credit: false
 ```
+
+## Sharing extras
+
+These are made for you on every build, no setup needed:
+
+| File                        | What it's for                                                                                                                          |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `og.png`                    | The preview card shown when your link is shared in Messages, Slack, X and so on: your photo, name, bio and address.                    |
+| `qr.png`, `qr.svg`          | A QR code for your page, for business cards, posters and menus. Open `your-page-address/qr.png` to download it; use the SVG for print. |
+| `contact.vcf`               | The contact card behind "Save contact" (only when `contact.vcard` is on).                                                              |
+| `sitemap.xml`, `robots.txt` | Help search engines find your page.                                                                                                    |
+
+The preview card and QR code need your page's address, which your host provides automatically. If you build somewhere else, set `site.url`.

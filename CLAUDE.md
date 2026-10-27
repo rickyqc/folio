@@ -37,7 +37,10 @@ Astro + TypeScript (strictest), plain CSS with custom properties as design token
 - No verified badge (cut under "Fewer, better").
 - Embeds load with the page by default (owner's call, 2026-10-27). `embeds.loadOnTap: true` swaps in a srcdoc placeholder so no third-party requests happen until the visitor taps.
 - Images resolve from `public/`; existence is checked case-sensitively at build time.
-- Share button, share image (Satori) and QR code are not built yet.
+- Share button is opt-in (`footer.share`), the only inline script Folio can add, so pages stay 0 KB JS by default.
+- `og.png`, `qr.png`, `qr.svg` need a public URL: `site.url`, else `hostUrl()` reads FOLIO_SITE_URL / VERCEL_PROJECT_PRODUCTION_URL / Netlify's URL.
+- The share card font is Inter from `@fontsource/inter` (build-time only, never shipped to the page).
+- Sample avatar is Noto Emoji artwork (Apache 2.0) as paths, so it renders identically everywhere, including resvg on Linux.
 
 ## Design language (summary; full table in VISION.md)
 

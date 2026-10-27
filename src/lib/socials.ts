@@ -73,6 +73,7 @@ export const UI_ICONS = {
     path: 'M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z',
   },
   arrow: { kind: 'stroke', path: 'M7 17 17 7M8 7h9v9' },
+  share: { kind: 'stroke', path: 'M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7' },
 } as const satisfies Record<string, Icon>;
 
 export const PLATFORMS = {
