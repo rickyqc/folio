@@ -1,0 +1,54 @@
+---
+import type { Social } from '../config/load.ts';
+import Icon from './Icon.astro';
+
+interface Props {
+  socials: Social[];
+}
+
+const { socials } = Astro.props;
+---
+
+{socials.length > 0 && (
+  <ul class="socials" aria-label="Social profiles">
+    {socials.map((s) => (
+      <li>
+        <a href={s.url} rel="me noopener" target={s.id === 'email' ? undefined : '_blank'}>
+          <Icon icon={s.icon} size={24} label={s.label} />
+        </a>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: var(--text);
+    transition:
+      background-color 200ms var(--ease),
+      transform 200ms var(--ease);
+  }
+
+  a:hover {
+    background: var(--surface-press);
+  }
+
+  a:active {
+    transform: scale(0.94);
+  }
+</style>

@@ -1,0 +1,98 @@
+---
+import type { Icon as IconType } from '../lib/socials.ts';
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  url: string;
+  subtitle?: string | undefined;
+  icon?: IconType | undefined;
+  featured?: boolean;
+}
+
+const { title, url, subtitle, icon, featured = false } = Astro.props;
+---
+
+<a
+  class:list={['button', { featured, 'has-icon': icon }]}
+  href={url}
+  rel="noopener"
+  target="_blank"
+>
+  {icon && <Icon icon={icon} size={22} />}
+  <span class="text">
+    <span class="title">{title}</span>
+    {subtitle && <span class="subtitle">{subtitle}</span>}
+  </span>
+</a>
+
+<style>
+  .button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--button-height);
+    padding: 8px 20px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+    color: var(--text);
+    text-align: center;
+    text-decoration: none;
+    transition:
+      background-color 200ms var(--ease),
+      transform 200ms var(--ease);
+  }
+
+  .button:hover {
+    background: var(--surface-press);
+  }
+
+  .button:active {
+    transform: scale(0.98);
+  }
+
+  /* Keep the text centered on the button, with the icon pinned left. */
+  .has-icon {
+    padding-inline: 52px;
+  }
+
+  .has-icon :global(svg) {
+    position: absolute;
+    left: 18px;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .title {
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .featured {
+    background: var(--accent);
+    box-shadow: none;
+    color: var(--on-accent);
+  }
+
+  .featured:hover {
+    background: color-mix(in srgb, var(--accent) 88%, var(--on-accent));
+  }
+
+  .featured .subtitle {
+    color: inherit;
+    opacity: 0.85;
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+// A third-party player that loads only when tapped. The iframe starts as a local srcdoc
+// placeholder (no requests, no cookies); its link navigates the frame to the real player.
+// No JavaScript on the page.
+import { UI_ICONS } from '../lib/socials.ts';
+
+interface Props {
+  /** The real player URL, loaded on tap. */
+  src: string;
+  /** Accessible name for the frame and the play link. */
+  title: string;
+  /** Who the player loads from, shown so visitors know before tapping. */
+  provider: string;
+  /** CSS aspect-ratio, or a fixed pixel height. */
+  aspectRatio?: string;
+  height?: number;
+}
+
+const { src, title, provider, aspectRatio, height } = Astro.props;
+
+const escapeHtml = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+const srcdoc = `<!doctype html><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0}html,body{height:100%}
+a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%;padding:16px;
+background:#1d1d1f;color:#f5f5f7;text-align:center;text-decoration:none;
+font:500 16px/1.3 -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;letter-spacing:-.01em}
+.b{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:rgb(255 255 255/.16);transition:transform .2s}
+a:hover .b{background:rgb(255 255 255/.24)}a:active .b{transform:scale(.94)}
+a:focus-visible{outline:3px solid #f5f5f7;outline-offset:-6px}
+svg{width:24px;height:24px;fill:#fff;margin-left:3px}small{font-size:12px;font-weight:400;color:#a1a1a6}
+</style><a href="${escapeHtml(src)}" aria-label="Play: ${escapeHtml(title)}"><span class="b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${UI_ICONS.play.path}"/></svg></span><span>${escapeHtml(title)}</span><small>Tap to load from ${escapeHtml(provider)}</small></a>`;
+---
+
+<div class="embed" style={aspectRatio ? `aspect-ratio: ${aspectRatio}` : `height: ${height}px`}>
+  <iframe
+    title={title}
+    srcdoc={srcdoc}
+    loading="lazy"
+    allow="autoplay; encrypted-media; fullscreen; picture-in-picture; clipboard-write"
+    allowfullscreen
+    referrerpolicy="strict-origin-when-cross-origin"
+  ></iframe>
+</div>
+
+<style>
+  .embed {
+    overflow: hidden;
+    border-radius: var(--radius-embed, 14px);
+    background: var(--embed-bg);
+  }
+
+  iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>

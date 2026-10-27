@@ -1,0 +1,50 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  url?: string | undefined;
+  caption?: string | undefined;
+}
+
+const { src, alt, url, caption } = Astro.props;
+const Wrapper = url ? 'a' : 'div';
+---
+
+<figure class="image-card">
+  <Wrapper class="frame" {...(url ? { href: url, rel: 'noopener', target: '_blank' } : {})}>
+    <img src={src} alt={alt} loading="lazy" decoding="async" />
+  </Wrapper>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .image-card {
+    margin: 0;
+  }
+
+  .frame {
+    display: block;
+    overflow: hidden;
+    border-radius: 14px;
+    box-shadow: 0 0 0 1px var(--hairline);
+    transition: transform 200ms var(--ease);
+  }
+
+  a.frame:active {
+    transform: scale(0.98);
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  figcaption {
+    margin-top: 8px;
+    padding-inline: 4px;
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
+  }
+</style>

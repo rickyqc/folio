@@ -1,0 +1,70 @@
+---
+import { UI_ICONS } from '../lib/socials.ts';
+import type { ResolvedConfig } from '../config/load.ts';
+import Icon from './Icon.astro';
+
+interface Props {
+  profile: ResolvedConfig['profile'];
+}
+
+const { profile } = Astro.props;
+---
+
+<header class="profile">
+  {profile.avatar && (
+    <img class="avatar" src={profile.avatar} alt={profile.name} width="96" height="96" />
+  )}
+  <h1 class="name">{profile.name}</h1>
+  {profile.bio && <p class="bio">{profile.bio}</p>}
+  {profile.location && (
+    <p class="location">
+      <Icon icon={UI_ICONS.pin} size={16} />
+      {profile.location}
+    </p>
+  )}
+</header>
+
+<style>
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 16px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--surface);
+    box-shadow: 0 0 0 1px var(--hairline);
+  }
+
+  .name {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .bio {
+    max-width: 36ch;
+    margin: 8px 0 0;
+    font-size: 17px;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  .location {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 8px 0 0;
+    font-size: 15px;
+    color: var(--muted);
+  }
+</style>

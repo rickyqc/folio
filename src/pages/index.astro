@@ -1,19 +1,191 @@
 ---
-// Placeholder until Milestone 3 renders the page from folio.config.yaml.
+import ClickToLoad from '../components/ClickToLoad.astro';
+import ImageCard from '../components/ImageCard.astro';
+import LinkButton from '../components/LinkButton.astro';
+import PageFooter from '../components/PageFooter.astro';
+import Profile from '../components/Profile.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import SocialRow from '../components/SocialRow.astro';
+import { loadConfig } from '../config/load.ts';
+import { expandHex, readableTextOn } from '../lib/color.ts';
+import '../themes/tokens.css';
+
+// Everything on this page comes from folio.config.yaml.
+const config = loadConfig();
+const { site, profile, theme, socials, blocks, contact, analytics, footer } = config;
+
+const accent = expandHex(theme.accent);
+const absolute = (path: string) => (site.url ? new URL(path, site.url).toString() : undefined);
+const ogImage =
+  profile.avatar && !profile.avatar.endsWith('.svg') ? absolute(profile.avatar) : undefined;
 ---
 
 <!doctype html>
-<html lang="en">
+<html
+  lang={site.lang}
+  data-mode={theme.mode}
+  data-buttons={theme.buttons}
+  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}`}
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Folio</title>
-    <meta name="description" content="An open-source link-in-bio page you own outright." />
+    <title>{site.title}</title>
+    {site.description && <meta name="description" content={site.description} />}
+    {site.url && <link rel="canonical" href={site.url} />}
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={site.title} />
+    {site.description && <meta property="og:description" content={site.description} />}
+    {site.url && <meta property="og:url" content={site.url} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary" />
+    {theme.mode === 'auto' ? (
+      <>
+        <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+      </>
+    ) : (
+      <meta name="theme-color" content={theme.mode === 'dark' ? '#000000' : '#fbfbfd'} />
+    )}
+    {profile.avatar && <link rel="icon" href={profile.avatar} />}
+    {site.url && <link rel="sitemap" href="/sitemap.xml" />}
+    {analytics.provider === 'plausible' && (
+      <script
+        is:inline
+        defer
+        data-domain={analytics.domain}
+        src={analytics.src ?? 'https://plausible.io/js/script.js'}
+      />
+    )}
+    {analytics.provider === 'umami' && (
+      <script
+        is:inline
+        defer
+        data-website-id={analytics.websiteId}
+        src={analytics.src ?? 'https://cloud.umami.is/script.js'}
+      />
+    )}
   </head>
   <body>
-    <main>
-      <h1>Folio</h1>
-      <p>Your links. Your page. Your domain.</p>
+    <main class="page">
+      <div class="enter" style="--i: 0">
+        <Profile profile={profile} />
+      </div>
+      {socials.length > 0 && (
+        <div class="enter" style="--i: 1">
+          <SocialRow socials={socials} />
+        </div>
+      )}
+      <div class="blocks">
+        {blocks.map((block, index) => (
+          <div class="enter" style={`--i: ${Math.min(index + 2, 10)}`}>
+            {block.type === 'link' && (
+              <LinkButton
+                title={block.title}
+                url={block.url}
+                subtitle={block.subtitle}
+                icon={block.icon}
+                featured={block.featured}
+              />
+            )}
+            {block.type === 'header' && <SectionHeader title={block.title} />}
+            {block.type === 'youtube' && (
+              <ClickToLoad
+                src={`https://www.youtube-nocookie.com/embed/${block.id}?autoplay=1&rel=0`}
+                title={block.title ?? 'Play video'}
+                provider="YouTube"
+                aspectRatio="16 / 9"
+              />
+            )}
+            {block.type === 'spotify' && (
+              <ClickToLoad
+                src={`https://open.spotify.com/embed/${block.kind}/${block.id}`}
+                title={block.title ?? `Listen on Spotify`}
+                provider="Spotify"
+                height={block.height}
+              />
+            )}
+            {block.type === 'image' && (
+              <ImageCard src={block.src} alt={block.alt} url={block.url} caption={block.caption} />
+            )}
+          </div>
+        ))}
+      </div>
+      <PageFooter name={profile.name} vcard={contact.vcard} credit={footer.credit} />
     </main>
   </body>
 </html>
+
+<style is:global>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 17px;
+    line-height: 1.47;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--text);
+    outline-offset: 3px;
+  }
+
+  .page {
+    width: 100%;
+    max-width: calc(var(--column) + var(--gutter) * 2);
+    margin: 0 auto;
+    padding: 56px var(--gutter) 40px;
+  }
+
+  .page > * + * {
+    margin-top: 20px;
+  }
+
+  .page > .blocks {
+    margin-top: 28px;
+  }
+
+  .blocks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+  }
+
+  /* Fade and rise once on load, slightly staggered. */
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  .enter {
+    animation: enter 300ms var(--ease) both;
+    animation-delay: calc(var(--i) * 40ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+</style>
