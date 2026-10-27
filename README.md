@@ -89,7 +89,7 @@ Folio is an [Astro](https://astro.build) static site. The config is validated wi
 
 ## Made something?
 
-**[Show off your page](https://github.com/rickyqc/folio/discussions/categories/show-and-tell)** in Show and tell. We love seeing them.
+**[Show off your page in the showcase](https://github.com/rickyqc/folio/discussions/1).** We love seeing them.
 
 Stuck? [Ask for setup help](https://github.com/rickyqc/folio/issues/new?template=setup-help.yml). Want to help build Folio? Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the [good first issues](https://github.com/rickyqc/folio/labels/good%20first%20issue).
 
