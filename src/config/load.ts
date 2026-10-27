@@ -29,6 +29,7 @@ export interface ResolvedConfig {
   theme: FolioConfig['theme'];
   socials: Social[];
   blocks: ResolvedBlock[];
+  embeds: FolioConfig['embeds'];
   contact: Omit<FolioConfig['contact'], 'email'> & { email?: string | undefined };
   analytics: FolioConfig['analytics'];
   footer: FolioConfig['footer'];
@@ -221,6 +222,7 @@ function resolveConfig(config: FolioConfig): ResolvedConfig {
     theme: config.theme,
     socials,
     blocks,
+    embeds: config.embeds,
     contact: { ...config.contact, ...(email && { email }) },
     analytics: config.analytics,
     footer: config.footer,

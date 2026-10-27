@@ -1,5 +1,5 @@
 ---
-import ClickToLoad from '../components/ClickToLoad.astro';
+import Embed from '../components/Embed.astro';
 import ImageCard from '../components/ImageCard.astro';
 import LinkButton from '../components/LinkButton.astro';
 import PageFooter from '../components/PageFooter.astro';
@@ -12,7 +12,7 @@ import '../themes/tokens.css';
 
 // Everything on this page comes from folio.config.yaml.
 const config = loadConfig();
-const { site, profile, theme, socials, blocks, contact, analytics, footer } = config;
+const { site, profile, theme, socials, blocks, embeds, contact, analytics, footer } = config;
 
 const accent = expandHex(theme.accent);
 const absolute = (path: string) => (site.url ? new URL(path, site.url).toString() : undefined);
@@ -90,16 +90,19 @@ const ogImage =
             )}
             {block.type === 'header' && <SectionHeader title={block.title} />}
             {block.type === 'youtube' && (
-              <ClickToLoad
-                src={`https://www.youtube-nocookie.com/embed/${block.id}?autoplay=1&rel=0`}
-                title={block.title ?? 'Play video'}
+              <Embed
+                src={`https://www.youtube-nocookie.com/embed/${block.id}?rel=0`}
+                tapSrc={`https://www.youtube-nocookie.com/embed/${block.id}?autoplay=1&rel=0`}
+                loadOnTap={embeds.loadOnTap}
+                title={block.title ?? 'YouTube video'}
                 provider="YouTube"
                 aspectRatio="16 / 9"
               />
             )}
             {block.type === 'spotify' && (
-              <ClickToLoad
+              <Embed
                 src={`https://open.spotify.com/embed/${block.kind}/${block.id}`}
+                loadOnTap={embeds.loadOnTap}
                 title={block.title ?? `Listen on Spotify`}
                 provider="Spotify"
                 height={block.height}

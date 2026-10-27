@@ -50,6 +50,7 @@ describe('defaults', () => {
     expect(config.blocks).toEqual([]);
     expect(config.footer.credit).toBe(true);
     expect(config.contact.vcard).toBe(false);
+    expect(config.embeds.loadOnTap).toBe(false);
   });
 
   it('uses the bio as the description and adds a trailing slash to the site url', () => {
@@ -58,6 +59,18 @@ describe('defaults', () => {
     );
     expect(config.site.url).toBe('https://jane.dev/');
     expect(config.site.description).toBe('Hi there');
+  });
+});
+
+describe('embeds', () => {
+  it('can load players only when tapped', () => {
+    expect(parse(`${MINIMAL}embeds:\n  loadOnTap: true\n`).embeds.loadOnTap).toBe(true);
+  });
+
+  it('explains a quoted true', () => {
+    expect(errorFor(`${MINIMAL}embeds:\n  loadOnTap: "yes"\n`)).toContain(
+      '"loadOnTap" in embeds should be true or false (without quotes).',
+    );
   });
 });
 

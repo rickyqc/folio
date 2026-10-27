@@ -96,9 +96,9 @@ Fix the line in `folio.config.yaml`, commit again, and your page updates.
 
 The build checks this for you and names the file it couldn't find. Usually the file isn't in the `public` folder, or the capital letters in the name don't match.
 
-### The YouTube or Spotify box doesn't play right away
+### The YouTube or Spotify box is gray with a play button
 
-That's on purpose. Players only load when a visitor taps them, so YouTube and Spotify can't track people who just visit your page.
+Your config has `loadOnTap: true` under `embeds:`, which loads players only when a visitor taps them, for privacy. Remove those lines to load players straight away.
 
 ### Still stuck?
 

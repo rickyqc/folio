@@ -136,6 +136,17 @@ export const configSchema = z
 
     blocks: z.array(block).default([]).describe('Your links, headers and embeds, top to bottom.'),
 
+    embeds: z
+      .strictObject({
+        loadOnTap: z
+          .boolean()
+          .default(false)
+          .describe(
+            'Show a placeholder and load YouTube and Spotify players only when tapped, so those companies can’t see who visits your page.',
+          ),
+      })
+      .default({ loadOnTap: false }),
+
     contact: z
       .strictObject({
         vcard: z

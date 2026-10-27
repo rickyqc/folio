@@ -8,7 +8,8 @@ If the AI gets something wrong, your page won't break: the build stops and tells
 Write a folio.config.yaml file for my Folio link-in-bio page. If anything you need is missing from "About me", ask me first. Then reply with only the finished YAML in one code block.
 
 Rules:
-- Use only these top-level sections: site, profile, theme, socials, blocks, contact, analytics, footer.
+- Use only these top-level sections: site, profile, theme, socials, blocks, embeds, contact, analytics, footer.
+- Leave out embeds unless I ask for extra privacy; then add embeds: loadOnTap: true.
 - profile.name is required. profile.bio is one short line. profile.avatar is the file name of my photo in the public folder (for example avatar.jpg); leave it out if I don't give one. profile.location is optional.
 - site.title defaults to my name and site.description to my bio, so leave them out unless I want something different.
 - theme.mode is auto, light or dark (use auto unless I say otherwise). theme.accent is a hex color in double quotes, like "#0071e3". theme.buttons is rounded or pill.

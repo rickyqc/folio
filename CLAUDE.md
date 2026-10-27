@@ -35,7 +35,7 @@ Astro + TypeScript (strictest), plain CSS with custom properties as design token
 - Themes are light / dark / auto plus an accent color; no separate "accent theme".
 - At most one featured link (validated).
 - No verified badge (cut under "Fewer, better").
-- Embeds load on tap via a srcdoc placeholder: no third-party requests or JS until the visitor opts in.
+- Embeds load with the page by default (owner's call, 2026-10-27). `embeds.loadOnTap: true` swaps in a srcdoc placeholder so no third-party requests happen until the visitor taps.
 - Images resolve from `public/`; existence is checked case-sensitively at build time.
 - Share button, share image (Satori) and QR code are not built yet.
 

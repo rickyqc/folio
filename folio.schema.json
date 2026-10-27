@@ -354,6 +354,20 @@
         ]
       }
     },
+    "embeds": {
+      "default": {
+        "loadOnTap": false
+      },
+      "type": "object",
+      "properties": {
+        "loadOnTap": {
+          "default": false,
+          "description": "Show a placeholder and load YouTube and Spotify players only when tapped, so those companies can’t see who visits your page.",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
     "contact": {
       "default": {
         "vcard": false

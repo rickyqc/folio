@@ -9,6 +9,7 @@ In VS Code with the [YAML extension](https://marketplace.visualstudio.com/items?
 - [theme](#theme)
 - [socials](#socials)
 - [blocks](#blocks): [link](#link) · [header](#header) · [youtube](#youtube) · [spotify](#spotify) · [image](#image)
+- [embeds](#embeds)
 - [contact](#contact)
 - [analytics](#analytics)
 - [footer](#footer)
@@ -127,7 +128,7 @@ A small heading to group the blocks below it.
 
 ### youtube
 
-A video player. It loads only when a visitor taps it, so YouTube can't track people who just visit.
+A YouTube video player, ready to play when the page opens.
 
 | Option  | Default      | What it does                                                             |
 | ------- | ------------ | ------------------------------------------------------------------------ |
@@ -142,7 +143,7 @@ A video player. It loads only when a visitor taps it, so YouTube can't track peo
 
 ### spotify
 
-A Spotify player for a track, album, playlist, podcast episode, show or artist. Also loads only on tap. In the Spotify app, use **Share → Copy link**.
+A Spotify player for a track, album, playlist, podcast episode, show or artist. In the Spotify app, use **Share → Copy link**.
 
 ```yaml
 - type: spotify
@@ -166,6 +167,17 @@ An image card, optionally linked.
   alt: Poster for my spring show at Gallery 9
   url: https://tickets.example.com
   caption: April 12, Oakland
+```
+
+## embeds
+
+YouTube and Spotify players load with your page, so visitors see the real video and music straight away. That also means YouTube and Spotify can see that someone opened your page (YouTube uses its privacy-enhanced mode, which doesn't set cookies until someone plays the video).
+
+For maximum privacy, show a placeholder instead and load each player only when a visitor taps it:
+
+```yaml
+embeds:
+  loadOnTap: true
 ```
 
 ## contact
