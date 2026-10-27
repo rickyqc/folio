@@ -7,6 +7,10 @@ const [root = 'dist', port = '4400'] = process.argv.slice(2);
 const base = resolve(root);
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json',
+  '.webp': 'image/webp',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.vcf': 'text/vcard; charset=utf-8',

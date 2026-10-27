@@ -1,0 +1,900 @@
+---
+// Fill in a form, watch a live preview, copy a finished folio.config.yaml.
+// Platform names, examples and icons come from Folio itself, so the builder can't drift.
+import { PLATFORMS } from '../../../src/lib/socials.ts';
+import { ACCENTS } from '../builder/model';
+import { GUIDE_URL, VERCEL_DEPLOY_URL } from '../site';
+
+const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
+  id,
+  label: p.label,
+  example: p.example,
+  needsUrl: !('fromHandle' in p),
+  icon: p.icon,
+}));
+---
+
+<script
+  type="application/json"
+  id="builder-platforms"
+  set:html={JSON.stringify(platforms).replace(/</g, '\\u003c')}
+/>
+<div class="builder">
+  <form class="form" novalidate aria-label="Build your Folio config">
+    <fieldset>
+      <legend>About you</legend>
+      <div class="field" data-field="name">
+        <label for="b-name">Name</label>
+        <input
+          id="b-name"
+          name="name"
+          autocomplete="name"
+          placeholder="Jane Park"
+          required
+          aria-describedby="b-name-error"
+        />
+        <small id="b-name-error" class="error" aria-live="polite"></small>
+      </div>
+      <label class="field">
+        <span>
+          One line about you <em>optional</em>
+        </span>
+        <input name="bio" placeholder="Product designer. Writing about craft and tools." />
+      </label>
+      <div class="row">
+        <label class="field">
+          <span>
+            Location <em>optional</em>
+          </span>
+          <input name="location" autocomplete="address-level2" placeholder="San Francisco, CA" />
+        </label>
+        <div class="field" data-field="avatar">
+          <label for="b-avatar">
+            Photo file name <em>optional</em>
+          </label>
+          <input
+            id="b-avatar"
+            name="avatar"
+            placeholder="me.jpg"
+            aria-describedby="b-avatar-hint b-avatar-error"
+          />
+          <small id="b-avatar-hint" class="hint">
+            Upload it to the <b>public</b> folder later. Blank shows your initials.
+          </small>
+          <small id="b-avatar-error" class="error" aria-live="polite"></small>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Look</legend>
+      <div class="field">
+        <span id="mode-label">Theme</span>
+        <div class="segmented" role="radiogroup" aria-labelledby="mode-label">
+          {(['auto', 'light', 'dark'] as const).map((mode) => (
+            <label>
+              <input type="radio" name="mode" value={mode} checked={mode === 'auto'} />
+              <span>{mode === 'auto' ? 'Auto' : mode === 'light' ? 'Light' : 'Dark'}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div class="field">
+        <span id="accent-label">Accent color</span>
+        <div class="swatches" role="radiogroup" aria-labelledby="accent-label">
+          {ACCENTS.map((color, i) => (
+            <label class="swatch" style={`--c: ${color}`}>
+              <input
+                type="radio"
+                name="accent"
+                value={color}
+                checked={i === 0}
+                aria-label={color}
+              />
+            </label>
+          ))}
+          <label class="swatch swatch--custom" title="Pick any color">
+            <input type="color" name="accentCustom" value="#0071e3" aria-label="Pick any color" />
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <span id="buttons-label">Buttons</span>
+        <div class="segmented" role="radiogroup" aria-labelledby="buttons-label">
+          <label>
+            <input type="radio" name="buttons" value="rounded" checked />
+            <span>Rounded</span>
+          </label>
+          <label>
+            <input type="radio" name="buttons" value="pill" />
+            <span>Pill</span>
+          </label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Social accounts</legend>
+      <div class="list" data-list="socials"></div>
+      <button type="button" class="add" data-action="add-social">
+        + Add an account
+      </button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Links</legend>
+      <p class="legend-hint">
+        Top to bottom, the way they’ll appear. Tap ★ to highlight your most important one.
+      </p>
+      <div class="list" data-list="items"></div>
+      <div class="adds">
+        <button type="button" class="add" data-action="add-link">
+          + Add a link
+        </button>
+        <button type="button" class="add" data-action="add-header">
+          + Add a section heading
+        </button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Extras</legend>
+      <label class="check">
+        <input type="checkbox" name="vcard" checked />
+        <span>
+          <b>Save contact</b> button, so people can add you to their phone
+        </span>
+      </label>
+      <label class="check">
+        <input type="checkbox" name="share" />
+        <span>
+          <b>Share</b> button (adds a tiny script to your page)
+        </span>
+      </label>
+    </fieldset>
+
+    <button type="button" class="reset" data-action="reset">
+      Start over
+    </button>
+  </form>
+
+  <aside class="output" aria-label="Preview and your config">
+    <div class="preview-phone" aria-hidden="true">
+      <div class="preview-screen">
+        <div class="bp" data-preview></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="button" class="button" data-action="copy">
+        Copy my config
+      </button>
+      <button type="button" class="button button--quiet" data-action="download">
+        Download file
+      </button>
+    </div>
+    <p class="status" data-status aria-live="polite"></p>
+    <details class="file">
+      <summary>See the file</summary>
+      <pre data-yaml></pre>
+    </details>
+    <ol class="next">
+      <li>
+        No copy of Folio yet? <a href={VERCEL_DEPLOY_URL}>Deploy one</a> first (about a minute).
+      </li>
+      <li>
+        In your repo on GitHub, open <b>folio.config.yaml</b> and click the pencil icon.
+      </li>
+      <li>
+        Select everything, paste, and click <b>Commit changes</b>. Your page updates in a minute.
+      </li>
+    </ol>
+    <p class="next-more">
+      <a class="more" href={GUIDE_URL}>
+        Adding a photo, your domain and more
+      </a>
+    </p>
+  </aside>
+</div>
+
+<template id="tpl-social">
+  <div class="item item--social">
+    <select data-key="platform" aria-label="Platform"></select>
+    <input data-key="value" aria-label="Username or link" />
+    <button type="button" class="icon-btn" data-action="remove" aria-label="Remove">
+      ×
+    </button>
+    <small class="error" aria-live="polite"></small>
+  </div>
+</template>
+
+<template id="tpl-link">
+  <div class="item item--link">
+    <div class="item-main">
+      <input
+        data-key="title"
+        aria-label="Button text"
+        placeholder="Button text, e.g. My portfolio"
+      />
+      <input
+        data-key="url"
+        aria-label="Link"
+        placeholder="Link, e.g. https://example.com"
+        inputmode="url"
+      />
+      <div class="item-extra">
+        <input
+          data-key="subtitle"
+          aria-label="Second line (optional)"
+          placeholder="Second line (optional)"
+        />
+        <input
+          data-key="icon"
+          class="emoji-input"
+          aria-label="Emoji (optional)"
+          placeholder="🙂"
+          maxlength="8"
+        />
+      </div>
+      <small class="error" aria-live="polite"></small>
+    </div>
+    <div class="item-tools">
+      <button
+        type="button"
+        class="icon-btn star"
+        data-action="feature"
+        aria-label="Highlight this link"
+      >
+        ★
+      </button>
+      <button type="button" class="icon-btn" data-action="up" aria-label="Move up">
+        ↑
+      </button>
+      <button type="button" class="icon-btn" data-action="down" aria-label="Move down">
+        ↓
+      </button>
+      <button type="button" class="icon-btn" data-action="remove" aria-label="Remove">
+        ×
+      </button>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-header">
+  <div class="item item--header">
+    <div class="item-main">
+      <input
+        data-key="title"
+        aria-label="Section heading"
+        placeholder="Section heading, e.g. Shop"
+      />
+    </div>
+    <div class="item-tools">
+      <button type="button" class="icon-btn" data-action="up" aria-label="Move up">
+        ↑
+      </button>
+      <button type="button" class="icon-btn" data-action="down" aria-label="Move down">
+        ↓
+      </button>
+      <button type="button" class="icon-btn" data-action="remove" aria-label="Remove">
+        ×
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { mountBuilder } from '../builder/ui';
+
+  const root = document.querySelector<HTMLElement>('.builder');
+  if (root) mountBuilder(root);
+</script>
+
+<style>
+  .builder {
+    display: grid;
+    gap: 40px;
+    align-items: start;
+  }
+
+  @media (min-width: 960px) {
+    .builder {
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 56px;
+    }
+
+    .output {
+      position: sticky;
+      top: 76px;
+    }
+  }
+
+  .form {
+    display: grid;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  fieldset {
+    display: grid;
+    gap: 16px;
+    min-width: 0;
+    margin: 0;
+    padding: 24px;
+    border: 0;
+    border-radius: 24px;
+    background: var(--surface);
+  }
+
+  legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  legend + * {
+    clear: both;
+  }
+
+  .legend-hint {
+    margin-top: -8px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .field {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .field em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .row {
+    display: grid;
+    gap: 16px;
+  }
+
+  @media (min-width: 600px) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  input:not([type='radio'], [type='checkbox'], [type='color']),
+  select {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--bg-alt);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+    color: var(--text);
+    font: inherit;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  input:focus-visible,
+  select:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .invalid input,
+  input.invalid {
+    box-shadow: inset 0 0 0 1.5px var(--error);
+  }
+
+  .hint {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .error {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--error);
+  }
+
+  .error:empty {
+    display: none;
+  }
+
+  .segmented {
+    display: inline-flex;
+    justify-self: start;
+    padding: 3px;
+    border-radius: 12px;
+    background: var(--bg-alt);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  .segmented label {
+    position: relative;
+  }
+
+  .segmented input,
+  .swatch input[type='radio'] {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .segmented span {
+    display: block;
+    padding: 8px 18px;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .segmented input:checked + span {
+    background: var(--surface);
+    box-shadow: 0 0 0 1px var(--hairline);
+    color: var(--text);
+  }
+
+  .segmented input:focus-visible + span {
+    outline: 3px solid var(--accent);
+  }
+
+  .swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .swatch {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  .swatch:has(input:checked) {
+    box-shadow:
+      0 0 0 2px var(--surface),
+      0 0 0 4px var(--c, var(--text));
+  }
+
+  .swatch:has(input:focus-visible) {
+    outline: 3px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .swatch--custom {
+    overflow: hidden;
+    background: conic-gradient(#ff375f, #ff9f0a, #34c759, #0071e3, #af52de, #ff375f);
+  }
+
+  .swatch--custom input {
+    position: absolute;
+    inset: -8px;
+    width: 52px;
+    height: 52px;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .item {
+    display: grid;
+    gap: 8px;
+  }
+
+  /* Phones: platform and remove on one line, the username full-width below. */
+  .item--social {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .item--social input {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  @media (min-width: 600px) {
+    .item--social {
+      grid-template-columns: minmax(0, 150px) minmax(0, 1fr) auto;
+    }
+
+    .item--social input {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    .item--social .icon-btn {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+
+  .item--social .error {
+    grid-column: 1 / -1;
+  }
+
+  .item--link,
+  .item--header {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    padding: 12px;
+    border-radius: 16px;
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  .item--header {
+    background: var(--bg-alt);
+  }
+
+  .item-main {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .item-extra {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 64px;
+    gap: 8px;
+  }
+
+  .emoji-input {
+    text-align: center;
+  }
+
+  /* Phones: tools in a row under the fields. Wider: a 2×2 grid beside them. */
+  .item-tools {
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  @media (min-width: 600px) {
+    .item--link,
+    .item--header {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .item-tools {
+      display: grid;
+      grid-template-columns: repeat(2, 36px);
+    }
+  }
+
+  .icon-btn {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .icon-btn:hover {
+    background: var(--bg-alt);
+    color: var(--text);
+  }
+
+  .icon-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .star[aria-pressed='true'] {
+    color: #ff9f0a;
+  }
+
+  .adds {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+  }
+
+  .add,
+  .reset {
+    justify-self: start;
+    padding: 6px 0;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .reset {
+    color: var(--muted);
+  }
+
+  .check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .check b {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .check input {
+    width: 20px;
+    height: 20px;
+    margin: 1px 0 0;
+    accent-color: var(--button-bg);
+  }
+
+  /* Output */
+  .output {
+    display: grid;
+    gap: 16px;
+    justify-items: center;
+    min-width: 0;
+  }
+
+  .preview-phone {
+    width: 300px;
+    height: 560px;
+    padding: 10px;
+    border-radius: 50px;
+    background: #1d1d1f;
+    box-shadow: inset 0 0 0 2px #3a3a3c;
+  }
+
+  .preview-screen {
+    height: 100%;
+    overflow: hidden auto;
+    border-radius: 40px;
+    scrollbar-width: none;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .actions .button {
+    border: 0;
+    font: inherit;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .actions .button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .status {
+    min-height: 20px;
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .file {
+    width: 100%;
+  }
+
+  .file summary {
+    font-size: 14px;
+    color: var(--accent);
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .file pre {
+    max-height: 320px;
+    margin: 12px 0 0;
+    padding: 16px;
+    overflow: auto;
+    border-radius: 16px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  .next {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    margin: 4px 0 0;
+    padding-left: 20px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .next b {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .next-more {
+    font-size: 14px;
+  }
+
+  /* Live preview: the same tokens and proportions as a real Folio page, scaled to the phone. */
+  .bp {
+    --p-bg: light-dark(#fbfbfd, #000000);
+    --p-surface: light-dark(#ffffff, #1c1c1e);
+    --p-text: light-dark(#1d1d1f, #f5f5f7);
+    --p-muted: light-dark(#6e6e73, #a1a1a6);
+    --p-hairline: light-dark(rgb(0 0 0 / 0.12), rgb(255 255 255 / 0.16));
+    --p-radius: 12px;
+
+    color-scheme: light dark;
+    min-height: 100%;
+    padding: 48px 18px 28px;
+    background: var(--p-bg);
+    color: var(--p-text);
+    font-family: var(--font);
+    text-align: center;
+  }
+
+  .bp:global([data-mode='light']) {
+    color-scheme: light;
+  }
+
+  .bp:global([data-mode='dark']) {
+    color-scheme: dark;
+  }
+
+  .bp:global([data-buttons='pill']) {
+    --p-radius: 999px;
+  }
+
+  .bp :global(.bp-avatar) {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--p-accent) 16%, var(--p-surface));
+    color: var(--p-accent);
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  .bp :global(.bp-name) {
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .bp :global(.bp-bio),
+  .bp :global(.bp-loc) {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--p-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .bp :global(.bp-socials) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 14px 0 4px;
+  }
+
+  .bp :global(.bp-socials svg) {
+    width: 19px;
+    height: 19px;
+  }
+
+  .bp :global(.bp-blocks) {
+    display: grid;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .bp :global(.bp-link) {
+    position: relative;
+    display: grid;
+    place-content: center;
+    min-height: 44px;
+    padding: 6px 36px;
+    border-radius: var(--p-radius);
+    background: var(--p-surface);
+    box-shadow: inset 0 0 0 1px var(--p-hairline);
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+
+  .bp :global(.bp-link small) {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--p-muted);
+  }
+
+  .bp :global(.bp-link.is-featured) {
+    background: var(--p-accent);
+    box-shadow: none;
+    color: var(--p-on-accent);
+  }
+
+  .bp :global(.bp-link.is-featured small) {
+    color: inherit;
+  }
+
+  .bp :global(.bp-icon) {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    font-size: 15px;
+    transform: translateY(-50%);
+  }
+
+  .bp :global(.bp-header) {
+    margin: 8px 0 0 2px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--p-muted);
+    text-align: left;
+  }
+
+  .bp :global(.bp-placeholder) {
+    opacity: 0.45;
+  }
+
+  .bp :global(.bp-foot) {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .bp :global(.bp-pill) {
+    padding: 7px 14px;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px var(--p-hairline);
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+
+  .bp :global(.bp-credit) {
+    margin-top: 14px;
+    font-size: 10.5px;
+    color: var(--p-muted);
+  }
+</style>

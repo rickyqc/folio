@@ -11,9 +11,17 @@ export default defineConfig({
     baseURL: 'http://localhost:4400',
     ...devices['Desktop Chrome'],
   },
-  webServer: {
-    command: 'node scripts/serve.mjs dist-e2e 4400',
-    url: 'http://localhost:4400/sample/',
-    reuseExistingServer: !process.env['CI'],
-  },
+  webServer: [
+    {
+      command: 'node scripts/serve.mjs dist-e2e 4400',
+      url: 'http://localhost:4400/sample/',
+      reuseExistingServer: !process.env['CI'],
+    },
+    {
+      // Folio's website, served at the root the way Vercel serves it.
+      command: 'node scripts/serve.mjs dist-e2e/website 4401',
+      url: 'http://localhost:4401/',
+      reuseExistingServer: !process.env['CI'],
+    },
+  ],
 });

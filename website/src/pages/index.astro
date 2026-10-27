@@ -1,4 +1,6 @@
 ---
+import ConfigBuilder from '../components/ConfigBuilder.astro';
+import Faq from '../components/Faq.astro';
 import PhonePreview from '../components/PhonePreview.astro';
 import Layout from '../layouts/Layout.astro';
 import aiPromptDoc from '../../../docs/AI_PROMPT.md?raw';
@@ -28,7 +30,7 @@ const steps = [
   },
   {
     title: 'Add your details',
-    body: 'Open folio.config.yaml on GitHub, click the pencil icon, and swap the sample name, bio and links for yours.',
+    body: 'Fill in the builder below, then paste what it makes into folio.config.yaml on GitHub. Or edit the sample by hand.',
   },
   {
     title: 'Commit',
@@ -65,13 +67,13 @@ const comparison = [
           <a href="#how-it-works">How it works</a>
         </li>
         <li>
-          <a href="#ai">AI setup</a>
+          <a href="#build">Build yours</a>
         </li>
         <li>
           <a href="#features">Features</a>
         </li>
         <li>
-          <a href="#why">Why Folio</a>
+          <a href="#faq">FAQ</a>
         </li>
       </ul>
       <a class="nav-github" href={REPO_URL}>
@@ -238,13 +240,30 @@ const comparison = [
       </div>
     </section>
 
-    <!-- AI prompt -->
-    <section id="ai" class="section section--alt" aria-labelledby="ai-title">
+    <!-- Builder -->
+    <section id="build" class="section section--alt" aria-labelledby="build-title">
       <div class="container">
         <div class="section-head reveal">
-          <p class="eyebrow">Don’t want to touch YAML?</p>
+          <p class="eyebrow">Config builder</p>
+          <h2 id="build-title" class="headline">
+            Build yours in two minutes.
+          </h2>
+          <p class="lede">
+            Fill this in and watch your page take shape, then copy the file into your repo. What you
+            type stays in your browser.
+          </p>
+        </div>
+        <ConfigBuilder />
+      </div>
+    </section>
+
+    <!-- AI prompt -->
+    <section id="ai" class="section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Rather just describe it?</p>
           <h2 id="ai-title" class="headline">
-            Let AI write it for you.
+            Or let AI write it for you.
           </h2>
           <p class="lede">
             Copy this prompt into Claude, ChatGPT or any AI chat. Fill in the “About me” part at the
@@ -272,7 +291,7 @@ const comparison = [
     </section>
 
     <!-- Features -->
-    <section id="features" class="section" aria-labelledby="features-title">
+    <section id="features" class="section section--alt" aria-labelledby="features-title">
       <div class="container">
         <div class="section-head reveal">
           <p class="eyebrow">What you get</p>
@@ -369,7 +388,7 @@ const comparison = [
     </section>
 
     <!-- Why -->
-    <section id="why" class="section section--alt" aria-labelledby="why-title">
+    <section id="why" class="section" aria-labelledby="why-title">
       <div class="container">
         <div class="section-head reveal">
           <p class="eyebrow">Why Folio</p>
@@ -406,6 +425,19 @@ const comparison = [
             </tbody>
           </table>
         </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section section--alt" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Questions</p>
+          <h2 id="faq-title" class="headline">
+            Good to know.
+          </h2>
+        </div>
+        <Faq />
       </div>
     </section>
 

@@ -34,6 +34,12 @@ describe('checkBudget', () => {
     expect(checkBudget(dist).errors[0]).toMatch(/budget is 50 KB/);
   });
 
+  it('lets Folio’s own website opt in to scripts and a larger budget', () => {
+    writeFileSync(join(dist, 'index.html'), 'x'.repeat(PAGE_BUDGET_BYTES + 1));
+    writeFileSync(join(dist, 'app.js'), 'console.log(1)');
+    expect(checkBudget(dist, { allowJs: true, maxBytes: 100 * 1024 }).errors).toEqual([]);
+  });
+
   it('does not count images toward the budget', () => {
     writeFileSync(join(dist, 'index.html'), '<h1>Hi</h1>');
     writeFileSync(join(dist, 'avatar.jpg'), Buffer.alloc(PAGE_BUDGET_BYTES * 2));

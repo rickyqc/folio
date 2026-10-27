@@ -12,3 +12,5 @@ export const VERCEL_DEPLOY_URL = `https://vercel.com/new/clone?repository-url=${
 export const NETLIFY_DEPLOY_URL = `https://app.netlify.com/start/deploy?repository=${REPO_URL}`;
 export const DEMO_URL = 'https://rickyqc.github.io/folio/';
 export const SHOWCASE_URL = `${REPO_URL}/discussions/1`;
+export const CUSTOM_DOMAIN_URL = `${REPO_URL}/blob/main/docs/CUSTOM_DOMAIN.md`;
+export const UPDATING_URL = `${REPO_URL}/blob/main/docs/UPDATING.md`;
