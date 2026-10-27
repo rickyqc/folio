@@ -191,6 +191,18 @@ describe('friendly errors', () => {
     expect(message).toContain('Images in public/ now: me.jpg');
   });
 
+  it('explains how to convert an iPhone HEIC photo', () => {
+    const message = errorFor(`profile:\n  name: Jane\n  avatar: IMG_0042.HEIC\n`);
+    expect(message).toContain('is an iPhone HEIC photo');
+    expect(message).toContain('File → Export → Format: JPEG');
+  });
+
+  it('rejects files that are not images', () => {
+    expect(errorFor(`profile:\n  name: Jane\n  avatar: resume.pdf\n`)).toContain(
+      "isn't an image format Folio can use",
+    );
+  });
+
   it('explains an invalid choice and suggests the closest one', () => {
     expect(errorFor(`${MINIMAL}theme:\n  mode: darkk\n`)).toContain(
       '"mode" in theme must be one of: auto, light, dark. You wrote "darkk".',

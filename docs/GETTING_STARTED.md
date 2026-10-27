@@ -14,7 +14,7 @@ Prefer Netlify? It works the same way. Use the Netlify button in the [README](..
 ## 1. Make your copy
 
 1. Click this button: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Frickyqc%2Ffolio&project-name=my-folio&repository-name=my-folio)
-2. Sign in to Vercel with GitHub if it asks.
+2. Sign in to Vercel with GitHub if it asks. If GitHub asks whether to let Vercel access your account, click **Install** or **Authorize**: that's how Vercel saves your copy and rebuilds your page when you edit it.
 3. Under **Create Git Repository**, keep the name `my-folio` or type your own. Choose **Private** if you don't want others to see your files. Your page is public either way.
 4. Click **Create**.
 
@@ -29,7 +29,7 @@ Everything on your page comes from one file called `folio.config.yaml`.
 1. Go to [github.com](https://github.com) and open your new `my-folio` repository.
 2. Click **folio.config.yaml** in the file list.
 3. Click the **pencil icon** (Edit this file) at the top right of the file.
-4. Change the sample details to yours: name, bio, social usernames and links. The notes after `#` explain each option.
+4. Change the sample details to yours: name, bio, links and social accounts. The sample social links just point to each site's home page; replace them with your usernames, e.g. `instagram: your-username`. The notes after `#` explain each option.
 5. Click **Commit changes…**, then **Commit changes** again in the box that appears.
 
 Vercel notices the change and rebuilds your page. Refresh it after about a minute.
@@ -49,7 +49,7 @@ Every option is listed in the [config reference](CONFIG.md).
 ## 3. Add your photo
 
 1. In your repository on GitHub, click the **public** folder.
-2. Click **Add file → Upload files** and drag in your photo. Square photos look best. Under 500 KB keeps your page fast.
+2. Click **Add file → Upload files** and drag in your photo (JPG or PNG). Any size works: Folio crops it to a circle and shrinks it for you. iPhone photos in HEIC format need converting to JPG first; the build tells you how if you forget.
 3. Click **Commit changes**.
 4. Open `folio.config.yaml` again and set `avatar:` to your photo's exact file name, for example `avatar: me.jpg`. Capital letters must match: `Me.JPG` and `me.jpg` are different files.
 5. Commit.
@@ -99,4 +99,4 @@ Your config has `loadOnTap: true` under `embeds:`, which loads players only when
 
 ### Still stuck?
 
-[Open an issue](https://github.com/rickyqc/folio/issues) with the error message and we'll help.
+[Ask for setup help](https://github.com/rickyqc/folio/issues/new?template=setup-help.yml). Paste the error message if there is one, and we'll help.

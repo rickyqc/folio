@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { extname, join, resolve } from 'node:path';
 import { LineCounter, parseDocument } from 'yaml';
 import { parseSpotify, parseYouTubeId, spotifyHeight, type SpotifyKind } from '../lib/embeds.ts';
 import { PLATFORMS, isPlatform, resolveSocial, type Icon } from '../lib/socials.ts';
@@ -63,6 +63,8 @@ function existsExactly(dir: string, relativePath: string): boolean {
   return existsSync(current);
 }
 
+const SUPPORTED_IMAGE = /^\.(jpe?g|png|webp|avif|gif|svg)$/i;
+
 function checkImage(
   src: string | undefined,
   path: PropertyKey[],
@@ -71,10 +73,25 @@ function checkImage(
 ): Problem | undefined {
   if (!src || isRemote(src)) return undefined;
   const file = publicPath(src);
+  const ext = extname(file).toLowerCase();
+  if (ext === '.heic' || ext === '.heif') {
+    return {
+      line: locate(path),
+      message: `"${src}" is an iPhone HEIC photo, which most browsers can't show.`,
+      fix: 'Save it as a JPG and upload that instead. On a Mac: open it in Preview, then File → Export → Format: JPEG. On iPhone: Settings → Camera → Formats → Most Compatible.',
+    };
+  }
+  if (!SUPPORTED_IMAGE.test(ext)) {
+    return {
+      line: locate(path),
+      message: `"${src}" isn't an image format Folio can use.`,
+      fix: 'Use a JPG, PNG, WebP, AVIF, GIF or SVG file.',
+    };
+  }
   if (existsExactly(publicDir, file)) return undefined;
   let available: string[] = [];
   try {
-    available = readdirSync(publicDir).filter((f) => /\.(jpe?g|png|webp|avif|gif|svg)$/i.test(f));
+    available = readdirSync(publicDir).filter((f) => SUPPORTED_IMAGE.test(extname(f)));
   } catch {
     // No public folder yet; the fix below covers it.
   }
