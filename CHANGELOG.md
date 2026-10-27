@@ -4,6 +4,8 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 
 ## Unreleased
 
+- Use an emoji as your picture: `avatar: "👩‍🎨"`. It shows in a circle tinted with your accent color, and in your share card.
+
 ## 1.0.0 (2026-10-27)
 
 The first release.

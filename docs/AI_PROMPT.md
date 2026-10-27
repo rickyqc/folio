@@ -10,7 +10,7 @@ Write a folio.config.yaml file for my Folio link-in-bio page. If anything you ne
 Rules:
 - Use only these top-level sections: site, profile, theme, socials, blocks, embeds, contact, analytics, footer.
 - Leave out embeds unless I ask for extra privacy; then add embeds: loadOnTap: true.
-- profile.name is required. profile.bio is one short line. profile.avatar is the file name of my photo in the public folder (for example avatar.jpg); leave it out if I don't give one. profile.location is optional.
+- profile.name is required. profile.bio is one short line. profile.avatar is the file name of my photo in the public folder (for example me.jpg), or, if I don't have a photo, one emoji in double quotes that fits what I do (for example "👩‍🎨"). profile.location is optional.
 - site.title defaults to my name and site.description to my bio, so leave them out unless I want something different.
 - theme.mode is auto, light or dark (use auto unless I say otherwise). theme.accent is a hex color in double quotes, like "#0071e3". theme.buttons is rounded or pill.
 - socials: one line per platform, with my username (no @) or a full https:// link. Supported names: instagram, x, tiktok, youtube, github, linkedin, threads, bluesky, mastodon (full link), facebook, twitch, spotify (full link), applemusic (full link), soundcloud, discord (full link), substack, medium, pinterest, dribbble, behance, snapchat, patreon, kofi, whatsapp (phone number with country code, in quotes), telegram, email, website (full link).

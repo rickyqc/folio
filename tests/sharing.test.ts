@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { hostUrl, parseConfig } from '../src/config/load.ts';
-import { OG_HEIGHT, OG_WIDTH, renderOgImage } from '../src/lib/og-image.ts';
+import { OG_HEIGHT, OG_WIDTH, notoFileName, renderOgImage } from '../src/lib/og-image.ts';
 import { qrPng, qrSvg } from '../src/lib/qr.ts';
 
 const publicDir = resolve(import.meta.dirname, '../public');
@@ -68,6 +68,14 @@ describe('renderOgImage', () => {
       publicDir,
     });
     expect(pngSize(png)).toEqual({ width: OG_WIDTH, height: OG_HEIGHT });
+  });
+});
+
+describe('notoFileName', () => {
+  it('matches Noto Emoji’s file names, dropping variation selectors', () => {
+    expect(notoFileName('👩‍🎨')).toBe('emoji_u1f469_200d_1f3a8.svg');
+    expect(notoFileName('👩‍⚕️')).toBe('emoji_u1f469_200d_2695.svg');
+    expect(notoFileName('☕️')).toBe('emoji_u2615.svg');
   });
 });
 

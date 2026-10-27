@@ -122,7 +122,9 @@ export const configSchema = z
       bio: text.optional().describe('One line about you.'),
       avatar: imageSource
         .optional()
-        .describe('Your photo: a file in the public folder (e.g. avatar.jpg) or a full image URL.'),
+        .describe(
+          'Your photo: a file in the public folder (e.g. me.jpg), a full image URL, or a single emoji in quotes (e.g. "👩‍🎨").',
+        ),
       location: text.optional().describe('e.g. Oakland, CA'),
     }),
 

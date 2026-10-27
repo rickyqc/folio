@@ -13,6 +13,11 @@ const { profile, avatar } = Astro.props;
 ---
 
 <header class="profile">
+  {profile.emoji && (
+    <div class="avatar avatar--emoji" role="img" aria-label={profile.name}>
+      {profile.emoji}
+    </div>
+  )}
   {avatar && (
     <img
       class="avatar"
@@ -50,6 +55,15 @@ const { profile, avatar } = Astro.props;
     object-fit: cover;
     background: var(--surface);
     box-shadow: 0 0 0 1px var(--hairline);
+  }
+
+  .avatar--emoji {
+    display: grid;
+    place-items: center;
+    background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+    box-shadow: none;
+    font-size: 54px;
+    line-height: 1;
   }
 
   .name {

@@ -38,12 +38,12 @@ site:
 
 The top of your page.
 
-| Option     | Default      | What it does                                                                                             |
-| ---------- | ------------ | -------------------------------------------------------------------------------------------------------- |
-| `name`     | **required** | Your name.                                                                                               |
-| `bio`      | none         | One line about you.                                                                                      |
-| `avatar`   | none         | Your photo: a file in the `public` folder (e.g. `me.jpg`) or a full image link. Shown as a 96 px circle. |
-| `location` | none         | Shown under your bio with a pin icon.                                                                    |
+| Option     | Default      | What it does                                                                                                                                      |
+| ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`     | **required** | Your name.                                                                                                                                        |
+| `bio`      | none         | One line about you.                                                                                                                               |
+| `avatar`   | none         | Your photo: a file in the `public` folder (e.g. `me.jpg`), a full image link, or a single emoji in quotes (e.g. `"👩‍🎨"`). Shown as a 96 px circle. |
+| `location` | none         | Shown under your bio with a pin icon.                                                                                                             |
 
 ```yaml
 profile:

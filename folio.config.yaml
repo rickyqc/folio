@@ -14,7 +14,8 @@ site:
 profile:
   name: Jane Park
   bio: Product designer. Writing about craft and tools.
-  # Put your photo in the public folder and write its file name here.
+  # Put your photo in the public folder and write its file name here,
+  # or use an emoji instead, e.g.  avatar: "👩‍🎨"
   avatar: avatar.svg
   location: San Francisco, CA
 

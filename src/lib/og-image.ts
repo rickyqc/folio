@@ -12,6 +12,8 @@ export interface OgInput {
   bio?: string | undefined;
   /** A file path inside public/, or a remote URL (which is skipped to keep builds offline). */
   avatar?: string | undefined;
+  /** An emoji avatar, drawn with Noto Emoji artwork fetched at build time. */
+  emoji?: string | undefined;
   url: string;
   accent: string;
   publicDir: string;
@@ -49,6 +51,41 @@ async function avatarDataUri(
   return `data:image/png;base64,${png.toString('base64')}`;
 }
 
+/** Noto Emoji's file name for an emoji: its code points in hex, without variation selectors. */
+export function notoFileName(emoji: string): string {
+  const points = [...emoji].map((c) => c.codePointAt(0) ?? 0).filter((cp) => cp !== 0xfe0f);
+  return `emoji_u${points.map((cp) => cp.toString(16)).join('_')}.svg`;
+}
+
+/**
+ * Fetches the emoji as Noto artwork (Apache 2.0) so the card looks the same on every build
+ * machine; Linux build servers have no color emoji font. Gives up quietly after 5 seconds.
+ */
+async function emojiDataUri(emoji: string): Promise<string | undefined> {
+  const url = `https://raw.githubusercontent.com/googlefonts/noto-emoji/main/2D/svg/${notoFileName(emoji)}`;
+  try {
+    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!response.ok) return undefined;
+    const png = new Resvg(await response.text(), { fitTo: { mode: 'width', value: 300 } })
+      .render()
+      .asPng();
+    return `data:image/png;base64,${png.toString('base64')}`;
+  } catch {
+    return undefined;
+  }
+}
+
+/** The accent tinted toward white, matching the page's emoji avatar background. */
+function mixWithWhite(hex: string, amount: number): string {
+  const h = hex.replace('#', '');
+  const full = h.length === 3 ? [...h].map((c) => c + c).join('') : h;
+  const channel = (i: number) => {
+    const v = parseInt(full.slice(i, i + 2), 16);
+    return Math.round(255 - (255 - v) * amount);
+  };
+  return `rgb(${channel(0)}, ${channel(2)}, ${channel(4)})`;
+}
+
 function initials(name: string): string {
   return name
     .split(/\s+/)
@@ -66,7 +103,24 @@ const h = (type: string, style: Record<string, unknown>, children?: unknown, ext
 
 export async function renderOgImage(input: OgInput): Promise<Buffer> {
   const avatar = await avatarDataUri(input.avatar, input.publicDir);
+  const emoji = input.emoji ? await emojiDataUri(input.emoji) : undefined;
   const host = new URL(input.url).host + new URL(input.url).pathname.replace(/\/$/, '');
+
+  const emojiNode = emoji
+    ? h(
+        'div',
+        {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: 220,
+          height: 220,
+          borderRadius: 110,
+          background: mixWithWhite(input.accent, 0.16),
+        },
+        h('img', { width: 140, height: 140 }, undefined, { src: emoji, width: 140, height: 140 }),
+      )
+    : undefined;
 
   const avatarNode = avatar
     ? h('img', { width: 220, height: 220, borderRadius: 110, objectFit: 'cover' }, undefined, {
@@ -105,7 +159,7 @@ export async function renderOgImage(input: OgInput): Promise<Buffer> {
       color: '#1d1d1f',
     },
     [
-      avatarNode,
+      emojiNode ?? avatarNode,
       h('div', { display: 'flex', flexDirection: 'column', flex: 1, gap: 20 }, [
         h(
           'div',

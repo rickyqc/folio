@@ -20,6 +20,7 @@ export const GET: APIRoute = async ({ params }) => {
           name: profile.name,
           bio: profile.bio,
           avatar: profile.avatar,
+          emoji: profile.emoji,
           url,
           accent: theme.accent,
           publicDir: resolve('public'),

@@ -68,6 +68,12 @@ const ogImage = absolute('og.png');
       <meta name="theme-color" content={theme.mode === 'dark' ? '#000000' : '#fbfbfd'} />
     )}
     {profile.avatar && <link rel="icon" href={profile.avatar} />}
+    {profile.emoji && (
+      <link
+        rel="icon"
+        href={`data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${profile.emoji}</text></svg>`)}`}
+      />
+    )}
     {site.url && <link rel="sitemap" href="sitemap.xml" />}
     {analytics.provider === 'plausible' && (
       <script

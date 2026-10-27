@@ -48,6 +48,8 @@ Every option is listed in the [config reference](CONFIG.md).
 
 ## 3. Add your photo
 
+No photo handy? Use an emoji instead: `avatar: "👩‍💻"`. Otherwise:
+
 1. In your repository on GitHub, click the **public** folder.
 2. Click **Add file → Upload files** and drag in your photo (JPG or PNG). Any size works: Folio crops it to a circle and shrinks it for you. iPhone photos in HEIC format need converting to JPG first; the build tells you how if you forget.
 3. Click **Commit changes**.

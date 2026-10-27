@@ -2,7 +2,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
 import { LineCounter, parseDocument } from 'yaml';
 import { parseSpotify, parseYouTubeId, spotifyHeight, type SpotifyKind } from '../lib/embeds.ts';
-import { PLATFORMS, isPlatform, resolveSocial, type Icon } from '../lib/socials.ts';
+import { PLATFORMS, isEmoji, isPlatform, resolveSocial, type Icon } from '../lib/socials.ts';
 import { FolioConfigError, issueToProblems, lineOf, type Problem } from './errors.ts';
 import { configSchema, type FolioConfig } from './schema.ts';
 
@@ -25,7 +25,8 @@ export type ResolvedBlock =
 /** Everything the page needs, with defaults filled in and links resolved. */
 export interface ResolvedConfig {
   site: { url?: string; title: string; description?: string; lang: string };
-  profile: { name: string; bio?: string; avatar?: string; location?: string };
+  /** avatar is an image path or URL; emoji is set instead when the avatar is an emoji. */
+  profile: { name: string; bio?: string; avatar?: string; emoji?: string; location?: string };
   theme: FolioConfig['theme'];
   socials: Social[];
   blocks: ResolvedBlock[];
@@ -149,7 +150,9 @@ export function parseConfig(
 
   const config = result.data;
   const imageProblems = [
-    checkImage(config.profile.avatar, ['profile', 'avatar'], options.publicDir, locate),
+    isEmoji(config.profile.avatar ?? '')
+      ? undefined
+      : checkImage(config.profile.avatar, ['profile', 'avatar'], options.publicDir, locate),
     ...config.blocks.map((b, i) =>
       b.type === 'image'
         ? checkImage(b.src, ['blocks', i, 'src'], options.publicDir, locate)
@@ -239,7 +242,10 @@ function resolveConfig(config: FolioConfig, fallbackUrl?: string): ResolvedConfi
     profile: {
       name: config.profile.name,
       ...(config.profile.bio && { bio: config.profile.bio }),
-      ...(config.profile.avatar && { avatar: imageUrl(config.profile.avatar) }),
+      ...(config.profile.avatar &&
+        (isEmoji(config.profile.avatar)
+          ? { emoji: config.profile.avatar.trim() }
+          : { avatar: imageUrl(config.profile.avatar) })),
       ...(config.profile.location && { location: config.profile.location }),
     },
     theme: config.theme,

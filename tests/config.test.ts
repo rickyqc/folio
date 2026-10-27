@@ -106,6 +106,12 @@ describe('resolving', () => {
     expect(config.contact.email).toBe('hi@jane.dev');
   });
 
+  it('accepts an emoji as the avatar, without looking for a file', () => {
+    const config = parse(`profile:\n  name: Jane\n  avatar: "👩‍🎨"\n`);
+    expect(config.profile.emoji).toBe('👩‍🎨');
+    expect(config.profile.avatar).toBeUndefined();
+  });
+
   it('accepts avatar paths written several ways', () => {
     for (const avatar of ['me.jpg', './me.jpg', '/me.jpg', 'public/me.jpg']) {
       const config = parse(`profile:\n  name: Jane\n  avatar: ${avatar}\n`);

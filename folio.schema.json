@@ -46,7 +46,7 @@
           "minLength": 1
         },
         "avatar": {
-          "description": "Your photo: a file in the public folder (e.g. avatar.jpg) or a full image URL.",
+          "description": "Your photo: a file in the public folder (e.g. me.jpg), a full image URL, or a single emoji in quotes (e.g. \"👩‍🎨\").",
           "type": "string",
           "minLength": 1
         },
