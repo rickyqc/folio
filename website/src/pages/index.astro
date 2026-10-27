@@ -1,20 +1,36 @@
 ---
 import PhonePreview from '../components/PhonePreview.astro';
 import Layout from '../layouts/Layout.astro';
-import { CLONE_URL, ISSUES_URL, LICENSE_URL, REPO_URL, SPEC_URL, TEMPLATE_URL } from '../site';
+import aiPromptDoc from '../../../docs/AI_PROMPT.md?raw';
+import {
+  AI_PROMPT_URL,
+  CLONE_URL,
+  CONFIG_DOCS_URL,
+  GUIDE_URL,
+  ISSUES_URL,
+  LICENSE_URL,
+  NETLIFY_DEPLOY_URL,
+  REPO_URL,
+  SPEC_URL,
+  VERCEL_DEPLOY_URL,
+} from '../site';
+
+// The prompt lives in docs/AI_PROMPT.md so the repo and the website always show the same text.
+const aiPrompt = aiPromptDoc.match(/```text\n([\s\S]*?)\n```/)?.[1];
+if (!aiPrompt) throw new Error('docs/AI_PROMPT.md must contain a ```text block with the prompt.');
 
 const steps = [
   {
-    title: 'Use the template',
-    body: 'Click “Use this template” on GitHub. You get your own copy of Folio in one click.',
+    title: 'Click Deploy',
+    body: 'The “Deploy to Vercel” button copies Folio into your GitHub account and puts your page online.',
   },
   {
-    title: 'Deploy it',
-    body: 'Connect the new repo to Vercel, Netlify or GitHub Pages. All three are free.',
+    title: 'Add your details',
+    body: 'Open folio.config.yaml on GitHub, click the pencil icon, and swap the sample name, bio and links for yours.',
   },
   {
-    title: 'Make it yours',
-    body: 'Edit your name, bio and links in folio.config.yaml and commit. You’re live in about a minute.',
+    title: 'Commit',
+    body: 'Click “Commit changes”. Your page updates in about a minute, and every change after that works the same way.',
   },
 ];
 
@@ -47,6 +63,9 @@ const comparison = [
           <a href="#how-it-works">How it works</a>
         </li>
         <li>
+          <a href="#ai">AI setup</a>
+        </li>
+        <li>
           <a href="#features">Features</a>
         </li>
         <li>
@@ -68,7 +87,7 @@ const comparison = [
   <main id="main">
     <!-- Hero -->
     <section class="hero container" aria-labelledby="hero-title">
-      <p class="pill rise">Open source · MIT licensed · v1 in development</p>
+      <p class="pill rise">Open source · MIT licensed · Early release</p>
       <h1 id="hero-title" class="hero-title rise rise-2">
         Your links.
         <br />
@@ -77,18 +96,20 @@ const comparison = [
         <span class="accent">Your domain.</span>
       </h1>
       <p class="lede hero-lede rise rise-3">
-        Folio is a free link-in-bio page you own outright. Edit one file, push to GitHub, and it’s
-        live on your own domain in five minutes.
+        Folio is a free link-in-bio page you own outright. Edit one file, and it’s live on your own
+        domain in five minutes.
       </p>
       <div class="cta-row rise rise-4">
-        <a class="button" href={TEMPLATE_URL}>
-          Use this template
+        <a class="button" href={VERCEL_DEPLOY_URL}>
+          Deploy to Vercel
         </a>
-        <a class="more" href={REPO_URL}>
-          View on GitHub
+        <a class="more" href={GUIDE_URL}>
+          Read the setup guide
         </a>
       </div>
-      <p class="fine rise rise-4">No account. No database. No monthly fee.</p>
+      <p class="fine rise rise-4">
+        No Folio account and no monthly fee. You’ll just need free GitHub and Vercel accounts.
+      </p>
       <div class="hero-visual rise rise-4">
         <PhonePreview />
         <p class="caption">A sample Folio page, shown in your device’s light or dark setting.</p>
@@ -136,15 +157,18 @@ const comparison = [
             <div class="note reveal">
               <h3>Edit it anywhere.</h3>
               <p>
-                Change it in GitHub’s web editor. No terminal needed. Your editor autocompletes
-                every option as you type.
+                Change it right on GitHub. No terminal needed. In VS Code, every option
+                autocompletes as you type. <a href={CONFIG_DOCS_URL}>See every option</a>
               </p>
             </div>
             <div class="note reveal">
               <h3>Mistakes, explained.</h3>
-              <p>A typo never ships a broken page. The build stops and tells you what to fix.</p>
-              <pre class="error-line"><span class="x">✗</span> Link #3 is missing a url.
-  Add one, e.g. url: https://jane.dev</pre>
+              <p>
+                A typo never breaks your page. The update stops, your last page stays up, and you
+                get the line and the fix.
+              </p>
+              <pre class="error-line"><span class="x">✗</span> Line 42: Block 3 (link “Portfolio”) is missing "url".
+  Fix: Add a line like   url: https://example.com</pre>
             </div>
             <div class="note reveal">
               <h3>Your copy, your history.</h3>
@@ -163,7 +187,9 @@ const comparison = [
           <h2 id="how-title" class="headline">
             Live in five minutes.
           </h2>
-          <p class="lede">Three steps. No sign-up, no card, no server to run.</p>
+          <p class="lede">
+            Three steps, all in your browser. Nothing to install, no card, no server to run.
+          </p>
         </div>
 
         <ol class="steps">
@@ -178,6 +204,18 @@ const comparison = [
           ))}
         </ol>
 
+        <p class="steps-more reveal">
+          <a class="button" href={VERCEL_DEPLOY_URL}>
+            Deploy to Vercel
+          </a>
+          <a class="more" href={NETLIFY_DEPLOY_URL}>
+            Or deploy to Netlify
+          </a>
+          <a class="more" href={GUIDE_URL}>
+            Step-by-step guide with every click
+          </a>
+        </p>
+
         <div class="dev reveal">
           <div>
             <h3>Prefer the terminal?</h3>
@@ -190,11 +228,44 @@ const comparison = [
       </div>
     </section>
 
-    <!-- Features -->
-    <section id="features" class="section section--alt" aria-labelledby="features-title">
+    <!-- AI prompt -->
+    <section id="ai" class="section section--alt" aria-labelledby="ai-title">
       <div class="container">
         <div class="section-head reveal">
-          <p class="eyebrow">What’s in v1</p>
+          <p class="eyebrow">Don’t want to touch YAML?</p>
+          <h2 id="ai-title" class="headline">
+            Let AI write it for you.
+          </h2>
+          <p class="lede">
+            Copy this prompt into Claude, ChatGPT or any AI chat. Fill in the “About me” part at the
+            bottom, and paste what it writes back into folio.config.yaml.
+          </p>
+        </div>
+
+        <figure class="code-card prompt-card reveal">
+          <figcaption class="code-title">
+            <span>Prompt</span>
+            <span class="prompt-hint">Click inside once to select all, then copy</span>
+          </figcaption>
+          <pre
+            class="prompt"
+            tabindex="0"
+            aria-label="AI prompt for writing your Folio config"
+          >{aiPrompt}</pre>
+        </figure>
+        <p class="prompt-links reveal">
+          <a class="more" href={AI_PROMPT_URL}>
+            Open it on GitHub, with a copy button
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">What you get</p>
           <h2 id="features-title" class="headline">
             Everything a link page needs.
             <br />
@@ -210,8 +281,8 @@ const comparison = [
               Not ours.
             </h3>
             <p>
-              Point your own domain at it on Vercel, Netlify or GitHub Pages. Step-by-step guides
-              for each.
+              Point your own domain at it on Vercel or Netlify, with a step-by-step guide for each.
+              HTTPS is set up for you.
             </p>
             <div class="url-bar" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -225,7 +296,7 @@ const comparison = [
           <article class="card reveal">
             <p class="stat">0 KB</p>
             <h3>of JavaScript.</h3>
-            <p>The whole page is under 50 KB, so it loads instantly, even on bad signal.</p>
+            <p>The whole page is about 15 KB, so it loads instantly, even on a weak signal.</p>
           </article>
 
           <article class="card reveal">
@@ -252,12 +323,18 @@ const comparison = [
               <path d="M0 0h7v7H0zM2 2v3h3V2zM14 0h7v7h-7zm2 2v3h3V2zM0 14h7v7H0zm2 2v3h3v-3zM9 0h2v2H9zm0 4h3v2H9zm-1 4h2v2H8zm4 0h2v3h-2zM0 9h2v2H0zm4 0h2v2H4zm11 0h3v2h-3zm4 0h2v4h-2zM9 12h2v2H9zm4 2h2v2h-2zm-4 2h3v2H9zm7 0h2v2h-2zm-6 3h2v2h-2zm5 0h6v2h-6z"></path>
             </svg>
             <h3>Made to be shared.</h3>
-            <p>A share preview image, a QR code and a “Save contact” button, all built for you.</p>
+            <p>
+              A “Save contact” button, search-ready tags and a sitemap, built for you. Share images
+              and QR codes are next.
+            </p>
           </article>
 
           <article class="card reveal">
             <h3>Three embeds. Done properly.</h3>
-            <p>YouTube, Spotify and image cards, inline wherever you put them in your config.</p>
+            <p>
+              YouTube, Spotify and image cards. Players load only when tapped, so visitors aren’t
+              tracked.
+            </p>
           </article>
 
           <article class="card reveal">
@@ -282,7 +359,7 @@ const comparison = [
     </section>
 
     <!-- Why -->
-    <section id="why" class="section" aria-labelledby="why-title">
+    <section id="why" class="section section--alt" aria-labelledby="why-title">
       <div class="container">
         <div class="section-head reveal">
           <p class="eyebrow">Why Folio</p>
@@ -323,15 +400,15 @@ const comparison = [
     </section>
 
     <!-- Final CTA -->
-    <section class="section section--alt closing" aria-labelledby="closing-title">
+    <section class="section closing" aria-labelledby="closing-title">
       <div class="container closing-inner reveal">
         <h2 id="closing-title" class="headline">
           Your page is five minutes away.
         </h2>
-        <p class="lede">Free forever. No account to create. No card to enter.</p>
+        <p class="lede">Free forever. No Folio account. No card to enter.</p>
         <div class="cta-row">
-          <a class="button" href={TEMPLATE_URL}>
-            Use this template
+          <a class="button" href={VERCEL_DEPLOY_URL}>
+            Deploy to Vercel
           </a>
           <a class="button button--quiet" href={REPO_URL}>
             Star on GitHub
@@ -579,7 +656,8 @@ const comparison = [
   .error-line {
     margin: 16px 0 0;
     padding: 14px 16px;
-    overflow-x: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
     border-radius: 14px;
     background: color-mix(in srgb, var(--error) 8%, var(--surface));
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--error) 25%, transparent);
@@ -655,6 +733,49 @@ const comparison = [
     user-select: none;
   }
 
+  .steps-more {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px 28px;
+    margin-top: clamp(40px, 6vw, 64px);
+  }
+
+  /* AI prompt */
+  .prompt-card {
+    max-width: 820px;
+    margin-inline: auto;
+  }
+
+  .code-title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 16px;
+  }
+
+  .prompt-hint {
+    font-family: var(--font);
+  }
+
+  .code-card .prompt {
+    max-height: 420px;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 13.5px;
+    line-height: 1.6;
+    /* One click selects the whole prompt, ready to copy. No JavaScript needed. */
+    user-select: all;
+    -webkit-user-select: all;
+  }
+
+  .prompt-links {
+    margin-top: 20px;
+    text-align: center;
+  }
+
   /* Bento */
   .bento {
     display: grid;
@@ -693,6 +814,10 @@ const comparison = [
 
   .card p {
     color: var(--muted);
+  }
+
+  .section:not(.section--alt) .card {
+    background: var(--bg-alt);
   }
 
   .card .more {
