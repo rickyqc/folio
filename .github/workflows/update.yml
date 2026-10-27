@@ -1,0 +1,27 @@
+# Checks every Monday for a new Folio release and offers it as a pull request.
+# Your folio.config.yaml and public/ folder are never changed. Runs in copies of Folio only.
+# To turn it off: Actions tab → "Folio updates" → ⋯ → Disable workflow.
+name: Folio updates
+
+on:
+  schedule:
+    - cron: '17 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  update:
+    if: github.repository != 'rickyqc/folio'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - run: bash scripts/update-folio.sh
+        env:
+          GH_TOKEN: ${{ github.token }}
