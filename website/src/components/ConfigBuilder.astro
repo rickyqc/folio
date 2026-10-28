@@ -21,7 +21,7 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
 />
 <div class="builder">
   <form class="form" novalidate aria-label="Build your Folio config">
-    <fieldset>
+    <fieldset class="reveal">
       <legend>About you</legend>
       <div class="field" data-field="name">
         <label for="b-name">Name</label>
@@ -70,7 +70,7 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
       </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="reveal">
       <legend>Look</legend>
       <div class="field">
         <span id="mode-label">Theme</span>
@@ -117,7 +117,7 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
       </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="reveal">
       <legend>Social accounts</legend>
       <div class="list" data-list="socials"></div>
       <button type="button" class="add" data-action="add-social">
@@ -125,7 +125,7 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
       </button>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="reveal">
       <legend>Links</legend>
       <p class="legend-hint">
         Top to bottom, the way they’ll appear. Tap ★ to highlight your most important one.
@@ -141,7 +141,7 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
       </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="reveal">
       <legend>Extras</legend>
       <label class="check">
         <input type="checkbox" name="vcard" checked />
@@ -162,7 +162,7 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
     </button>
   </form>
 
-  <aside class="output" aria-label="Preview and your config">
+  <aside class="output reveal" aria-label="Preview and your config">
     <div class="preview-phone" aria-hidden="true">
       <div class="preview-screen">
         <div class="bp" data-preview></div>

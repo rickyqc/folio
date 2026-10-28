@@ -39,12 +39,52 @@ const shareImage = Astro.site ? new URL('og.png', Astro.site).toString() : undef
     <meta name="twitter:card" content={shareImage ? 'summary_large_image' : 'summary'} />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Marks that scroll reveals will run, before first paint, so nothing flashes. -->
+    <script is:inline>
+      document.documentElement.classList.add('reveals');
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">
       Skip to content
     </a>
     <slot />
+    <!--
+      Scroll reveals: each .reveal fades up as it enters the viewport. Siblings in the same group
+      (cards, steps, FAQ) arrive one after another. Inline, so a failed script download can never
+      leave content hidden; without JavaScript nothing is hidden at all.
+    -->
+    <script is:inline>
+      (() => {
+        const items = document.querySelectorAll('.reveal');
+        const show = (el) => el.classList.add('is-visible');
+        if (
+          !('IntersectionObserver' in window) ||
+          matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+          items.forEach(show);
+          return;
+        }
+        const groups = new Map();
+        items.forEach((el) => {
+          const siblings = groups.get(el.parentElement) ?? [];
+          el.style.setProperty('--reveal-delay', `${Math.min(siblings.length, 6) * 90}ms`);
+          siblings.push(el);
+          groups.set(el.parentElement, siblings);
+        });
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              show(entry.target);
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -12% 0px', threshold: 0.12 },
+        );
+        items.forEach((el) => observer.observe(el));
+      })();
+    </script>
   </body>
 </html>
 
@@ -261,7 +301,7 @@ const shareImage = Astro.site ? new URL('og.png', Astro.site).toString() : undef
     content: ' ›';
   }
 
-  /* Motion: fade and rise once. Scroll reveals only where CSS scroll timelines exist. */
+  /* Motion: the hero rises once on load; everything below fades up as it scrolls into view. */
   @keyframes rise {
     from {
       opacity: 0;
@@ -285,11 +325,19 @@ const shareImage = Astro.site ? new URL('og.png', Astro.site).toString() : undef
     animation-delay: 320ms;
   }
 
-  @supports (animation-timeline: view()) {
-    .reveal {
-      animation: rise linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 40%;
+  @media (prefers-reduced-motion: no-preference) {
+    .reveals .reveal {
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      transition:
+        opacity 900ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    .reveals .reveal.is-visible {
+      opacity: 1;
+      transform: none;
     }
   }
 

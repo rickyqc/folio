@@ -48,7 +48,7 @@ const faqs: { q: string; a: string }[] = [
 
 <div class="faq">
   {faqs.map(({ q, a }) => (
-    <details>
+    <details class="reveal">
       <summary>{q}</summary>
       <p set:html={a} />
     </details>
