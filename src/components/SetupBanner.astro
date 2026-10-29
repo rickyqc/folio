@@ -1,0 +1,94 @@
+---
+// Shown on a freshly deployed copy while it still has the sample details, so the owner's
+// first look at their page tells them exactly where to go next. Disappears once they edit it.
+import { BUILDER_URL, GUIDE_URL, type SetupInfo } from '../lib/links.ts';
+
+interface Props {
+  setup: SetupInfo;
+}
+
+const { setup } = Astro.props;
+---
+
+<aside class="setup" aria-label="Finish setting up your page">
+  <p class="setup-title">🎉 Your Folio is live!</p>
+  <p class="setup-body">
+    This is the sample page. Swap in your own name, links and picture, and this note goes away.
+  </p>
+  <div class="setup-actions">
+    <a class="setup-primary" href={setup.editUrl ?? GUIDE_URL}>
+      {setup.editUrl ? 'Edit my page on GitHub' : 'See how to edit it'}
+    </a>
+    <a class="setup-secondary" href={BUILDER_URL}>
+      Or fill in the builder
+    </a>
+  </div>
+  {setup.editUrl && (
+    <p class="setup-hint">
+      Opens your <code>folio.config.yaml</code>. Change it, then click <b>Commit changes</b>.
+    </p>
+  )}
+</aside>
+
+<style>
+  .setup {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 32px;
+    padding: 20px;
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+    text-align: center;
+  }
+
+  .setup-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .setup-body,
+  .setup-hint {
+    margin: 0;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .setup-hint {
+    font-size: 13px;
+  }
+
+  .setup-hint code {
+    font-size: 12px;
+  }
+
+  .setup-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 20px;
+    margin-top: 6px;
+  }
+
+  .setup-primary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .setup-secondary {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+  }
+</style>

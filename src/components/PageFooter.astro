@@ -1,4 +1,5 @@
 ---
+import { FOLIO_SITE } from '../lib/links.ts';
 import { UI_ICONS } from '../lib/socials.ts';
 import Icon from './Icon.astro';
 import ShareButton from './ShareButton.astro';
@@ -29,7 +30,7 @@ const vcardFile = `${name.replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '')
     )}
     {credit && (
       <p class="credit">
-        <a href="https://folio-rouge-kappa-88.vercel.app">Made with Folio</a>
+        <a href={FOLIO_SITE}>Made with Folio</a>
       </p>
     )}
   </footer>

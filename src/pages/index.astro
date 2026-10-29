@@ -5,11 +5,13 @@ import LinkButton from '../components/LinkButton.astro';
 import PageFooter from '../components/PageFooter.astro';
 import Profile from '../components/Profile.astro';
 import SectionHeader from '../components/SectionHeader.astro';
+import SetupBanner from '../components/SetupBanner.astro';
 import SocialRow from '../components/SocialRow.astro';
 import { resolve } from 'node:path';
 import { loadConfig } from '../config/load.ts';
 import { expandHex, readableTextOn } from '../lib/color.ts';
 import { optimize } from '../lib/images.ts';
+import { setupInfo } from '../lib/links.ts';
 import '../themes/tokens.css';
 
 // Everything on this page comes from folio.config.yaml.
@@ -28,6 +30,7 @@ const images = new Map(
   ),
 );
 
+const setup = setupInfo(profile.name);
 const accent = expandHex(theme.accent);
 const absolute = (path: string) => (site.url ? new URL(path, site.url).toString() : undefined);
 const ogImage = absolute('og.png');
@@ -94,6 +97,7 @@ const ogImage = absolute('og.png');
   </head>
   <body>
     <main class="page">
+      {setup && <SetupBanner setup={setup} />}
       <div class="enter" style="--i: 0">
         <Profile profile={profile} avatar={avatar} />
       </div>

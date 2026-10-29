@@ -4,6 +4,9 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 
 ## Unreleased
 
+- A new copy's page shows a "Your Folio is live!" note with a button straight to its `folio.config.yaml` on GitHub. It disappears once you change the sample name.
+- The README, setup guide and sample config point to the config builder.
+
 - Use an emoji as your picture: `avatar: "👩‍🎨"`. It shows in a circle tinted with your accent color, and in your share card.
 
 ## 1.0.0 (2026-10-27)

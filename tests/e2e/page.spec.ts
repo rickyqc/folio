@@ -97,6 +97,31 @@ test.describe('sample page', () => {
   });
 });
 
+test.describe('a freshly deployed copy', () => {
+  test('tells the owner their page is live and links to their own config', async ({ page }) => {
+    const { scripts } = watch(page);
+    await page.goto('/setup/');
+    const banner = page.getByRole('complementary', { name: 'Finish setting up your page' });
+    await expect(banner).toContainText('Your Folio is live!');
+    await expect(banner.getByRole('link', { name: 'Edit my page on GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/jane/my-folio/edit/main/folio.config.yaml',
+    );
+    await expect(banner.getByRole('link', { name: 'Or fill in the builder' })).toHaveAttribute(
+      'href',
+      /#build$/,
+    );
+    expect(scripts).toEqual([]);
+  });
+
+  test('is not shown on the demo or once the page is edited', async ({ page }) => {
+    await page.goto('/sample/');
+    await expect(page.getByText('Your Folio is live!')).toHaveCount(0);
+    await page.goto('/full/');
+    await expect(page.getByText('Your Folio is live!')).toHaveCount(0);
+  });
+});
+
 test.describe('every option switched on', () => {
   test('applies the dark theme, pill buttons and readable text on a light accent', async ({
     page,

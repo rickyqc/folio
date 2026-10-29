@@ -6,6 +6,8 @@ Folio is a link-in-bio page you own outright. Edit one file, and it's live on yo
 
 **[Website](https://folio-rouge-kappa-88.vercel.app)** · **[See a live example →](https://rickyqc.github.io/folio/)**
 
+> **Already have your copy?** Make it yours: fill in the **[config builder](https://folio-rouge-kappa-88.vercel.app/#build)** and paste the result into [`folio.config.yaml`](folio.config.yaml), or edit that file directly (open it, click the pencil, change the details, commit). The [step-by-step guide](docs/GETTING_STARTED.md#2-put-in-your-details) covers every click.
+
 ## Get your page in 5 minutes
 
 You'll need free **GitHub** and **Vercel** (or Netlify) accounts. Nothing to install.
@@ -14,8 +16,8 @@ You'll need free **GitHub** and **Vercel** (or Netlify) accounts. Nothing to ins
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/rickyqc/folio)
 
 1. **Click a button above.** It copies Folio into your GitHub account and puts your page online.
-2. **Open `folio.config.yaml`** in your new repository and click the pencil icon to edit it.
-3. **Change the sample details to yours** and click **Commit changes**.
+2. **Open the link on your new page.** It says "Your Folio is live!" and takes you straight to `folio.config.yaml` on GitHub.
+3. **Put in your details** (or paste what the [config builder](https://folio-rouge-kappa-88.vercel.app/#build) makes) and click **Commit changes**.
 4. **Your page updates in about a minute.**
 
 New to GitHub? The **[step-by-step guide](docs/GETTING_STARTED.md)** walks through every click.

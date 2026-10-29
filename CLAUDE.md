@@ -47,6 +47,7 @@ Astro + TypeScript (strictest), plain CSS with custom properties as design token
 - Share button is opt-in (`footer.share`), the only inline script Folio can add, so pages stay 0 KB JS by default.
 - `og.png`, `qr.png`, `qr.svg` need a public URL: `site.url`, else `hostUrl()` reads FOLIO_SITE_URL / VERCEL_PROJECT_PRODUCTION_URL / Netlify's URL.
 - The share card font is Inter from `@fontsource/inter` (build-time only, never shipped to the page).
+- The setup banner (`src/lib/links.ts`) shows while `profile.name` is still the sample name, links to the repo's GitHub editor from host env vars, and is suppressed on rickyqc/folio and with FOLIO_SETUP_BANNER=0. Changing the sample name means updating `SAMPLE_NAME`.
 - Sample avatar is Noto Emoji artwork (Apache 2.0) as paths, so it renders identically everywhere, including resvg on Linux.
 
 ## Design language (summary; full table in VISION.md)

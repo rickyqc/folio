@@ -18,7 +18,7 @@ Prefer Netlify? It works the same way. Use the Netlify button in the [README](..
 3. Under **Create Git Repository**, keep the name `my-folio` or type your own. Choose **Private** if you don't want others to see your files. Your page is public either way.
 4. Click **Create**.
 
-Vercel copies Folio into your GitHub account and builds your page. After about a minute you'll see a **Congratulations** screen. Click the preview to open your page. It shows the sample person, Jane Park, for now.
+Vercel copies Folio into your GitHub account and builds your page. After about a minute you'll see a **Congratulations** screen. Click the preview to open your page. It shows the sample person, Jane Park, for now, with a **"Your Folio is live!"** note at the top. That note's button opens your config on GitHub, ready to edit: it's the quickest way into step 2.
 
 **Write down your page's address.** It looks like `my-folio-abc123.vercel.app`. You'll find it again any time on your project's page in the [Vercel dashboard](https://vercel.com/dashboard).
 
@@ -26,13 +26,13 @@ Vercel copies Folio into your GitHub account and builds your page. After about a
 
 Everything on your page comes from one file called `folio.config.yaml`.
 
-1. Go to [github.com](https://github.com) and open your new `my-folio` repository.
-2. Click **folio.config.yaml** in the file list.
-3. Click the **pencil icon** (Edit this file) at the top right of the file.
-4. Change the sample details to yours: name, bio, links and social accounts. The sample social links just point to each site's home page; replace them with your usernames, e.g. `instagram: your-username`. The notes after `#` explain each option.
-5. Click **Commit changes…**, then **Commit changes** again in the box that appears.
+**Easiest way:** fill in the **[config builder](https://folio-rouge-kappa-88.vercel.app/#build)**. You'll see a live preview as you type, then click **Copy my config**. In the steps below, select everything in the file and paste instead of editing line by line.
 
-Vercel notices the change and rebuilds your page. Refresh it after about a minute.
+1. Click **Edit my page on GitHub** in the note at the top of your page. (Or go to [github.com](https://github.com), open your new `my-folio` repository, click **folio.config.yaml**, then the **pencil icon**.)
+2. Change the sample details to yours (or paste from the builder): name, bio, links and social accounts. The sample social links just point to each site's home page; replace them with your usernames, e.g. `instagram: your-username`. The notes after `#` explain each option.
+3. Click **Commit changes…**, then **Commit changes** again in the box that appears.
+
+Vercel notices the change and rebuilds your page. Refresh it after about a minute. Once your name is in, the "Your Folio is live!" note disappears.
 
 > **Tip:** Rather not edit by hand? Copy the [AI prompt](AI_PROMPT.md) into Claude or ChatGPT with your details, and paste what it writes over the whole file.
 

@@ -33,7 +33,7 @@
     "ci": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build && npm run budget && (test ! -d website || (npm run site:build && npm run budget:site))",
     "schema": "node scripts/generate-schema.ts",
     "budget:site": "node scripts/check-budget.mjs website/dist --allow-js --max-kb 150",
-    "build:e2e": "astro build --outDir dist-e2e/sample && FOLIO_CONFIG=tests/fixtures/full.config.yaml FOLIO_SITE_URL=http://localhost:4400/full/ astro build --outDir dist-e2e/full && cd website && astro build --outDir ../dist-e2e/website",
+    "build:e2e": "FOLIO_SETUP_BANNER=0 astro build --outDir dist-e2e/sample && VERCEL_GIT_REPO_OWNER=jane VERCEL_GIT_REPO_SLUG=my-folio VERCEL_GIT_COMMIT_REF=main astro build --outDir dist-e2e/setup && FOLIO_CONFIG=tests/fixtures/full.config.yaml FOLIO_SITE_URL=http://localhost:4400/full/ astro build --outDir dist-e2e/full && cd website && astro build --outDir ../dist-e2e/website",
     "test:e2e": "npm run build:e2e && playwright test"
   },
   "dependencies": {

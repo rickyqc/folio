@@ -1,6 +1,8 @@
 # yaml-language-server: $schema=./folio.schema.json
 #
 # This is your whole page. Change the details below, then commit.
+# Rather fill in a form? The config builder writes this file for you:
+#   https://folio-rouge-kappa-88.vercel.app/#build
 # Lines starting with # are notes and are ignored.
 # Every option is explained in docs/CONFIG.md.
 
