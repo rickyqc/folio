@@ -12,7 +12,6 @@ import {
   GUIDE_URL,
   ISSUES_URL,
   LICENSE_URL,
-  NETLIFY_DEPLOY_URL,
   REPO_URL,
   SHOWCASE_URL,
   SPEC_URL,
@@ -25,16 +24,16 @@ if (!aiPrompt) throw new Error('docs/AI_PROMPT.md must contain a ```text block w
 
 const steps = [
   {
-    title: 'Click Deploy',
-    body: 'The “Deploy to Vercel” button copies Folio into your GitHub account and puts your page online.',
+    title: 'Build it',
+    body: 'Fill in the builder below and watch your page take shape. No account needed for this part.',
   },
   {
-    title: 'Add your details',
-    body: 'Fill in the builder below, then paste what it makes into folio.config.yaml on GitHub. Or edit the sample by hand.',
+    title: 'Deploy',
+    body: 'One click copies Folio into your GitHub account and puts it online with Vercel, for free.',
   },
   {
-    title: 'Commit',
-    body: 'Click “Commit changes”. Your page updates in about a minute, and every change after that works the same way.',
+    title: 'Paste and commit',
+    body: 'Paste your config into folio.config.yaml on GitHub and click “Commit changes”. Your page updates in about a minute.',
   },
 ];
 
@@ -149,18 +148,16 @@ const comparison = [
         domain in five minutes.
       </p>
       <div class="cta-row rise rise-4">
-        <a class="button" href={VERCEL_DEPLOY_URL}>
-          Deploy to Vercel
+        <a class="button" href="#build">
+          Build your page
         </a>
         <a class="button button--quiet" href={DEMO_URL}>
           See a live example
         </a>
       </div>
       <p class="fine rise rise-4">
-        New to GitHub? <a href={GUIDE_URL}>Read the step-by-step guide</a>.
-      </p>
-      <p class="fine rise rise-4">
-        No Folio account and no monthly fee. You’ll just need free GitHub and Vercel accounts.
+        No Folio account or monthly fee, just free GitHub and Vercel accounts. New to GitHub?{' '}
+        <a href={GUIDE_URL}>Here’s every click</a>.
       </p>
       <div class="hero-visual rise rise-4">
         <PhonePreview />
@@ -262,11 +259,11 @@ const comparison = [
         </ol>
 
         <p class="steps-more reveal">
-          <a class="button" href={VERCEL_DEPLOY_URL}>
-            Deploy to Vercel
+          <a class="button" href="#build">
+            Start building
           </a>
-          <a class="more" href={NETLIFY_DEPLOY_URL}>
-            Or deploy to Netlify
+          <a class="more" href={VERCEL_DEPLOY_URL}>
+            Or deploy the sample and edit it by hand
           </a>
           <a class="more" href={GUIDE_URL}>
             Step-by-step guide with every click
@@ -294,8 +291,8 @@ const comparison = [
             Build yours in two minutes.
           </h2>
           <p class="lede">
-            Fill this in and watch your page take shape, then copy the file into your repo. What you
-            type stays in your browser.
+            Fill this in and watch your page take shape, then copy it into your repo. What you type
+            stays in your browser, even while you go off to deploy.
           </p>
         </div>
         <ConfigBuilder />
@@ -494,8 +491,8 @@ const comparison = [
         </h2>
         <p class="lede">Free forever. No Folio account. No card to enter.</p>
         <div class="cta-row">
-          <a class="button" href={VERCEL_DEPLOY_URL}>
-            Deploy to Vercel
+          <a class="button" href="#build">
+            Build your page
           </a>
           <a class="button button--quiet" href={REPO_URL}>
             Star on GitHub

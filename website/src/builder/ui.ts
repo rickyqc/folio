@@ -2,7 +2,9 @@
 // rows are added, removed or moved, so typing never loses focus.
 import { readableTextOn } from '../../../src/lib/color.ts';
 import {
+  embedType,
   emptyState,
+  fromConfig,
   hasContent,
   isEmoji,
   toYaml,
@@ -13,11 +15,19 @@ import {
   type Item,
   type Platform,
 } from './model';
+import { parseYamlLite } from './yaml-lite';
 
 type Icon = { kind: 'fill' | 'stroke'; path: string } | { kind: 'emoji'; char: string };
 type PlatformWithIcon = Platform & { icon: Icon };
 
 const STORAGE_KEY = 'folio-builder-v1';
+
+const TEMPLATES: Record<Item['kind'], string> = {
+  link: 'tpl-link',
+  header: 'tpl-header',
+  embed: 'tpl-embed',
+  image: 'tpl-image',
+};
 
 function load(): BuilderState {
   try {
@@ -77,6 +87,10 @@ export function mountBuilder(root: HTMLElement): void {
   const template = (id: string) =>
     (document.getElementById(id) as HTMLTemplateElement).content.firstElementChild as HTMLElement;
 
+  const importSheet = root.querySelector('[data-import-sheet]') as HTMLDialogElement;
+  const importText = root.querySelector('[data-import-text]') as HTMLTextAreaElement;
+  const importError = root.querySelector('[data-import-error]') as HTMLElement;
+
   let state = load();
   // Errors show for fields someone has left, or everywhere after they try to copy.
   const touched = new Set<string>();
@@ -85,23 +99,40 @@ export function mountBuilder(root: HTMLElement): void {
   // Simple fields
   const text = (name: keyof BuilderState) =>
     form.elements.namedItem(name as string) as HTMLInputElement;
-  for (const key of ['name', 'bio', 'location'] as const) text(key).value = state[key];
   const radio = (name: string, value: string) => {
-    const input = form.querySelector<HTMLInputElement>(`input[name="${name}"][value="${value}"]`);
+    const input = [...form.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`)].find(
+      (r) => r.value === value,
+    );
     if (input) input.checked = true;
     return !!input;
   };
-  if (!radio('avatar', state.avatar)) {
-    // A draft from before the emoji picker held a file name; fall back to the first emoji.
-    state.avatar = emptyState().avatar;
-    radio('avatar', state.avatar);
+
+  /** A photo from a loaded config gets its own choice, so it isn't lost. */
+  function photoOption(avatar: string): void {
+    root.querySelector('[data-photo-option]')?.remove();
+    if (!avatar || isEmoji(avatar)) return;
+    const option = template('tpl-photo').cloneNode(true) as HTMLElement;
+    const input = option.querySelector('input') as HTMLInputElement;
+    input.value = avatar;
+    input.setAttribute('aria-label', `Your photo (${avatar})`);
+    option.title = `Your photo (${avatar})`;
+    root.querySelector('.avatar-option')?.after(option);
   }
-  radio('mode', state.mode);
-  radio('buttons', state.buttons);
-  if (!radio('accent', state.accent))
-    text('accentCustom' as keyof BuilderState).value = state.accent;
-  text('vcard').checked = state.vcard;
-  text('share').checked = state.share;
+
+  function fillForm(): void {
+    for (const key of ['name', 'bio', 'location'] as const) text(key).value = state[key];
+    photoOption(state.avatar);
+    radio('avatar', state.avatar);
+    radio('mode', state.mode);
+    radio('buttons', state.buttons);
+    for (const r of form.querySelectorAll<HTMLInputElement>('input[name="accent"]'))
+      r.checked = false;
+    if (!radio('accent', state.accent))
+      text('accentCustom' as keyof BuilderState).value = state.accent;
+    text('vcard').checked = state.vcard;
+    text('share').checked = state.share;
+  }
+  fillForm();
 
   function renderSocials(): void {
     socialList.replaceChildren(
@@ -135,10 +166,11 @@ export function mountBuilder(root: HTMLElement): void {
   function renderItems(): void {
     itemList.replaceChildren(
       ...state.items.map((item, i) => {
-        const row = template(item.kind === 'link' ? 'tpl-link' : 'tpl-header').cloneNode(
-          true,
-        ) as HTMLElement;
+        const row = template(TEMPLATES[item.kind]).cloneNode(true) as HTMLElement;
         row.dataset['index'] = String(i);
+        for (const el of row.querySelectorAll<HTMLElement>('[data-text]')) {
+          el.textContent = String((item as Record<string, string>)[el.dataset['text'] ?? ''] ?? '');
+        }
         for (const input of row.querySelectorAll<HTMLInputElement>('input[data-key]')) {
           const key = input.dataset['key'] as keyof Item;
           input.value = String((item as Record<string, string>)[key] ?? '');
@@ -179,6 +211,16 @@ export function mountBuilder(root: HTMLElement): void {
       ? filled
           .map(({ item, i }) => {
             if (item.kind === 'header') return `<p class="bp-header">${escape(item.title)}</p>`;
+            if (item.kind === 'image') {
+              return `<div class="bp-media">🖼️ ${escape(item.caption || item.alt)}</div>`;
+            }
+            if (item.kind === 'embed') {
+              const kind = embedType(item.url);
+              const label =
+                kind === 'spotify' ? '♫ Spotify' : kind === 'youtube' ? '▶ YouTube' : '▶';
+              const title = item.title.trim() ? ` · ${escape(item.title)}` : '';
+              return `<div class="bp-media">${label}${title}</div>`;
+            }
             const iconValue = item.icon.trim();
             const platform = platforms.find((p) => p.id === iconValue);
             const icon = platform
@@ -199,7 +241,7 @@ export function mountBuilder(root: HTMLElement): void {
       .join('');
 
     preview.innerHTML = `
-      <div class="bp-avatar${state.avatar ? ' is-emoji' : ''}">${escape(state.avatar || initials(name))}</div>
+      <div class="bp-avatar${state.avatar ? ' is-emoji' : ''}">${escape(avatarText(state))}</div>
       <p class="bp-name${name ? '' : ' bp-placeholder'}">${escape(name || 'Your name')}</p>
       ${state.bio.trim() ? `<p class="bp-bio">${escape(state.bio)}</p>` : name ? '' : '<p class="bp-bio bp-placeholder">One line about you</p>'}
       ${state.location.trim() ? `<p class="bp-loc">${escape(state.location)}</p>` : ''}
@@ -295,7 +337,7 @@ export function mountBuilder(root: HTMLElement): void {
     if (el.dataset['key'] !== 'url') return;
     const index = Number(el.closest<HTMLElement>('[data-index]')?.dataset['index']);
     const item = state.items[index];
-    if (item?.kind !== 'link') return;
+    if (item?.kind !== 'link' && item?.kind !== 'embed') return;
     const fixed = withScheme(item.url);
     if (fixed !== item.url) {
       item.url = el.value = fixed;
@@ -318,11 +360,13 @@ export function mountBuilder(root: HTMLElement): void {
       state.socials.push({ platform: next ?? 'website', value: '' });
       renderSocials();
       (socialList.lastElementChild?.querySelector('input') as HTMLInputElement | null)?.focus();
-    } else if (action === 'add-link' || action === 'add-header') {
+    } else if (action === 'add-link' || action === 'add-header' || action === 'add-embed') {
       state.items.push(
         action === 'add-link'
           ? { kind: 'link', title: '', url: '', subtitle: '', icon: '' }
-          : { kind: 'header', title: '' },
+          : action === 'add-embed'
+            ? { kind: 'embed', url: '', title: '' }
+            : { kind: 'header', title: '' },
       );
       renderItems();
       (itemList.lastElementChild?.querySelector('input') as HTMLInputElement | null)?.focus();
@@ -358,14 +402,31 @@ export function mountBuilder(root: HTMLElement): void {
       touched.clear();
       attempted = false;
       status.textContent = '';
-      for (const key of ['name', 'bio', 'location'] as const) text(key).value = '';
-      radio('avatar', state.avatar);
-      radio('mode', 'auto');
-      radio('buttons', 'rounded');
-      radio('accent', state.accent);
-      text('vcard').checked = true;
-      text('share').checked = false;
+      fillForm();
       renderAll();
+      return;
+    } else if (action === 'open-import') {
+      importError.textContent = '';
+      importSheet.showModal();
+      return;
+    } else if (action === 'import') {
+      try {
+        const loaded = fromConfig(parseYamlLite(importText.value), platforms);
+        state = loaded.state;
+        touched.clear();
+        attempted = false;
+        fillForm();
+        renderAll();
+        importSheet.close();
+        importText.value = '';
+        status.textContent = loaded.skipped.length
+          ? `Loaded your config. Left out, since the builder can’t write them: ${loaded.skipped.join(', ')}.`
+          : 'Loaded your config. Change anything, then copy it back.';
+        text('name').focus();
+      } catch (error) {
+        importError.textContent =
+          error instanceof Error ? error.message : 'That file couldn’t be read.';
+      }
       return;
     } else if (action === 'copy') {
       if (!ready()) return;
@@ -396,7 +457,14 @@ export function mountBuilder(root: HTMLElement): void {
   });
 
   renderAll();
-  mountPreviewSheet(root, () => state.avatar || initials(state.name));
+  mountPreviewSheet(root, () => avatarText(state));
+}
+
+/** What the avatar circle shows: the emoji, a camera for a photo, or initials. */
+function avatarText(state: BuilderState): string {
+  const avatar = state.avatar.trim();
+  if (!avatar) return initials(state.name);
+  return isEmoji(avatar) ? avatar : '📷';
 }
 
 /**

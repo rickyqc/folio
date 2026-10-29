@@ -3,7 +3,7 @@
 // Platform names, examples and icons come from Folio itself, so the builder can't drift.
 import { PLATFORMS } from '../../../src/lib/socials.ts';
 import { ACCENTS, AVATARS } from '../builder/model';
-import { GUIDE_URL, VERCEL_DEPLOY_URL } from '../site';
+import { GUIDE_URL, NETLIFY_DEPLOY_URL, VERCEL_DEPLOY_URL } from '../site';
 
 const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
   id,
@@ -21,6 +21,12 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
 />
 <div class="builder">
   <form class="form" novalidate aria-label="Build your Folio config">
+    <p class="import reveal">
+      Already have a Folio page?{' '}
+      <button type="button" class="add" data-action="open-import">
+        Load your current config
+      </button>
+    </p>
     <fieldset class="reveal">
       <legend>About you</legend>
       <div class="field" data-field="name">
@@ -138,6 +144,9 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
         <button type="button" class="add" data-action="add-header">
           + Add a section heading
         </button>
+        <button type="button" class="add" data-action="add-embed">
+          + Add a video or song
+        </button>
       </div>
     </fieldset>
 
@@ -181,9 +190,17 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
       <summary>See the file</summary>
       <pre data-yaml></pre>
     </details>
+    <h3 class="next-title">Then put it online</h3>
     <ol class="next">
       <li>
-        No copy of Folio yet? <a href={VERCEL_DEPLOY_URL}>Deploy one</a> first (about a minute).
+        <b>Deploy your copy of Folio.</b> It takes about a minute, and this draft stays saved here.
+        Already have one? Skip ahead.
+        <span class="next-deploy">
+          <a class="button button--small" href={VERCEL_DEPLOY_URL}>
+            Deploy to Vercel
+          </a>
+          <a href={NETLIFY_DEPLOY_URL}>or Netlify</a>
+        </span>
       </li>
       <li>
         In your repo on GitHub, open <b>folio.config.yaml</b> and click the pencil icon.
@@ -198,6 +215,34 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
       </a>
     </p>
   </aside>
+
+  <dialog class="import-sheet" data-import-sheet aria-labelledby="import-title">
+    <h3 id="import-title">Load your current config</h3>
+    <p>
+      In your repo on GitHub, open <b>folio.config.yaml</b>, select everything, copy it and paste it
+      here. It replaces what’s in the builder now, and never leaves your browser.
+    </p>
+    <textarea
+      data-import-text
+      rows="10"
+      spellcheck="false"
+      autocapitalize="off"
+      aria-label="Your folio.config.yaml"
+      aria-describedby="import-error"
+      placeholder="profile:&#10;  name: …"
+    ></textarea>
+    <small id="import-error" class="error" data-import-error aria-live="polite"></small>
+    <div class="import-actions">
+      <button type="button" class="button" data-action="import">
+        Load it
+      </button>
+      <form method="dialog">
+        <button type="submit" class="button button--quiet">
+          Cancel
+        </button>
+      </form>
+    </div>
+  </dialog>
 </div>
 
 <!-- Phones: the preview sits below the form, so a floating button brings it up in a sheet. -->
@@ -264,6 +309,61 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
       >
         ★
       </button>
+      <button type="button" class="icon-btn" data-action="up" aria-label="Move up">
+        ↑
+      </button>
+      <button type="button" class="icon-btn" data-action="down" aria-label="Move down">
+        ↓
+      </button>
+      <button type="button" class="icon-btn" data-action="remove" aria-label="Remove">
+        ×
+      </button>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-photo">
+  <label class="avatar-option" data-photo-option>
+    <input type="radio" name="avatar" />
+    <span aria-hidden="true">📷</span>
+  </label>
+</template>
+
+<template id="tpl-embed">
+  <div class="item item--link">
+    <div class="item-main">
+      <input
+        data-key="url"
+        aria-label="YouTube or Spotify link"
+        placeholder="YouTube or Spotify link"
+        inputmode="url"
+      />
+      <input data-key="title" aria-label="Title (optional)" placeholder="Title (optional)" />
+      <small class="error" aria-live="polite"></small>
+    </div>
+    <div class="item-tools">
+      <button type="button" class="icon-btn" data-action="up" aria-label="Move up">
+        ↑
+      </button>
+      <button type="button" class="icon-btn" data-action="down" aria-label="Move down">
+        ↓
+      </button>
+      <button type="button" class="icon-btn" data-action="remove" aria-label="Remove">
+        ×
+      </button>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-image">
+  <div class="item item--header">
+    <p class="item-main item-note">
+      <span>
+        🖼️ Image: <b data-text="alt"></b>
+      </span>
+      <small>Kept as is. Change it in folio.config.yaml on GitHub.</small>
+    </p>
+    <div class="item-tools">
       <button type="button" class="icon-btn" data-action="up" aria-label="Move up">
         ↑
       </button>
@@ -815,6 +915,123 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
     font-size: 14px;
   }
 
+  .next-title {
+    width: 100%;
+    margin: 8px 0 0;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .next-deploy {
+    display: flex;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+  }
+
+  .button--small {
+    min-height: 40px;
+    padding: 0 18px;
+    font-size: 15px;
+  }
+
+  .import {
+    margin: 0;
+    padding: 14px 20px;
+    border-radius: 16px;
+    background: var(--surface);
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .import .add {
+    padding: 0;
+  }
+
+  .item-note {
+    margin: 0;
+    font-size: 15px;
+  }
+
+  .item-note small {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .import-sheet {
+    width: min(calc(100vw - 32px), 560px);
+    max-height: calc(100dvh - 32px);
+    padding: 24px;
+    border: 0;
+    border-radius: 24px;
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .import-sheet[open] {
+    display: grid;
+    gap: 12px;
+  }
+
+  .import-sheet::backdrop {
+    background: rgb(0 0 0 / 0.45);
+  }
+
+  .import-sheet h3 {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .import-sheet p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .import-sheet textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 12px 14px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--bg-alt);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+    color: var(--text);
+    font:
+      13px/1.5 ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+    resize: vertical;
+  }
+
+  .import-sheet textarea:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .import-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .import-actions form {
+    display: contents;
+  }
+
+  .import-sheet .button {
+    border: 0;
+    font: inherit;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
   .preview-fab {
     position: fixed;
     bottom: max(16px, env(safe-area-inset-bottom));
@@ -1039,6 +1256,19 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
     font-weight: 600;
     color: var(--p-muted);
     text-align: left;
+  }
+
+  .bp :global(.bp-media) {
+    display: grid;
+    place-items: center;
+    min-height: 64px;
+    padding: 10px 14px;
+    border-radius: var(--p-radius);
+    background: var(--p-surface);
+    box-shadow: inset 0 0 0 1px var(--p-hairline);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--p-muted);
   }
 
   .bp :global(.bp-placeholder) {

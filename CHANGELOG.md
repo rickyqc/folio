@@ -8,6 +8,9 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - The README, setup guide and sample config point to the config builder.
 
 - Use an emoji as your picture: `avatar: "👩‍🎨"`. It shows in a circle tinted with your accent color, and in your share card.
+- The config builder can load your current `folio.config.yaml`, so you can change an existing page there. Settings it has no fields for (images, analytics, site details) are kept as they were.
+- The config builder adds YouTube videos and Spotify players.
+- The landing page leads with the builder: build first, then deploy and paste. It now has a sitemap and robots.txt.
 
 ## 1.0.0 (2026-10-27)
 

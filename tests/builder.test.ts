@@ -1,16 +1,20 @@
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { parse } from 'yaml';
 import { parseConfig } from '../src/config/load.ts';
 import { PLATFORMS } from '../src/lib/socials.ts';
 import {
   AVATARS,
   emptyState,
+  fromConfig,
   scalar,
   toYaml,
   validate,
   withScheme,
   type BuilderState,
 } from '../website/src/builder/model.ts';
+import { parseYamlLite, YamlLiteError } from '../website/src/builder/yaml-lite.ts';
 
 const publicDir = resolve(import.meta.dirname, '../public');
 const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
@@ -187,5 +191,111 @@ describe('helpers', () => {
     expect(scalar('Jane Park')).toBe('Jane Park');
     expect(scalar('true')).toBe('"true"');
     expect(scalar('a: b')).toBe('"a: b"');
+  });
+});
+
+describe('video and music in the builder', () => {
+  it('writes YouTube and Spotify players from the link alone', () => {
+    const config = build(
+      state({
+        name: 'Sam',
+        items: [
+          { kind: 'embed', url: 'youtu.be/aqz-KE-bpKQ', title: 'Throwing a mug' },
+          {
+            kind: 'embed',
+            url: 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M',
+            title: '',
+          },
+          { kind: 'embed', url: '', title: '' },
+        ],
+      }),
+    );
+    expect(config.blocks).toMatchObject([
+      { type: 'youtube', title: 'Throwing a mug' },
+      { type: 'spotify' },
+    ]);
+  });
+
+  it('asks for a YouTube or Spotify link', () => {
+    const fields = (url: string, title = '') =>
+      validate(state({ name: 'Sam', items: [{ kind: 'embed', url, title }] }), platforms).map(
+        (i) => i.field,
+      );
+    expect(fields('https://vimeo.com/123')).toEqual(['item-0-url']);
+    expect(fields('', 'My song')).toEqual(['item-0-url']);
+    expect(fields('')).toEqual([]);
+  });
+});
+
+describe('loading an existing config', () => {
+  const sample = readFileSync(resolve(import.meta.dirname, '../folio.config.yaml'), 'utf8');
+  const full = readFileSync(resolve(import.meta.dirname, 'fixtures/full.config.yaml'), 'utf8');
+
+  it.each([
+    ['the sample', sample],
+    ['every option', full],
+  ])('reads %s exactly like the real YAML library', (_, source) => {
+    expect(parseYamlLite(source)).toEqual(parse(source));
+  });
+
+  it.each([
+    ['comments and quotes', `a: 'it''s # not a comment' # but this is\nb: "x\\"y"\n`],
+    ['an apostrophe in a plain value', "bio: It's me # hi\n"],
+    ['a list at the same indent as its key', 'blocks:\n- type: link\n  title: A\n- type: header\n'],
+    ['empty maps and lists', 'socials: {}\nblocks: []\n'],
+    ['plain values that look special', 'a: yes\nb: 42\nc: ~\nd: True\n'],
+  ])('handles %s', (_, source) => {
+    expect(parseYamlLite(source)).toEqual(parseLike(source));
+  });
+
+  function parseLike(source: string) {
+    // Folio reads numbers as text anyway, so compare with every plain value as a string.
+    return JSON.parse(
+      JSON.stringify(parse(source), (_, v) => (typeof v === 'number' ? String(v) : v)),
+    );
+  }
+
+  it('names the line it can’t read', () => {
+    const error = (source: string) => {
+      try {
+        parseYamlLite(source);
+      } catch (e) {
+        return e instanceof YamlLiteError ? e.message : 'other';
+      }
+      return 'parsed';
+    };
+    expect(error('profile:\n  bio: |\n    two lines\n')).toMatch(/^Line 2:/);
+    expect(error('profile:\n  name: "open\n')).toMatch(/^Line 2: .*isn’t closed/);
+    expect(error('profile:\n\tname: Sam\n')).toMatch(/^Line 2: .*tabs/);
+    expect(error('profile:\n  name: Sam\n    bio: x\n')).toMatch(/^Line 3:/);
+    expect(error('socials: [a, b]\n')).toMatch(/^Line 1:/);
+  });
+
+  it('round-trips the sample: same page, same settings', () => {
+    const { state: loaded, skipped } = fromConfig(parseYamlLite(sample), platforms);
+    expect(skipped).toEqual([]);
+    const before = parseConfig(sample, { publicDir });
+    const after = build(loaded);
+    expect(after).toEqual(before);
+  });
+
+  it('round-trips every option, including ones the builder has no fields for', () => {
+    const { state: loaded, skipped } = fromConfig(parseYamlLite(full), platforms);
+    expect(skipped).toEqual([]);
+    expect(loaded.avatar).toBe('avatar.svg');
+    expect(loaded.items.map((i) => i.kind)).toEqual(['link', 'header', 'embed', 'image']);
+    expect(build(loaded)).toEqual(parseConfig(full, { publicDir }));
+  });
+
+  it('says what it had to leave out, and rejects things that aren’t configs', () => {
+    const { skipped } = fromConfig(
+      parseYamlLite(
+        'profile:\n  name: Sam\nsocials:\n  myspace: sam\nblocks:\n  - type: map\nextra: 1\n',
+      ),
+      platforms,
+    );
+    expect(skipped).toEqual(['socials: myspace', 'a block of type “map”', 'extra']);
+    expect(() => fromConfig(parseYamlLite('hello: world\n'), platforms)).toThrow(/no profile/);
+    expect(() => fromConfig(parseYamlLite('just text\n'), platforms)).toThrow(/^Line 1:/);
   });
 });

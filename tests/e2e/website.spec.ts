@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 import { parseConfig } from '../../src/config/load.ts';
@@ -94,6 +95,54 @@ test('the config builder makes a file Folio accepts, with a live preview', async
   // The draft survives a reload.
   await page.reload();
   await expect(builder.getByLabel('Name', { exact: true })).toHaveValue('Riley Chen');
+});
+
+test('loading an existing config fills the builder and writes it back', async ({ page }) => {
+  const builder = page.locator('.builder');
+  await builder.getByRole('button', { name: 'Load your current config' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Load your current config' });
+  const box = sheet.getByLabel('Your folio.config.yaml');
+
+  await box.fill('profile:\n  bio: |\n    two lines\n');
+  await sheet.getByRole('button', { name: 'Load it' }).click();
+  await expect(sheet.getByText(/^Line 2:/)).toBeVisible();
+
+  const yaml = readFileSync(resolve(import.meta.dirname, '../fixtures/full.config.yaml'), 'utf8');
+  await box.fill(yaml);
+  await sheet.getByRole('button', { name: 'Load it' }).click();
+  await expect(sheet).toBeHidden();
+  await expect(builder.getByLabel('Name', { exact: true })).toHaveValue('Sam Rivera');
+  await expect(builder.getByRole('radio', { name: 'Your photo (avatar.svg)' })).toBeChecked();
+  await expect(builder.getByText('Sam in the studio', { exact: true })).toBeVisible();
+
+  await builder.getByRole('button', { name: '+ Add a video or song' }).click();
+  await builder
+    .getByLabel('YouTube or Spotify link')
+    .last()
+    .fill('https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC');
+  await expect(builder.locator('[data-preview] .bp-media').last()).toContainText('Spotify');
+
+  await builder.getByRole('button', { name: 'Copy my config' }).click();
+  const copied = parseConfig(await page.evaluate(() => navigator.clipboard.readText()), {
+    publicDir,
+  });
+  const original = parseConfig(yaml, { publicDir });
+  expect(copied.blocks.slice(0, -1)).toEqual(original.blocks);
+  expect(copied.blocks.at(-1)).toMatchObject({ type: 'spotify' });
+  expect({ ...copied, blocks: [] }).toEqual({ ...original, blocks: [] });
+});
+
+test('the hero leads to the builder, and search engines get a sitemap', async ({
+  page,
+  request,
+}) => {
+  await page.goto('http://localhost:4401/');
+  await page.locator('.hero').getByRole('link', { name: 'Build your page' }).click();
+  await expect(page).toHaveURL(/#build$/);
+  expect((await request.get('http://localhost:4401/robots.txt')).ok()).toBe(true);
+  expect(await (await request.get('http://localhost:4401/sitemap.xml')).text()).toContain(
+    '<urlset',
+  );
 });
 
 test.describe('on a phone', () => {
