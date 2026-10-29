@@ -96,6 +96,53 @@ test('the config builder makes a file Folio accepts, with a live preview', async
   await expect(builder.getByLabel('Name', { exact: true })).toHaveValue('Riley Chen');
 });
 
+test.describe('on a phone', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+  });
+
+  test('the menu jumps to a section and closes', async ({ page }) => {
+    await page.goto('http://localhost:4401/');
+    await expect(page.locator('.nav-links')).toBeHidden();
+    const menu = page.locator('.nav-menu');
+    await menu.locator('summary[aria-label="Menu"]').click();
+    await expect(menu.getByRole('link', { name: 'FAQ' })).toBeVisible();
+    await menu.getByRole('link', { name: 'FAQ' }).click();
+    await expect(page).toHaveURL(/#faq$/);
+    await expect(menu).not.toHaveAttribute('open', '');
+  });
+
+  test('the builder preview opens in a sheet while filling in the form', async ({ page }) => {
+    await page.goto('http://localhost:4401/');
+    const fab = page.getByRole('button', { name: 'Preview' });
+    await expect(fab).not.toHaveClass(/is-shown/);
+
+    await page.getByLabel('Name', { exact: true }).scrollIntoViewIfNeeded();
+    await page.getByLabel('Name', { exact: true }).fill('Riley Chen');
+    // Out of the way while typing, back once the field is left.
+    await expect(fab).not.toHaveClass(/is-shown/);
+    await page.getByLabel('Name', { exact: true }).blur();
+    await expect(fab).toHaveClass(/is-shown/);
+
+    await fab.click();
+    const sheet = page.getByRole('dialog', { name: 'Preview of your page' });
+    await expect(sheet).toBeVisible();
+    await expect(sheet.locator('.bp-name')).toHaveText('Riley Chen');
+
+    await sheet.getByRole('button', { name: 'Keep editing' }).click();
+    await expect(sheet).toBeHidden();
+    // The preview is back in its place below the form.
+    await expect(page.locator('.output .preview-phone')).toHaveCount(1);
+  });
+
+  test('desktop never shows the floating button or the menu', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('http://localhost:4401/#build');
+    await expect(page.getByRole('button', { name: 'Preview' })).toBeHidden();
+    await expect(page.locator('.nav-menu')).toBeHidden();
+  });
+});
+
 test('the FAQ opens and closes without JavaScript', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();

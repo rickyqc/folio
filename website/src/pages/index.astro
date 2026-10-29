@@ -85,8 +85,53 @@ const comparison = [
         </svg>
         GitHub
       </a>
+      <details class="nav-menu">
+        <summary aria-label="Menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+        </summary>
+        <div class="nav-menu-panel">
+          <ul>
+            <li>
+              <a href="#how-it-works">How it works</a>
+            </li>
+            <li>
+              <a href="#build">Build yours</a>
+            </li>
+            <li>
+              <a href="#features">Features</a>
+            </li>
+            <li>
+              <a href="#faq">FAQ</a>
+            </li>
+          </ul>
+          <a class="button nav-menu-cta" href="#build">
+            Build your page
+          </a>
+        </div>
+      </details>
     </nav>
   </header>
+  <!-- Closes the phone menu after a tap on a link, a tap outside it, or Escape. -->
+  <script is:inline>
+    (() => {
+      const menu = document.querySelector('.nav-menu');
+      if (!menu) return;
+      menu.addEventListener('click', (e) => {
+        if (e.target.closest('a')) menu.open = false;
+      });
+      document.addEventListener('click', (e) => {
+        if (menu.open && !menu.contains(e.target)) menu.open = false;
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && menu.open) {
+          menu.open = false;
+          menu.querySelector('summary').focus();
+        }
+      });
+    })();
+  </script>
 
   <main id="main">
     <!-- Hero -->
@@ -560,9 +605,98 @@ const comparison = [
     height: 16px;
   }
 
+  /* Phones: a menu button in place of the hidden section links. */
+  .nav-menu {
+    margin-left: 8px;
+  }
+
+  @media (max-width: 719px) {
+    .nav-github {
+      margin-left: auto;
+    }
+  }
+
+  .nav-menu summary {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .nav-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .nav-menu summary:hover,
+  .nav-menu[open] summary {
+    background: var(--bg-alt);
+  }
+
+  .nav-menu summary svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+
+  .nav-menu-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    padding: 8px var(--gutter) 24px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--bg);
+    animation: menu-in 220ms var(--ease);
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  .nav-menu-panel ul {
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-menu-panel li a {
+    display: block;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--hairline);
+    color: var(--text);
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-menu-panel li a:hover {
+    text-decoration: none;
+  }
+
+  .nav-menu-cta {
+    width: 100%;
+  }
+
+  .nav-inner {
+    position: relative;
+  }
+
   @media (min-width: 720px) {
     .nav-links {
       display: flex;
+    }
+
+    .nav-menu {
+      display: none;
     }
   }
 

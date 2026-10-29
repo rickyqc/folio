@@ -200,6 +200,20 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
   </aside>
 </div>
 
+<!-- Phones: the preview sits below the form, so a floating button brings it up in a sheet. -->
+<button type="button" class="preview-fab" data-preview-fab hidden>
+  <span class="preview-fab-avatar" data-fab-avatar aria-hidden="true"></span>
+  Preview
+</button>
+<dialog class="preview-sheet" data-preview-sheet aria-label="Preview of your page">
+  <div class="preview-sheet-body" data-sheet-body></div>
+  <form method="dialog">
+    <button class="button" type="submit">
+      Keep editing
+    </button>
+  </form>
+</dialog>
+
 <template id="tpl-social">
   <div class="item item--social">
     <select data-key="platform" aria-label="Platform"></select>
@@ -799,6 +813,101 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
 
   .next-more {
     font-size: 14px;
+  }
+
+  .preview-fab {
+    position: fixed;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    left: 50%;
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 6px 20px 6px 6px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--text);
+    color: var(--bg);
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
+    cursor: pointer;
+    transform: translate(-50%, 0);
+    transition:
+      opacity 250ms var(--ease),
+      transform 250ms var(--ease);
+  }
+
+  .preview-fab[hidden] {
+    display: none;
+  }
+
+  .preview-fab:not(.is-shown) {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 16px);
+  }
+
+  .preview-fab-avatar {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  @media (min-width: 960px) {
+    .preview-fab {
+      display: none;
+    }
+  }
+
+  .preview-sheet {
+    width: min(100vw, 420px);
+    max-width: 100vw;
+    max-height: 100dvh;
+    margin: auto auto 0;
+    padding: 24px 16px max(20px, env(safe-area-inset-bottom));
+    border: 0;
+    border-radius: 28px 28px 0 0;
+    background: var(--bg-alt);
+    color: var(--text);
+  }
+
+  .preview-sheet[open] {
+    display: grid;
+    gap: 16px;
+    justify-items: center;
+    animation: sheet-up 280ms var(--ease);
+  }
+
+  .preview-sheet::backdrop {
+    background: rgb(0 0 0 / 0.45);
+  }
+
+  @keyframes sheet-up {
+    from {
+      transform: translateY(40px);
+      opacity: 0;
+    }
+  }
+
+  .preview-sheet-body .preview-phone {
+    height: min(560px, calc(100dvh - 140px));
+  }
+
+  .preview-sheet .button {
+    border: 0;
+    font: inherit;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
   }
 
   /* Live preview: the same tokens and proportions as a real Folio page, scaled to the phone. */

@@ -396,4 +396,70 @@ export function mountBuilder(root: HTMLElement): void {
   });
 
   renderAll();
+  mountPreviewSheet(root, () => state.avatar || initials(state.name));
+}
+
+/**
+ * On phones the preview is below a long form. While the form is on screen (and the preview
+ * isn't), a floating button opens the same preview in a bottom sheet.
+ */
+function mountPreviewSheet(root: HTMLElement, avatar: () => string): void {
+  const fab = document.querySelector<HTMLButtonElement>('[data-preview-fab]');
+  const sheet = document.querySelector<HTMLDialogElement>('[data-preview-sheet]');
+  const body = sheet?.querySelector<HTMLElement>('[data-sheet-body]');
+  const phone = root.querySelector<HTMLElement>('.preview-phone');
+  const form = root.querySelector('form');
+  const output = root.querySelector('.output');
+  const fabAvatar = document.querySelector<HTMLElement>('[data-fab-avatar]');
+  if (!fab || !sheet || !body || !phone || !form || !output || !('IntersectionObserver' in window))
+    return;
+
+  const home = phone.parentElement as HTMLElement;
+  const after = phone.nextSibling;
+  fab.hidden = false;
+
+  let formVisible = false;
+  let outputVisible = false;
+  // Hidden while typing: on phones the keyboard would push it over the field being edited.
+  let typing = false;
+  const sync = () => {
+    fab.classList.toggle('is-shown', formVisible && !outputVisible && !typing && !sheet.open);
+    fab.tabIndex = fab.classList.contains('is-shown') ? 0 : -1;
+  };
+  new IntersectionObserver(([entry]) => {
+    formVisible = !!entry?.isIntersecting;
+    sync();
+  }).observe(form);
+  new IntersectionObserver(([entry]) => {
+    outputVisible = !!entry?.isIntersecting;
+    sync();
+  }).observe(output);
+
+  fab.addEventListener('click', () => {
+    body.append(phone);
+    sheet.showModal();
+    sync();
+  });
+  sheet.addEventListener('close', () => {
+    home.insertBefore(phone, after);
+    sync();
+  });
+  // Tapping the dimmed backdrop closes the sheet too.
+  sheet.addEventListener('click', (event) => {
+    if (event.target === sheet) sheet.close();
+  });
+  form.addEventListener('input', () => {
+    if (fabAvatar) fabAvatar.textContent = avatar();
+  });
+  const isTextField = (el: EventTarget | null) =>
+    el instanceof HTMLInputElement && !['radio', 'checkbox', 'color'].includes(el.type);
+  form.addEventListener('focusin', (event) => {
+    typing = isTextField(event.target);
+    sync();
+  });
+  form.addEventListener('focusout', () => {
+    typing = false;
+    sync();
+  });
+  if (fabAvatar) fabAvatar.textContent = avatar();
 }
