@@ -62,6 +62,28 @@ describe('defaults', () => {
   });
 });
 
+describe('contact link buttons', () => {
+  it.each(['mailto:hello@example.com', 'tel:+15550100'])('accepts %s', (url) => {
+    const config = parse(
+      `${MINIMAL}blocks:\n  - type: link\n    title: Contact\n    url: ${url}\n`,
+    );
+    expect(config.blocks[0]).toMatchObject({ type: 'link', url });
+  });
+
+  it.each([
+    'javascript:alert(1)',
+    'mailto:',
+    'tel:',
+    'mailto:not-an-email',
+    'tel:---',
+    'tel:---;ext=1',
+  ])('rejects %s with a friendly error', (url) => {
+    expect(
+      errorFor(`${MINIMAL}blocks:\n  - type: link\n    title: Contact\n    url: "${url}"\n`),
+    ).toContain('"url" in Block 1');
+  });
+});
+
 describe('link icons', () => {
   const link = (icon: string) =>
     `${MINIMAL}blocks:\n  - type: link\n    title: Shop\n    url: https://a.com\n    icon: ${icon}\n`;

@@ -1,6 +1,7 @@
 // The config builder's data, checks and YAML output. No DOM here, so it's unit tested
 // (tests/builder.test.ts runs every output through Folio's real config validator).
 import { parseSpotify, parseYouTubeId } from '../../../src/lib/embeds.ts';
+import { isLinkUrl } from '../../../src/lib/link-url.ts';
 import type { YamlValue } from './yaml-lite';
 
 export interface Platform {
@@ -148,8 +149,11 @@ export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
     if (!title && !url) return;
     if (!title) issues.push({ field: `item-${i}-title`, message: 'Add the button text.' });
     if (!url) issues.push({ field: `item-${i}-url`, message: 'Add where the button goes.' });
-    else if (!WEB_URL.test(withScheme(url))) {
-      issues.push({ field: `item-${i}-url`, message: 'That doesn’t look like a web address.' });
+    else if (!isLinkUrl(withScheme(url))) {
+      issues.push({
+        field: `item-${i}-url`,
+        message: 'Enter a web address, mailto: email link, or tel: phone link.',
+      });
     }
     if (
       item.icon.trim() &&

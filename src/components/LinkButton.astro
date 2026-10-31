@@ -17,7 +17,7 @@ const { title, url, subtitle, icon, featured = false } = Astro.props;
   class:list={['button', { featured, 'has-icon': icon }]}
   href={url}
   rel="noopener"
-  target="_blank"
+  target={/^https?:\/\//i.test(url) ? '_blank' : undefined}
 >
   {icon && (
     <span class="icon">

@@ -232,7 +232,7 @@
               },
               "url": {
                 "type": "string",
-                "description": "Where the button goes. Must start with https://"
+                "description": "Where the button goes. Must start with https://, mailto:, or tel:"
               },
               "subtitle": {
                 "description": "A short second line under the title.",
