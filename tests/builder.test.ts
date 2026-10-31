@@ -34,6 +34,15 @@ function build(s: BuilderState) {
 }
 
 describe('config builder output', () => {
+  it.each(['mailto:hello@example.com', 'tel:+15550100'])('validates contact button %s', (url) => {
+    const config = state({
+      name: 'Studio',
+      items: [{ kind: 'link', title: 'Contact', url, subtitle: '', icon: '' }],
+    });
+    expect(validate(config, platforms)).toEqual([]);
+    expect(build(config).blocks[0]).toMatchObject({ type: 'link', url });
+  });
+
   it('is valid for a typical page and keeps every detail', () => {
     const config = build(
       state({
@@ -283,7 +292,14 @@ describe('loading an existing config', () => {
     const { state: loaded, skipped } = fromConfig(parseYamlLite(full), platforms);
     expect(skipped).toEqual([]);
     expect(loaded.avatar).toBe('avatar.svg');
-    expect(loaded.items.map((i) => i.kind)).toEqual(['link', 'header', 'embed', 'image']);
+    expect(loaded.items.map((i) => i.kind)).toEqual([
+      'link',
+      'link',
+      'link',
+      'header',
+      'embed',
+      'image',
+    ]);
     expect(build(loaded)).toEqual(parseConfig(full, { publicDir }));
   });
 

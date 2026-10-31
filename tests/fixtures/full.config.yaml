@@ -20,6 +20,12 @@ blocks:
     url: https://example.com/shop
     icon: '🏺'
     featured: true
+  - type: link
+    title: Email the studio
+    url: mailto:hello@example.com
+  - type: link
+    title: Call the studio
+    url: tel:+15550100
   - type: header
     title: Watch
   - type: youtube

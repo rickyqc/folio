@@ -54,9 +54,13 @@ test('the config builder makes a file Folio accepts, with a live preview', async
   await titles.nth(1).fill('Shop beans');
   await links.nth(1).fill('not a link');
   await links.nth(1).blur();
-  await expect(builder.getByText('That doesn’t look like a web address.')).toBeVisible();
+  await expect(
+    builder.getByText('Enter a web address, mailto: email link, or tel: phone link.'),
+  ).toBeVisible();
   await links.nth(1).fill('https://example.com/beans');
-  await expect(builder.getByText('That doesn’t look like a web address.')).toBeHidden();
+  await expect(
+    builder.getByText('Enter a web address, mailto: email link, or tel: phone link.'),
+  ).toBeHidden();
 
   // Highlight the second link and add a heading above it.
   await builder.getByRole('button', { name: 'Highlight this link' }).nth(1).click();

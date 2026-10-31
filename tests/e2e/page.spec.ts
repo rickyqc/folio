@@ -97,6 +97,18 @@ test.describe('sample page', () => {
   });
 });
 
+test('contact link buttons leave mail and phone handling to the browser', async ({ page }) => {
+  await page.goto('/full/');
+  for (const [name, href] of [
+    ['Email the studio', 'mailto:hello@example.com'],
+    ['Call the studio', 'tel:+15550100'],
+  ] as const) {
+    const link = page.getByRole('link', { name, exact: true });
+    await expect(link).toHaveAttribute('href', href);
+    await expect(link).not.toHaveAttribute('target');
+  }
+});
+
 test.describe('a freshly deployed copy', () => {
   test('tells the owner their page is live and links to their own config', async ({ page }) => {
     const { scripts } = watch(page);

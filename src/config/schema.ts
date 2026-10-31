@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { parseSpotify, parseYouTubeId } from '../lib/embeds.ts';
+import { isLinkUrl } from '../lib/link-url.ts';
 import { PLATFORMS, PLATFORM_IDS, isEmoji, isPlatform, resolveSocial } from '../lib/socials.ts';
 
 const webUrl = z
@@ -19,10 +20,15 @@ const hexColor = z
   .trim()
   .regex(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i, 'must be a hex color in quotes, like "#0071e3"');
 
+const linkUrl = z.string().trim().refine(isLinkUrl, {
+  message:
+    'must be a full web address starting with https://, an email link starting with mailto:, or a phone link starting with tel:',
+});
+
 const linkBlock = z.strictObject({
   type: z.literal('link'),
   title: text.describe('The button text.'),
-  url: webUrl.describe('Where the button goes. Must start with https://'),
+  url: linkUrl.describe('Where the button goes. Must start with https://, mailto:, or tel:'),
   subtitle: text.optional().describe('A short second line under the title.'),
   icon: z
     .string()

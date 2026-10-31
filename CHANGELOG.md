@@ -4,6 +4,8 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 
 ## Unreleased
 
+- Link buttons accept `mailto:` and `tel:` addresses and open them in the visitor’s mail or phone app.
+
 - A new copy's page shows a "Your Folio is live!" note with a button straight to its `folio.config.yaml` on GitHub. It disappears once you change the sample name.
 - The README, setup guide and sample config point to the config builder.
 

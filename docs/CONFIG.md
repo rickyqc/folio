@@ -103,7 +103,7 @@ A full-width button.
 | Option     | Default      | What it does                                                                                                       |
 | ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------ |
 | `title`    | **required** | The button text. Keep it short.                                                                                    |
-| `url`      | **required** | Where it goes. Must start with `https://`.                                                                         |
+| `url`      | **required** | Where it goes: a web address (`https://`), email link (`mailto:`), or phone link (`tel:`).                         |
 | `subtitle` | none         | A smaller second line.                                                                                             |
 | `icon`     | none         | An icon on the left: any name from [socials](#socials) (e.g. `youtube`) or a single emoji in quotes (e.g. `"🎨"`). |
 | `featured` | `false`      | Fills the button with your accent color. Only one link can be featured.                                            |
@@ -116,6 +116,17 @@ blocks:
     url: https://shop.jane.dev
     icon: '🛍️'
     featured: true
+```
+
+Email and phone links open in the visitor’s mail or phone app, rather than a new tab:
+
+```yaml
+- type: link
+  title: Email me
+  url: mailto:hello@example.com
+- type: link
+  title: Call the studio
+  url: tel:+15550100
 ```
 
 ### header
