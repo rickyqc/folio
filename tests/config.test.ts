@@ -70,14 +70,18 @@ describe('contact link buttons', () => {
     expect(config.blocks[0]).toMatchObject({ type: 'link', url });
   });
 
-  it.each(['javascript:alert(1)', 'mailto:', 'tel:', 'mailto:not-an-email'])(
-    'rejects %s with a friendly error',
-    (url) => {
-      expect(
-        errorFor(`${MINIMAL}blocks:\n  - type: link\n    title: Contact\n    url: "${url}"\n`),
-      ).toContain('"url" in Block 1');
-    },
-  );
+  it.each([
+    'javascript:alert(1)',
+    'mailto:',
+    'tel:',
+    'mailto:not-an-email',
+    'tel:---',
+    'tel:---;ext=1',
+  ])('rejects %s with a friendly error', (url) => {
+    expect(
+      errorFor(`${MINIMAL}blocks:\n  - type: link\n    title: Contact\n    url: "${url}"\n`),
+    ).toContain('"url" in Block 1');
+  });
 });
 
 describe('link icons', () => {

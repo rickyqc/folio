@@ -4,6 +4,6 @@ export function isLinkUrl(value: string): boolean {
   return (
     /^https?:\/\/[^\s.]+\.[^\s]+$/i.test(value) ||
     (/^mailto:/i.test(value) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(new URL(value).pathname)) ||
-    /^tel:\+?[\d().-]+(?:;[^\s]+)?$/i.test(value)
+    /^tel:\+?(?=[\d().-]*\d)[\d().-]+(?:;[^\s]+)?$/i.test(value)
   );
 }
