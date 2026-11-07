@@ -11,13 +11,15 @@ interface Props {
 }
 
 const { title, url, subtitle, icon, featured = false } = Astro.props;
+// Email, call and text links open the visitor's app, so they don't need a new tab.
+const web = /^https?:/i.test(url);
 ---
 
 <a
   class:list={['button', { featured, 'has-icon': icon }]}
   href={url}
-  rel="noopener"
-  target="_blank"
+  rel={web ? 'noopener' : undefined}
+  target={web ? '_blank' : undefined}
 >
   {icon && (
     <span class="icon">

@@ -9,6 +9,20 @@ const webUrl = z
     message: 'must be a full web address starting with https://',
   });
 
+/** mailto:, tel: and sms: links, for "Email me", "Call" and "Text me" buttons. */
+const CONTACT_URL = /^(mailto:[^\s@]+@[^\s@]+\.[^\s@]+|(tel|sms):\+?[\d\s().-]{3,})$/i;
+
+/** Where a link button can go: a web address, or an email, phone or text link. */
+const linkUrl = z
+  .string()
+  .trim()
+  .refine((v) => webUrl.safeParse(v).success || CONTACT_URL.test(v), {
+    message:
+      'must be a full web address starting with https://, or an email or phone link like mailto:hi@jane.dev or tel:+15550100',
+  })
+  // Phone apps want the bare number: tel:+1 (555) 010-0 becomes tel:+15550100.
+  .transform((v) => (/^(tel|sms):/i.test(v) ? v.replace(/[\s().-]/g, '') : v));
+
 const text = z.string().trim().min(1);
 
 /** A file in public/ (e.g. "me.jpg") or a full image URL. Existence is checked by the loader. */
@@ -22,7 +36,9 @@ const hexColor = z
 const linkBlock = z.strictObject({
   type: z.literal('link'),
   title: text.describe('The button text.'),
-  url: webUrl.describe('Where the button goes. Must start with https://'),
+  url: linkUrl.describe(
+    'Where the button goes: a web address starting with https://, or mailto:, tel: or sms: followed by an email or phone number.',
+  ),
   subtitle: text.optional().describe('A short second line under the title.'),
   icon: z
     .string()

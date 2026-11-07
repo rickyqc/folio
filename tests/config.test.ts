@@ -164,6 +164,23 @@ describe('friendly errors', () => {
     );
   });
 
+  it('accepts email, call and text buttons, and tidies phone numbers', () => {
+    const config = parse(
+      `${MINIMAL}blocks:\n  - type: link\n    title: Email\n    url: mailto:hi@jane.dev\n  - type: link\n    title: Call\n    url: tel:+1 (555) 010-0100\n  - type: link\n    title: Text\n    url: sms:+15550100\n`,
+    );
+    expect(config.blocks.map((b) => (b.type === 'link' ? b.url : ''))).toEqual([
+      'mailto:hi@jane.dev',
+      'tel:+15550100100',
+      'sms:+15550100',
+    ]);
+  });
+
+  it('rejects a mailto link without an email address', () => {
+    expect(
+      errorFor(`${MINIMAL}blocks:\n  - type: link\n    title: Email\n    url: mailto:jane\n`),
+    ).toContain('or an email or phone link like mailto:hi@jane.dev');
+  });
+
   it('explains a url without https://', () => {
     expect(
       errorFor(`${MINIMAL}blocks:\n  - type: link\n    title: Shop\n    url: jane.dev/shop\n`),

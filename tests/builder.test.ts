@@ -153,6 +153,10 @@ describe('builder checks', () => {
     ];
     expect(fields(state({ name: 'Sam', items: items('example.com') }))).toEqual([]);
     expect(fields(state({ name: 'Sam', items: items('not a link') }))).toEqual(['item-0-url']);
+    for (const url of ['mailto:sam@example.com', 'tel:+1 555 0100', 'sms:+15550100']) {
+      expect(fields(state({ name: 'Sam', items: items(url) }))).toEqual([]);
+      expect(build(state({ name: 'Sam', items: items(url) })).blocks).toHaveLength(1);
+    }
     expect(fields(state({ name: 'Sam', items: items('https://a.com', '') }))).toEqual([
       'item-0-title',
     ]);

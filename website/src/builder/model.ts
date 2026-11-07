@@ -96,6 +96,7 @@ export interface Issue {
 
 const WEB_URL = /^https?:\/\/[^\s.]+\.[^\s]+$/i;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CONTACT_URL = /^(mailto:[^\s@]+@[^\s@]+\.[^\s@]+|(tel|sms):\+?[\d\s().-]{3,})$/i;
 
 /** Mirrors Folio's own rules, so the copied file passes the build. */
 export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
@@ -148,8 +149,11 @@ export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
     if (!title && !url) return;
     if (!title) issues.push({ field: `item-${i}-title`, message: 'Add the button text.' });
     if (!url) issues.push({ field: `item-${i}-url`, message: 'Add where the button goes.' });
-    else if (!WEB_URL.test(withScheme(url))) {
-      issues.push({ field: `item-${i}-url`, message: 'That doesn’t look like a web address.' });
+    else if (!WEB_URL.test(withScheme(url)) && !CONTACT_URL.test(url)) {
+      issues.push({
+        field: `item-${i}-url`,
+        message: 'Use a web address, or mailto:you@example.com or tel:+15550100.',
+      });
     }
     if (
       item.icon.trim() &&

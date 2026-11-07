@@ -213,7 +213,6 @@
       }
     },
     "blocks": {
-      "default": [],
       "description": "Your links, headers and embeds, top to bottom.",
       "type": "array",
       "items": {
@@ -231,8 +230,8 @@
                 "description": "The button text."
               },
               "url": {
-                "type": "string",
-                "description": "Where the button goes. Must start with https://"
+                "description": "Where the button goes: a web address starting with https://, or mailto:, tel: or sms: followed by an email or phone number.",
+                "type": "string"
               },
               "subtitle": {
                 "description": "A short second line under the title.",

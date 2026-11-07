@@ -100,13 +100,13 @@ Your page, top to bottom. Each block starts with `- type:` followed by the type.
 
 A full-width button.
 
-| Option     | Default      | What it does                                                                                                       |
-| ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------ |
-| `title`    | **required** | The button text. Keep it short.                                                                                    |
-| `url`      | **required** | Where it goes. Must start with `https://`.                                                                         |
-| `subtitle` | none         | A smaller second line.                                                                                             |
-| `icon`     | none         | An icon on the left: any name from [socials](#socials) (e.g. `youtube`) or a single emoji in quotes (e.g. `"🎨"`). |
-| `featured` | `false`      | Fills the button with your accent color. Only one link can be featured.                                            |
+| Option     | Default      | What it does                                                                                                             |
+| ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `title`    | **required** | The button text. Keep it short.                                                                                          |
+| `url`      | **required** | Where it goes: a web address starting with `https://`, or `mailto:`, `tel:` or `sms:` for an email, call or text button. |
+| `subtitle` | none         | A smaller second line.                                                                                                   |
+| `icon`     | none         | An icon on the left: any name from [socials](#socials) (e.g. `youtube`) or a single emoji in quotes (e.g. `"🎨"`).       |
+| `featured` | `false`      | Fills the button with your accent color. Only one link can be featured.                                                  |
 
 ```yaml
 blocks:
@@ -116,6 +116,21 @@ blocks:
     url: https://shop.jane.dev
     icon: '🛍️'
     featured: true
+```
+
+Buttons can also start an email, a call or a text message:
+
+```yaml
+blocks:
+  - type: link
+    title: Email me
+    url: mailto:hi@jane.dev
+  - type: link
+    title: Call the studio
+    url: tel:+15550100
+  - type: link
+    title: Text me
+    url: sms:+15550100
 ```
 
 ### header
