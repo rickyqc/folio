@@ -224,6 +224,14 @@ describe('friendly errors', () => {
     ).toContain('must be a YouTube video link');
   });
 
+  it('points a YouTube channel link to socials', () => {
+    const message = errorFor(
+      `${MINIMAL}blocks:\n  - type: youtube\n    url: https://www.youtube.com/@mkbhd\n`,
+    );
+    expect(message).toContain('is a link to a YouTube channel, not a video.');
+    expect(message).not.toContain('must be a YouTube video link');
+  });
+
   it('requires alt text on images', () => {
     expect(errorFor(`${MINIMAL}blocks:\n  - type: image\n    src: me.jpg\n`)).toContain(
       'Block 1 (image) is missing "alt".',

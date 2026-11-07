@@ -2,7 +2,12 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { accentRing, contrast, expandHex, readableTextOn } from '../src/lib/color.ts';
-import { parseSpotify, parseYouTubeId, spotifyHeight } from '../src/lib/embeds.ts';
+import {
+  isYouTubeChannel,
+  parseSpotify,
+  parseYouTubeId,
+  spotifyHeight,
+} from '../src/lib/embeds.ts';
 import { PLATFORM_IDS, resolveSocial } from '../src/lib/socials.ts';
 import { withLinkScheme, withScheme } from '../src/lib/urls.ts';
 import { buildVCard } from '../src/lib/vcard.ts';
@@ -172,5 +177,15 @@ describe('withScheme', () => {
     expect(withLinkScheme('hi@jane.dev')).toBe('mailto:hi@jane.dev');
     expect(withLinkScheme('jane.dev')).toBe('https://jane.dev');
     expect(withLinkScheme('tel:+15550100')).toBe('tel:+15550100');
+  });
+});
+
+describe('isYouTubeChannel', () => {
+  it('spots channel pages, not videos', () => {
+    expect(isYouTubeChannel('https://www.youtube.com/@mkbhd')).toBe(true);
+    expect(isYouTubeChannel('https://youtube.com/channel/UC123')).toBe(true);
+    expect(isYouTubeChannel('https://m.youtube.com/c/name')).toBe(true);
+    expect(isYouTubeChannel('https://youtube.com/watch?v=aqz-KE-bpKQ')).toBe(false);
+    expect(isYouTubeChannel('https://youtube.com/shorts/aqz-KE-bpKQ')).toBe(false);
   });
 });

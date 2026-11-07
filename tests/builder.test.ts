@@ -142,6 +142,17 @@ describe('config builder output', () => {
 describe('builder checks', () => {
   const fields = (s: BuilderState) => validate(s, platforms).map((i) => i.field);
 
+  it('points a YouTube channel to socials', () => {
+    const issues = validate(
+      state({
+        name: 'Sam',
+        items: [{ kind: 'embed', url: 'https://youtube.com/@sam', title: '' }],
+      }),
+      platforms,
+    );
+    expect(issues[0]?.message).toContain('That’s a channel.');
+  });
+
   it('needs a name', () => {
     expect(fields(state({}))).toContain('name');
     expect(fields(state({ name: 'Sam' }))).toEqual([]);

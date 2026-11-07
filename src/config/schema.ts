@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { parseSpotify, parseYouTubeId } from '../lib/embeds.ts';
+import { isYouTubeChannel, parseSpotify, parseYouTubeId } from '../lib/embeds.ts';
 import { PLATFORMS, PLATFORM_IDS, isEmoji, isPlatform, resolveSocial } from '../lib/socials.ts';
 import { withLinkScheme, withScheme } from '../lib/urls.ts';
 
@@ -64,9 +64,15 @@ const headerBlock = z.strictObject({
 
 const youtubeBlock = z.strictObject({
   type: z.literal('youtube'),
-  url: webUrl.refine((v) => parseYouTubeId(v) !== null, {
-    message: 'must be a YouTube video link, like https://youtube.com/watch?v=dQw4w9WgXcQ',
-  }),
+  url: webUrl
+    .refine((v) => !isYouTubeChannel(v), {
+      message:
+        'is a link to a YouTube channel, not a video. To link your channel, add it under socials as  youtube: "@yourname"',
+      abort: true,
+    })
+    .refine((v) => parseYouTubeId(v) !== null, {
+      message: 'must be a YouTube video link, like https://youtube.com/watch?v=dQw4w9WgXcQ',
+    }),
   title: text.optional().describe('Shown on the player before it loads.'),
 });
 

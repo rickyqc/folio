@@ -22,6 +22,21 @@ export function parseYouTubeId(input: string): string | null {
   return id && YOUTUBE_ID.test(id) ? id : null;
 }
 
+/** True for a channel page (youtube.com/@name, /channel/…, /c/…, /user/…) rather than a video. */
+export function isYouTubeChannel(input: string): boolean {
+  let url: URL;
+  try {
+    url = new URL(input);
+  } catch {
+    return false;
+  }
+  const host = url.hostname.replace(/^(www\.|m\.)/, '');
+  const first = url.pathname.split('/').filter(Boolean)[0] ?? '';
+  return (
+    host === 'youtube.com' && (first.startsWith('@') || ['channel', 'c', 'user'].includes(first))
+  );
+}
+
 export const SPOTIFY_KINDS = ['track', 'album', 'playlist', 'episode', 'show', 'artist'] as const;
 export type SpotifyKind = (typeof SPOTIFY_KINDS)[number];
 

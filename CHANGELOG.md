@@ -20,6 +20,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - Links written without `https://` (`url: jane.dev/shop`) now work instead of failing the build, and a bare email address on a link button becomes an email link.
 - Clearer errors for configs written for other tools: `links:` points you to `blocks:`, and an option outside its section (like `bio:` at the top) says which section it belongs in. Errors about a section now point at its own line.
 - YAML mistakes are explained in plain words: tabs, misaligned lines, unclosed quotes, an option written twice, a username starting with @, and text containing `: ` (with the quoted line to paste).
+- A YouTube channel link in a video block now says to add the channel under `socials` instead.
 
 ## 1.0.0 (2026-10-27)
 

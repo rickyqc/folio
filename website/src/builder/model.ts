@@ -1,6 +1,6 @@
 // The config builder's data, checks and YAML output. No DOM here, so it's unit tested
 // (tests/builder.test.ts runs every output through Folio's real config validator).
-import { parseSpotify, parseYouTubeId } from '../../../src/lib/embeds.ts';
+import { isYouTubeChannel, parseSpotify, parseYouTubeId } from '../../../src/lib/embeds.ts';
 import { withLinkScheme, withScheme } from '../../../src/lib/urls.ts';
 import type { YamlValue } from './yaml-lite';
 
@@ -137,6 +137,11 @@ export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
       if (!url) {
         if (item.title.trim())
           issues.push({ field: `item-${i}-url`, message: 'Add the YouTube or Spotify link.' });
+      } else if (isYouTubeChannel(url)) {
+        issues.push({
+          field: `item-${i}-url`,
+          message: 'That’s a channel. Paste one video, or add your channel under Socials.',
+        });
       } else if (!embedType(url)) {
         issues.push({
           field: `item-${i}-url`,
