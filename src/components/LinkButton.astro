@@ -88,9 +88,10 @@ const { title, url, subtitle, icon, featured = false } = Astro.props;
     color: var(--muted);
   }
 
+  /* The ring only shows when the accent is too close to the page background to stand out. */
   .featured {
     background: var(--accent);
-    box-shadow: none;
+    box-shadow: inset 0 0 0 1.5px var(--accent-ring, transparent);
     color: var(--on-accent);
   }
 

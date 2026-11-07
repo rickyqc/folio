@@ -9,7 +9,7 @@ import SetupBanner from '../components/SetupBanner.astro';
 import SocialRow from '../components/SocialRow.astro';
 import { resolve } from 'node:path';
 import { loadConfig } from '../config/load.ts';
-import { expandHex, readableTextOn } from '../lib/color.ts';
+import { accentRing, expandHex, readableTextOn } from '../lib/color.ts';
 import { optimize } from '../lib/images.ts';
 import { setupInfo } from '../lib/links.ts';
 import '../themes/tokens.css';
@@ -41,7 +41,7 @@ const ogImage = absolute('og.png');
   lang={site.lang}
   data-mode={theme.mode}
   data-buttons={theme.buttons}
-  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}`}
+  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}; --accent-ring: ${accentRing(accent)}`}
 >
   <head>
     <meta charset="utf-8" />

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { contrast, expandHex, readableTextOn } from '../src/lib/color.ts';
+import { accentRing, contrast, expandHex, readableTextOn } from '../src/lib/color.ts';
 import { parseSpotify, parseYouTubeId, spotifyHeight } from '../src/lib/embeds.ts';
 import { PLATFORM_IDS, resolveSocial } from '../src/lib/socials.ts';
 import { buildVCard } from '../src/lib/vcard.ts';
@@ -103,6 +103,14 @@ describe('color', () => {
     for (const accent of ['#0071e3', '#ffd60a', '#34c759', '#ff375f', '#888888']) {
       expect(contrast(accent, readableTextOn(accent))).toBeGreaterThanOrEqual(3);
     }
+  });
+});
+
+describe('accentRing', () => {
+  it('outlines accents that blend into the page background', () => {
+    expect(accentRing('#0071e3')).toBe('light-dark(transparent, transparent)');
+    expect(accentRing('#f5f5f7')).toBe('light-dark(#1d1d1f, transparent)');
+    expect(accentRing('#1c1c1e')).toBe('light-dark(transparent, #f5f5f7)');
   });
 });
 
