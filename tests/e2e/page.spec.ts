@@ -131,7 +131,8 @@ test.describe('every option switched on', () => {
     const featured = page.getByRole('link', { name: /Shop the spring batch/ });
     await expect(featured).toHaveCSS('background-color', 'rgb(255, 214, 10)');
     await expect(featured).toHaveCSS('color', 'rgb(29, 29, 31)');
-    await expect(featured).toHaveCSS('border-radius', /^(999px|9\d\dpx)$/);
+    // Half the 56px button height: a pill on one line, tidy when a title wraps.
+    await expect(featured).toHaveCSS('border-radius', '28px');
   });
 
   test('loads embeds only when tapped', async ({ page }) => {

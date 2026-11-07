@@ -33,6 +33,8 @@
   color-scheme: dark;
 }
 
+/* Half the button height: a pill when the button is one line tall, and a tidy rounded box,
+   not a stretched oval, when a long title wraps. */
 :root[data-buttons='pill'] {
-  --radius: 999px;
+  --radius: calc(var(--button-height) / 2);
 }

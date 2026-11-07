@@ -15,6 +15,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - A color written without quotes (`accent: #ff375f`) now gets a clear “needs quotes” message, instead of saying the accent is missing.
 - Fixed: the browser tab icon used your original photo, so a large upload was downloaded in full by every visitor. It now uses the smallest resized copy.
 - Your featured link stays visible with any accent color: when the accent is too close to the page background (a very light accent in light mode, a very dark one in dark mode), the button gets a thin outline.
+- Pill buttons with a long, wrapping title keep pill-shaped ends instead of stretching into an oval.
 
 ## 1.0.0 (2026-10-27)
 
