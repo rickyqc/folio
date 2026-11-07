@@ -221,6 +221,13 @@ describe('friendly errors', () => {
     );
   });
 
+  it('explains a color written without quotes', () => {
+    const message = errorFor(`${MINIMAL}theme:\n  accent: #ff375f\n`);
+    expect(message).toContain('Line 4: The color for "accent" needs quotes.');
+    expect(message).toContain('accent: "#ff375f"');
+    expect(message).not.toContain('missing');
+  });
+
   it('catches YAML syntax mistakes with a line number', () => {
     expect(errorFor(`profile:\n  name: Jane\n   bio: bad indent\n`)).toMatch(
       /Line \d: The file isn't valid YAML/,

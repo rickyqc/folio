@@ -142,10 +142,11 @@ export function parseConfig(
   const locate = (path: PropertyKey[]) => lineOf(doc, counter, path);
   const result = configSchema.safeParse(raw);
   if (!result.success) {
-    const problems = result.error.issues.flatMap((issue) =>
-      issueToProblems(issue, raw, configSchema, locate),
-    );
-    throw new FolioConfigError(sortByLine(problems), fileName);
+    const colors = unquotedColors(source);
+    const problems = result.error.issues
+      .flatMap((issue) => issueToProblems(issue, raw, configSchema, locate))
+      .filter((p) => !colors.some((c) => c.line === p.line));
+    throw new FolioConfigError(sortByLine([...colors, ...problems]), fileName);
   }
 
   const config = result.data;
@@ -162,6 +163,25 @@ export function parseConfig(
   if (imageProblems.length > 0) throw new FolioConfigError(imageProblems, fileName);
 
   return resolveConfig(config, options.fallbackUrl);
+}
+
+/**
+ * Finds colors written without quotes, like  accent: #ff375f. YAML reads everything after
+ * " #" as a note, so the value silently disappears and the schema would only say it's missing.
+ */
+export function unquotedColors(source: string): Problem[] {
+  return source.split('\n').flatMap((text, i) => {
+    const match = /^\s*(?:-\s+)?([\w-]+):\s+(#[0-9a-f]{3}(?:[0-9a-f]{3})?)\b/i.exec(text);
+    if (!match) return [];
+    const [, key, color] = match;
+    return [
+      {
+        line: i + 1,
+        message: `The color for "${key}" needs quotes. Without them, everything after # is treated as a note and ignored.`,
+        fix: `Write it as   ${key}: "${color}"`,
+      },
+    ];
+  });
 }
 
 function sortByLine(problems: Problem[]): Problem[] {

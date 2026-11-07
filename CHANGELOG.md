@@ -12,6 +12,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - The config builder adds YouTube videos and Spotify players.
 - The landing page leads with the builder: build first, then deploy and paste. It now has a sitemap and robots.txt.
 - Fixed: long names and bios ran off the edge of the share card. Long names now get smaller and wrap, and long bios end with “…” after three lines.
+- A color written without quotes (`accent: #ff375f`) now gets a clear “needs quotes” message, instead of saying the accent is missing.
 
 ## 1.0.0 (2026-10-27)
 
