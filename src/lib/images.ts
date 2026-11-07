@@ -26,6 +26,8 @@ export interface Variant {
 
 export interface OptimizedImage {
   src: string;
+  /** The smallest generated size, for places like the browser tab icon. */
+  smallest?: string;
   srcset?: string;
   width?: number;
   height?: number;
@@ -72,10 +74,11 @@ export async function optimize(
   const list = await variants(publicDir, src, role);
   const { width, height } = await size(publicDir, src);
   const url = (v: Variant) => `${IMAGE_DIR}/${v.file}`;
-  const largest = list.at(-1);
-  if (!largest) return { src };
+  const [smallest, largest] = [list[0], list.at(-1)];
+  if (!smallest || !largest) return { src };
   return {
     src: url(largest),
+    smallest: url(smallest),
     srcset: list.map((v) => `${url(v)} ${v.width}w`).join(', '),
     ...(role === 'avatar' ? { width: 96, height: 96 } : { width, height }),
   };

@@ -13,6 +13,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - The landing page leads with the builder: build first, then deploy and paste. It now has a sitemap and robots.txt.
 - Fixed: long names and bios ran off the edge of the share card. Long names now get smaller and wrap, and long bios end with “…” after three lines.
 - A color written without quotes (`accent: #ff375f`) now gets a clear “needs quotes” message, instead of saying the accent is missing.
+- Fixed: the browser tab icon used your original photo, so a large upload was downloaded in full by every visitor. It now uses the smallest resized copy.
 
 ## 1.0.0 (2026-10-27)
 

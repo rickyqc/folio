@@ -70,7 +70,7 @@ const ogImage = absolute('og.png');
     ) : (
       <meta name="theme-color" content={theme.mode === 'dark' ? '#000000' : '#fbfbfd'} />
     )}
-    {profile.avatar && <link rel="icon" href={profile.avatar} />}
+    {avatar && <link rel="icon" href={avatar.smallest ?? avatar.src} />}
     {profile.emoji && (
       <link
         rel="icon"

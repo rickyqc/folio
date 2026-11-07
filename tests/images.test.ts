@@ -36,6 +36,7 @@ describe('optimize', () => {
     const img = await optimize(publicDir, 'Big Photo.jpg', 'avatar');
     expect(img).toEqual({
       src: 'folio-images/Big-Photo-288-sq.webp',
+      smallest: 'folio-images/Big-Photo-96-sq.webp',
       srcset:
         'folio-images/Big-Photo-96-sq.webp 96w, folio-images/Big-Photo-192-sq.webp 192w, folio-images/Big-Photo-288-sq.webp 288w',
       width: 96,
