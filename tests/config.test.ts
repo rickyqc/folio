@@ -269,10 +269,24 @@ describe('friendly errors', () => {
     expect(message).not.toContain('missing');
   });
 
-  it('catches YAML syntax mistakes with a line number', () => {
-    expect(errorFor(`profile:\n  name: Jane\n   bio: bad indent\n`)).toMatch(
-      /Line \d: The file isn't valid YAML/,
+  it('catches YAML syntax mistakes with a line number, in plain words', () => {
+    const indent = errorFor(`profile:\n  name: Jane\n   bio: bad indent\n`);
+    expect(indent).toContain('has 1 problem');
+    expect(indent).toMatch(/Line \d: This line’s indentation doesn’t line up/);
+    expect(errorFor(`profile:\n\tname: Jane\n`)).toContain(
+      'Line 2: This line is indented with a tab.',
     );
+    expect(errorFor(`profile:\n  name: A\n  name: B\n`)).toContain('"name" appears twice');
+    expect(errorFor(`profile:\n  name: "Jane\n`)).toContain(
+      'A quote is opened here but never closed.',
+    );
+    expect(errorFor(`${MINIMAL}socials:\n  instagram: @jane\n`)).toContain('leave out the @');
+  });
+
+  it('explains text with a colon in it', () => {
+    const message = errorFor(`profile:\n  name: Jane\n  bio: Designer: product & brand\n`);
+    expect(message).toContain('Line 3: The text for "bio" contains ": "');
+    expect(message).toContain('bio: "Designer: product & brand"');
   });
 
   it('requires the fields each analytics provider needs', () => {

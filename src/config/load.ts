@@ -116,14 +116,16 @@ export function parseConfig(
   const doc = parseDocument(source, { lineCounter: counter, prettyErrors: false });
 
   if (doc.errors.length > 0) {
-    throw new FolioConfigError(
-      doc.errors.map((e) => ({
-        line: counter.linePos(e.pos[0]).line,
-        message: `The file isn't valid YAML here (${e.message.split('\n')[0]}).`,
-        fix: 'Check the indentation lines up with the lines above, and put text containing ": " or " #" in quotes.',
-      })),
-      fileName,
+    const lines = source.split('\n');
+    const problems = doc.errors.map((e) => {
+      const line = counter.linePos(e.pos[0]).line;
+      return { line, ...yamlProblem(e.code, e.message, lines[line - 1] ?? '') };
+    });
+    // One slip can trip several YAML rules on the same line; report it once.
+    const unique = problems.filter(
+      (p, i) => problems.findIndex((q) => q.line === p.line && q.message === p.message) === i,
     );
+    throw new FolioConfigError(unique, fileName);
   }
 
   const raw: unknown = doc.toJS();
@@ -163,6 +165,69 @@ export function parseConfig(
   if (imageProblems.length > 0) throw new FolioConfigError(imageProblems, fileName);
 
   return resolveConfig(config, options.fallbackUrl);
+}
+
+/** Puts the YAML parser's error into everyday words, with the fix for that slip. */
+export function yamlProblem(
+  code: string,
+  parserMessage: string,
+  text: string,
+): { message: string; fix: string } {
+  const colonInValue = /^\s*(?:-\s+)?([\w-]+):\s+([^'"].*?:\s.*)$/.exec(text);
+  if (code === 'BLOCK_AS_IMPLICIT_KEY' && colonInValue) {
+    const [, key, value] = colonInValue;
+    return {
+      message: `The text for "${key}" contains ": ", which YAML reads as the start of a new option.`,
+      fix: `Put the text in quotes:   ${key}: "${value?.replace(/"/g, '\\"')}"`,
+    };
+  }
+  switch (code) {
+    case 'TAB_AS_INDENT':
+      return {
+        message: 'This line is indented with a tab.',
+        fix: 'Replace the tab with spaces: two for each level, like the lines around it.',
+      };
+    case 'BLOCK_AS_IMPLICIT_KEY':
+    case 'MULTILINE_IMPLICIT_KEY':
+    case 'BAD_INDENT':
+      return {
+        message: 'This line’s indentation doesn’t line up with the lines around it.',
+        fix: 'Use the same number of spaces as the other options in this section.',
+      };
+    case 'DUPLICATE_KEY': {
+      const key = /^\s*(?:-\s+)?([\w-]+):/.exec(text)?.[1];
+      return {
+        message: `${key ? `"${key}"` : 'This option'} appears twice in the same section.`,
+        fix: 'Keep one and delete the other.',
+      };
+    }
+    case 'BAD_SCALAR_START': {
+      const char = /character (\S)/.exec(parserMessage)?.[1] ?? '@';
+      return {
+        message: `A value can't start with ${char} unless it's in quotes.`,
+        fix:
+          char === '@'
+            ? 'For a username, leave out the @ (instagram: jane). Otherwise put the value in quotes.'
+            : 'Put the value in quotes.',
+      };
+    }
+  }
+  if (/quote/i.test(parserMessage)) {
+    return {
+      message: 'A quote is opened here but never closed.',
+      fix: 'Add the matching quote at the end of the text.',
+    };
+  }
+  if (/without - indicator/.test(parserMessage)) {
+    return {
+      message: 'This line’s indentation doesn’t line up with the lines around it.',
+      fix: 'Line it up with the other options of the same block, just after the "- ".',
+    };
+  }
+  return {
+    message: `The file isn't valid YAML here (${parserMessage.split('\n')[0]}).`,
+    fix: 'Check the indentation lines up with the lines above, and put text containing ": " or " #" in quotes.',
+  };
 }
 
 /**
