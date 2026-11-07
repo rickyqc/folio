@@ -56,11 +56,29 @@ function getAt(raw: unknown, path: Path): unknown {
   return node;
 }
 
+type Ranged = { range?: [number, number, number] | null } | null | undefined;
+
+/** The node for a map key, so errors point at "links:" rather than the list below it. */
+function keyNode(doc: Document, path: Path): Ranged {
+  const parent = doc.getIn(path.slice(0, -1) as unknown[], true) as
+    { items?: { key?: unknown }[] } | undefined;
+  const last = path.at(-1);
+  const pair = parent?.items?.find(
+    (item) =>
+      item &&
+      typeof item === 'object' &&
+      'key' in item &&
+      (item.key as { value?: unknown } | null)?.value === last,
+  );
+  return pair?.key as Ranged;
+}
+
 /** The 1-based line of the deepest part of `path` that exists in the file. */
 export function lineOf(doc: Document, counter: LineCounter, path: Path): number | undefined {
   for (let depth = path.length; depth >= 0; depth--) {
-    const node = doc.getIn(path.slice(0, depth) as unknown[], true) as
-      { range?: [number, number, number] } | undefined;
+    const sub = path.slice(0, depth);
+    const key = typeof sub.at(-1) === 'string' ? keyNode(doc, sub) : undefined;
+    const node = (key ?? doc.getIn(sub as unknown[], true)) as Ranged;
     if (node?.range) return counter.linePos(node.range[0]).line;
     if (depth === 0) return undefined;
   }
@@ -157,6 +175,50 @@ function keysAt(schema: z.ZodType, path: Path, raw: unknown): string[] {
   return finalDef['type'] === 'object' ? Object.keys(finalDef['shape'] as object) : [];
 }
 
+/** Names people use for Folio's sections, from other link-in-bio tools or AI assistants. */
+const SECTION_ALIASES: Record<string, string> = {
+  links: 'blocks',
+  link: 'blocks',
+  buttons: 'blocks',
+  items: 'blocks',
+  social: 'socials',
+  social_links: 'socials',
+  socialLinks: 'socials',
+  colors: 'theme',
+  color: 'theme',
+  style: 'theme',
+  appearance: 'theme',
+  about: 'profile',
+  user: 'profile',
+};
+
+/**
+ * Explains a top-level key that belongs somewhere else: another tool's name for a section
+ * ("links" for blocks), or an option written without its section ("name" outside profile).
+ */
+function misplacedTopLevel(
+  key: string,
+  schema: z.ZodType,
+  raw: unknown,
+): { message: string; fix: string } | undefined {
+  const section = SECTION_ALIASES[key];
+  if (section) {
+    return {
+      message: `Your config has an unknown section "${key}". Folio calls it "${section}".`,
+      fix: `Rename "${key}:" to "${section}:". See docs/CONFIG.md for what goes inside it.`,
+    };
+  }
+  for (const owner of ['profile', 'site', 'theme', 'contact', 'footer']) {
+    if (keysAt(schema, [owner], raw).includes(key)) {
+      return {
+        message: `"${key}" belongs inside the ${owner} section.`,
+        fix: `Move it under "${owner}:" and indent it two spaces, like the other ${owner} options.`,
+      };
+    }
+  }
+  return undefined;
+}
+
 export function issueToProblems(
   issue: z.core.$ZodIssue,
   raw: unknown,
@@ -210,6 +272,10 @@ export function issueToProblems(
     case 'unrecognized_keys': {
       const allowed = keysAt(schema, path, raw);
       return issue.keys.map((key) => {
+        if (path.length === 0) {
+          const placed = misplacedTopLevel(key, schema, raw);
+          if (placed) return { line: locate([key]), ...placed };
+        }
         const guess = suggest(key, allowed);
         const where = path.length === 0 ? 'Your config' : describe(raw, [...path, key]).owner;
         return {

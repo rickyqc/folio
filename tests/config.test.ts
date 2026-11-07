@@ -152,6 +152,19 @@ describe('friendly errors', () => {
     );
   });
 
+  it('recognizes other tools’ names for sections', () => {
+    const message = errorFor(`${MINIMAL}links:\n  - title: Shop\n    url: https://a.com\n`);
+    expect(message).toContain(
+      'Line 3: Your config has an unknown section "links". Folio calls it "blocks".',
+    );
+  });
+
+  it('says which section a stray option belongs in', () => {
+    const message = errorFor(`${MINIMAL}bio: Designer\naccent: '#ff375f'\n`);
+    expect(message).toContain('"bio" belongs inside the profile section.');
+    expect(message).toContain('"accent" belongs inside the theme section.');
+  });
+
   it('suggests the right block type', () => {
     expect(
       errorFor(`${MINIMAL}blocks:\n  - type: lnk\n    title: Shop\n    url: https://x.com\n`),
