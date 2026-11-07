@@ -231,6 +231,11 @@ analytics:
 
 Self-hosting either one? Add `src:` with your script's URL.
 
+Both also count which links get tapped, without adding cookies:
+
+- **Plausible** records taps on links to other sites as **Outbound Link: Click**, with the address. To see them, add a goal in Plausible: **Site settings → Goals → Add goal → Custom event → `Outbound Link: Click`**. If you self-host with your own `src:`, use your server's `script.outbound-links.js`.
+- **Umami** records each tap on a button, social icon or image link as a **Link click** event, with the link's name and address. They show under **Events** in your Umami dashboard.
+
 ## footer
 
 | Option   | Default | What it does                                                                                                                                         |

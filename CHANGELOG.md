@@ -21,6 +21,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - Clearer errors for configs written for other tools: `links:` points you to `blocks:`, and an option outside its section (like `bio:` at the top) says which section it belongs in. Errors about a section now point at its own line.
 - YAML mistakes are explained in plain words: tabs, misaligned lines, unclosed quotes, an option written twice, a username starting with @, and text containing `: ` (with the quoted line to paste).
 - A YouTube channel link in a video block now says to add the channel under `socials` instead.
+- With analytics on, you can see which links get tapped. Plausible now loads its outbound-links script (add the “Outbound Link: Click” goal once to see them), and Umami records a “Link click” event for each button, social icon and image link. No change for pages with analytics off.
 
 ## 1.0.0 (2026-10-27)
 

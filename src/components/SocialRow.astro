@@ -1,19 +1,27 @@
 ---
 import type { Social } from '../config/load.ts';
+import type { FolioConfig } from '../config/schema.ts';
+import { clickAttributes } from '../lib/analytics.ts';
 import Icon from './Icon.astro';
 
 interface Props {
   socials: Social[];
+  provider?: FolioConfig['analytics']['provider'];
 }
 
-const { socials } = Astro.props;
+const { socials, provider = 'none' } = Astro.props;
 ---
 
 {socials.length > 0 && (
   <ul class="socials" aria-label="Social profiles">
     {socials.map((s) => (
       <li>
-        <a href={s.url} rel="me noopener" target={s.id === 'email' ? undefined : '_blank'}>
+        <a
+          href={s.url}
+          rel="me noopener"
+          target={s.id === 'email' ? undefined : '_blank'}
+          {...clickAttributes(provider, s.label, s.url)}
+        >
           <Icon icon={s.icon} size={24} label={s.label} />
         </a>
       </li>

@@ -7,14 +7,19 @@ interface Props {
   srcset?: string | undefined;
   width?: number | undefined;
   height?: number | undefined;
+  /** Click-tracking attributes, only when the owner turned on analytics. */
+  events?: Record<string, string>;
 }
 
-const { src, alt, url, caption, srcset, width, height } = Astro.props;
+const { src, alt, url, caption, srcset, width, height, events = {} } = Astro.props;
 const Wrapper = url ? 'a' : 'div';
 ---
 
 <figure class="image-card">
-  <Wrapper class="frame" {...(url ? { href: url, rel: 'noopener', target: '_blank' } : {})}>
+  <Wrapper
+    class="frame"
+    {...(url ? { href: url, rel: 'noopener', target: '_blank', ...events } : {})}
+  >
     <img
       src={src}
       srcset={srcset}

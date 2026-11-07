@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { clickAttributes } from '../src/lib/analytics.ts';
 import { accentRing, contrast, expandHex, readableTextOn } from '../src/lib/color.ts';
 import {
   isYouTubeChannel,
@@ -187,5 +188,17 @@ describe('isYouTubeChannel', () => {
     expect(isYouTubeChannel('https://m.youtube.com/c/name')).toBe(true);
     expect(isYouTubeChannel('https://youtube.com/watch?v=aqz-KE-bpKQ')).toBe(false);
     expect(isYouTubeChannel('https://youtube.com/shorts/aqz-KE-bpKQ')).toBe(false);
+  });
+});
+
+describe('clickAttributes', () => {
+  it('tags links for Umami only', () => {
+    expect(clickAttributes('umami', 'Shop', 'https://a.com')).toEqual({
+      'data-umami-event': 'Link click',
+      'data-umami-event-link': 'Shop',
+      'data-umami-event-url': 'https://a.com',
+    });
+    expect(clickAttributes('plausible', 'Shop', 'https://a.com')).toEqual({});
+    expect(clickAttributes('none', 'Shop', 'https://a.com')).toEqual({});
   });
 });

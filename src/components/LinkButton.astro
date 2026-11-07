@@ -8,9 +8,11 @@ interface Props {
   subtitle?: string | undefined;
   icon?: IconType | undefined;
   featured?: boolean;
+  /** Click-tracking attributes, only when the owner turned on analytics. */
+  events?: Record<string, string>;
 }
 
-const { title, url, subtitle, icon, featured = false } = Astro.props;
+const { title, url, subtitle, icon, featured = false, events = {} } = Astro.props;
 // Email, call and text links open the visitor's app, so they don't need a new tab.
 const web = /^https?:/i.test(url);
 ---
@@ -20,6 +22,7 @@ const web = /^https?:/i.test(url);
   href={url}
   rel={web ? 'noopener' : undefined}
   target={web ? '_blank' : undefined}
+  {...events}
 >
   {icon && (
     <span class="icon">

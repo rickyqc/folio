@@ -9,6 +9,7 @@ import SetupBanner from '../components/SetupBanner.astro';
 import SocialRow from '../components/SocialRow.astro';
 import { resolve } from 'node:path';
 import { loadConfig } from '../config/load.ts';
+import { PLAUSIBLE_SRC, UMAMI_SRC, clickAttributes } from '../lib/analytics.ts';
 import { accentRing, expandHex, readableTextOn } from '../lib/color.ts';
 import { optimize } from '../lib/images.ts';
 import { setupInfo } from '../lib/links.ts';
@@ -79,19 +80,14 @@ const ogImage = absolute('og.png');
     )}
     {site.url && <link rel="sitemap" href="sitemap.xml" />}
     {analytics.provider === 'plausible' && (
-      <script
-        is:inline
-        defer
-        data-domain={analytics.domain}
-        src={analytics.src ?? 'https://plausible.io/js/script.js'}
-      />
+      <script is:inline defer data-domain={analytics.domain} src={analytics.src ?? PLAUSIBLE_SRC} />
     )}
     {analytics.provider === 'umami' && (
       <script
         is:inline
         defer
         data-website-id={analytics.websiteId}
-        src={analytics.src ?? 'https://cloud.umami.is/script.js'}
+        src={analytics.src ?? UMAMI_SRC}
       />
     )}
   </head>
@@ -103,7 +99,7 @@ const ogImage = absolute('og.png');
       </div>
       {socials.length > 0 && (
         <div class="enter" style="--i: 1">
-          <SocialRow socials={socials} />
+          <SocialRow socials={socials} provider={analytics.provider} />
         </div>
       )}
       <div class="blocks">
@@ -116,6 +112,7 @@ const ogImage = absolute('og.png');
                 subtitle={block.subtitle}
                 icon={block.icon}
                 featured={block.featured}
+                events={clickAttributes(analytics.provider, block.title, block.url)}
               />
             )}
             {block.type === 'header' && <SectionHeader title={block.title} />}
@@ -144,6 +141,7 @@ const ogImage = absolute('og.png');
                 alt={block.alt}
                 url={block.url}
                 caption={block.caption}
+                events={block.url ? clickAttributes(analytics.provider, block.alt, block.url) : {}}
               />
             )}
           </div>
