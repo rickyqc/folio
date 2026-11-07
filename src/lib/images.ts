@@ -91,3 +91,23 @@ export async function render(publicDir: string, variant: Variant): Promise<Buffe
     : image.resize({ width: variant.width, withoutEnlargement: true });
   return resized.webp({ quality: 80 }).toBuffer();
 }
+
+/**
+ * The avatar as a small square JPEG for the contact card. sharp reads photos and SVGs alike;
+ * transparent areas become white, since contacts apps don't show transparency well.
+ */
+export async function avatarJpeg(
+  publicDir: string,
+  src: string,
+  size = 256,
+): Promise<Buffer | undefined> {
+  if (/^https?:\/\//i.test(src) || !/\.(jpe?g|png|webp|avif|gif|svg|tiff?)$/i.test(src)) {
+    return undefined;
+  }
+  return sharp(join(publicDir, src), { density: 300 })
+    .rotate()
+    .resize({ width: size, height: size, fit: 'cover' })
+    .flatten({ background: '#ffffff' })
+    .jpeg({ quality: 80 })
+    .toBuffer();
+}

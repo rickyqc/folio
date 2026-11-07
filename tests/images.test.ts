@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import sharp from 'sharp';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { isOptimizable, optimize, render, variants } from '../src/lib/images.ts';
+import { avatarJpeg, isOptimizable, optimize, render, variants } from '../src/lib/images.ts';
 import { renderOgImage } from '../src/lib/og-image.ts';
 
 const publicDir = mkdtempSync(join(tmpdir(), 'folio-images-'));
@@ -85,5 +85,22 @@ describe('share image', () => {
       publicDir,
     });
     expect((await sharp(png).metadata()).width).toBe(1200);
+  });
+});
+
+describe('avatarJpeg', () => {
+  it('makes a small square JPEG for the contact card from a photo or an SVG', async () => {
+    for (const [dir, src] of [
+      [publicDir, 'Big Photo.jpg'],
+      [join(import.meta.dirname, '../public'), 'avatar.svg'],
+    ] as const) {
+      const jpeg = await avatarJpeg(dir, src);
+      const meta = await sharp(jpeg).metadata();
+      expect([meta.format, meta.width, meta.height]).toEqual(['jpeg', 256, 256]);
+    }
+  });
+
+  it('skips remote images', async () => {
+    expect(await avatarJpeg(publicDir, 'https://example.com/me.jpg')).toBeUndefined();
   });
 });

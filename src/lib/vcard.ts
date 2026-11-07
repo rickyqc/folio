@@ -7,6 +7,10 @@ export interface VCardInput {
   email?: string | undefined;
   url?: string | undefined;
   note?: string | undefined;
+  /** A small square JPEG, embedded so the contact shows the owner's picture. */
+  photo?: Buffer | undefined;
+  /** Social profiles, as X-SOCIALPROFILE (read by Apple Contacts and most others). */
+  socials?: { id: string; url: string }[] | undefined;
 }
 
 function escape(value: string): string {
@@ -32,7 +36,19 @@ export function buildVCard(input: VCardInput): string {
   if (input.phone) lines.push(`TEL;TYPE=CELL:${escape(input.phone)}`);
   if (input.email) lines.push(`EMAIL;TYPE=INTERNET:${escape(input.email)}`);
   if (input.url) lines.push(`URL:${escape(input.url)}`);
+  for (const social of input.socials ?? []) {
+    lines.push(`X-SOCIALPROFILE;TYPE=${social.id}:${escape(social.url)}`);
+  }
   if (input.note) lines.push(`NOTE:${escape(input.note)}`);
+  if (input.photo) lines.push(`PHOTO;ENCODING=b;TYPE=JPEG:${input.photo.toString('base64')}`);
   lines.push('END:VCARD');
-  return lines.join('\r\n') + '\r\n';
+  return lines.map(fold).join('\r\n') + '\r\n';
+}
+
+/** vCard lines over 75 characters continue on the next line after a space (RFC 2425). */
+function fold(line: string): string {
+  if (line.length <= 75) return line;
+  const parts = [line.slice(0, 75)];
+  for (let i = 75; i < line.length; i += 74) parts.push(' ' + line.slice(i, i + 74));
+  return parts.join('\r\n');
 }

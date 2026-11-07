@@ -146,6 +146,21 @@ describe('buildVCard', () => {
     ]);
   });
 
+  it('adds social profiles and a photo, folding long lines', () => {
+    const card = buildVCard({
+      name: 'Jane Park',
+      socials: [{ id: 'instagram', url: 'https://instagram.com/jane' }],
+      photo: Buffer.alloc(300, 1),
+    });
+    const lines = card.split('\r\n');
+    expect(lines).toContain('X-SOCIALPROFILE;TYPE=instagram:https://instagram.com/jane');
+    expect(lines.some((l) => l.startsWith('PHOTO;ENCODING=b;TYPE=JPEG:'))).toBe(true);
+    expect(lines.every((l) => l.length <= 75)).toBe(true);
+    // Unfolding gives back the whole photo.
+    const unfolded = card.replace(/\r\n /g, '');
+    expect(unfolded).toContain(`TYPE=JPEG:${Buffer.alloc(300, 1).toString('base64')}\r\n`);
+  });
+
   it('handles a single-word name and leaves out empty fields', () => {
     const card = buildVCard({ name: 'Cher' });
     expect(card).toContain('N:;Cher;;;');
