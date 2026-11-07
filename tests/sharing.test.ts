@@ -1,7 +1,13 @@
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { hostUrl, parseConfig } from '../src/config/load.ts';
-import { OG_HEIGHT, OG_WIDTH, notoFileName, renderOgImage } from '../src/lib/og-image.ts';
+import {
+  OG_HEIGHT,
+  OG_WIDTH,
+  nameFontSize,
+  notoFileName,
+  renderOgImage,
+} from '../src/lib/og-image.ts';
 import { qrPng, qrSvg } from '../src/lib/qr.ts';
 
 const publicDir = resolve(import.meta.dirname, '../public');
@@ -65,6 +71,27 @@ describe('renderOgImage', () => {
       name: 'Jane Park',
       url: 'https://jane.dev/',
       accent: '#ffd60a',
+      publicDir,
+    });
+    expect(pngSize(png)).toEqual({ width: OG_WIDTH, height: OG_HEIGHT });
+  });
+});
+
+describe('nameFontSize', () => {
+  it('steps long names down so they fit on the card', () => {
+    expect(nameFontSize('Jane Park')).toBe(76);
+    expect(nameFontSize('Alexandria Montgomery')).toBe(64);
+    expect(nameFontSize('Alexandria Montgomery-Okonkwo')).toBe(52);
+  });
+});
+
+describe('renderOgImage with long text', () => {
+  it('still renders at the card size', async () => {
+    const png = await renderOgImage({
+      name: 'Alexandria Montgomery-Okonkwo',
+      bio: 'Wedding and portrait photographer. '.repeat(10),
+      url: 'https://example.com/',
+      accent: '#0071e3',
       publicDir,
     });
     expect(pngSize(png)).toEqual({ width: OG_WIDTH, height: OG_HEIGHT });

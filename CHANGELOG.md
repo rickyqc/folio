@@ -11,6 +11,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - The config builder can load your current `folio.config.yaml`, so you can change an existing page there. Settings it has no fields for (images, analytics, site details) are kept as they were.
 - The config builder adds YouTube videos and Spotify players.
 - The landing page leads with the builder: build first, then deploy and paste. It now has a sitemap and robots.txt.
+- Fixed: long names and bios ran off the edge of the share card. Long names now get smaller and wrap, and long bios end with “…” after three lines.
 
 ## 1.0.0 (2026-10-27)
 

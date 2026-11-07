@@ -22,6 +22,11 @@ export interface OgInput {
 export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;
 
+const PADDING = 96;
+const AVATAR = 220;
+const GAP = 64;
+const TEXT_WIDTH = OG_WIDTH - PADDING * 2 - AVATAR - GAP;
+
 const require = createRequire(import.meta.url);
 
 function font(weight: 400 | 600): Buffer {
@@ -86,6 +91,12 @@ function mixWithWhite(hex: string, amount: number): string {
   return `rgb(${channel(0)}, ${channel(2)}, ${channel(4)})`;
 }
 
+/** Long names step down in size so they fit in two lines beside the avatar. */
+export function nameFontSize(name: string): number {
+  const length = [...name].length;
+  return length <= 18 ? 76 : length <= 28 ? 64 : 52;
+}
+
 function initials(name: string): string {
   return name
     .split(/\s+/)
@@ -113,9 +124,9 @@ export async function renderOgImage(input: OgInput): Promise<Buffer> {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: 220,
-          height: 220,
-          borderRadius: 110,
+          width: AVATAR,
+          height: AVATAR,
+          borderRadius: AVATAR / 2,
           background: mixWithWhite(input.accent, 0.16),
         },
         h('img', { width: 140, height: 140 }, undefined, { src: emoji, width: 140, height: 140 }),
@@ -123,20 +134,25 @@ export async function renderOgImage(input: OgInput): Promise<Buffer> {
     : undefined;
 
   const avatarNode = avatar
-    ? h('img', { width: 220, height: 220, borderRadius: 110, objectFit: 'cover' }, undefined, {
-        src: avatar,
-        width: 220,
-        height: 220,
-      })
+    ? h(
+        'img',
+        { width: AVATAR, height: AVATAR, borderRadius: AVATAR / 2, objectFit: 'cover' },
+        undefined,
+        {
+          src: avatar,
+          width: AVATAR,
+          height: AVATAR,
+        },
+      )
     : h(
         'div',
         {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: 220,
-          height: 220,
-          borderRadius: 110,
+          width: AVATAR,
+          height: AVATAR,
+          borderRadius: AVATAR / 2,
           background: input.accent,
           color: readableTextOn(input.accent),
           fontSize: 88,
@@ -152,25 +168,39 @@ export async function renderOgImage(input: OgInput): Promise<Buffer> {
       alignItems: 'center',
       width: '100%',
       height: '100%',
-      padding: '0 96px',
-      gap: 64,
+      padding: `0 ${PADDING}px`,
+      gap: GAP,
       background: '#fbfbfd',
       fontFamily: 'Inter',
       color: '#1d1d1f',
     },
     [
       emojiNode ?? avatarNode,
-      h('div', { display: 'flex', flexDirection: 'column', flex: 1, gap: 20 }, [
+      // A fixed width (Satori doesn't shrink flex children reliably) keeps text wrapping inside
+      // the card; lineClamp ends anything too long with an ellipsis.
+      h('div', { display: 'flex', flexDirection: 'column', width: TEXT_WIDTH, gap: 20 }, [
         h(
           'div',
-          { fontSize: 76, fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1.05 },
+          {
+            fontSize: nameFontSize(input.name),
+            fontWeight: 600,
+            letterSpacing: '-0.03em',
+            lineHeight: 1.05,
+            lineClamp: 2,
+          },
           input.name,
         ),
         ...(input.bio
           ? [
               h(
                 'div',
-                { fontSize: 36, color: '#6e6e73', lineHeight: 1.3, letterSpacing: '-0.01em' },
+                {
+                  fontSize: 36,
+                  color: '#6e6e73',
+                  lineHeight: 1.3,
+                  letterSpacing: '-0.01em',
+                  lineClamp: 3,
+                },
                 input.bio,
               ),
             ]
