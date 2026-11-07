@@ -92,7 +92,7 @@ socials:
 
 Need a platform that isn't listed? Add it as a [link](#link) instead.
 
-Icons are brand logos from [Simple Icons](https://simpleicons.org). LinkedIn doesn't allow its logo there, so `linkedin` shows a briefcase instead. Screen readers still announce it as "LinkedIn".
+Icons are brand logos from [Simple Icons](https://simpleicons.org). LinkedIn doesn't allow its logo there, so `linkedin` shows a briefcase instead. Screen readers still announce it as "LinkedIn", and hovering it shows the name.
 
 ## blocks
 

@@ -18,6 +18,7 @@ const { socials, provider = 'none' } = Astro.props;
       <li>
         <a
           href={s.url}
+          title={s.label}
           rel="me noopener"
           target={s.id === 'email' ? undefined : '_blank'}
           {...clickAttributes(provider, s.label, s.url)}

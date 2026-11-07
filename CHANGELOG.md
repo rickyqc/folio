@@ -23,6 +23,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - A YouTube channel link in a video block now says to add the channel under `socials` instead.
 - With analytics on, you can see which links get tapped. Plausible now loads its outbound-links script (add the “Outbound Link: Click” goal once to see them), and Umami records a “Link click” event for each button, social icon and image link. No change for pages with analytics off.
 - “Save contact” now includes your picture and your social profiles, so the saved contact shows your photo and links.
+- Hovering a social icon on a computer shows the platform's name.
 
 ## 1.0.0 (2026-10-27)
 
