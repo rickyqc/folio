@@ -92,6 +92,8 @@ socials:
 
 Need a platform that isn't listed? Add it as a [link](#link) instead.
 
+Icons are brand logos from [Simple Icons](https://simpleicons.org). LinkedIn doesn't allow its logo there, so `linkedin` shows a briefcase instead. Screen readers still announce it as "LinkedIn".
+
 ## blocks
 
 Your page, top to bottom. Each block starts with `- type:` followed by the type.

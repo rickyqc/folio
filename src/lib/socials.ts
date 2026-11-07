@@ -104,6 +104,7 @@ export const PLATFORMS = {
   },
   linkedin: {
     label: 'LinkedIn',
+    // Simple Icons removed LinkedIn's logo at the company's request, so a generic icon stands in.
     icon: UI_ICONS.briefcase,
     fromHandle: (h) => `https://linkedin.com/in/${h}`,
     example: 'janepark',
