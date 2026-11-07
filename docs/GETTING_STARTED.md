@@ -39,7 +39,7 @@ Vercel notices the change and rebuilds your page. Refresh it after about a minut
 ### A few rules that keep the file happy
 
 - **Indentation matters.** Use spaces, not tabs, and keep lines lined up with the ones around them, the way the sample does.
-- **Links start with `https://`.** Write `https://jane.dev`, not `jane.dev`.
+- **Links work with or without `https://`.** If you write `jane.dev`, Folio adds `https://` for you.
 - **Colors go in quotes:** `accent: "#ff375f"`.
 - **Quote text that contains `: ` or ` #`:** `bio: "Designer: product & brand"`.
 - **Each block starts with `- type:`.** Copy an existing block and change it rather than typing one from scratch.

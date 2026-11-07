@@ -9,6 +9,7 @@ import {
   isEmoji,
   toYaml,
   validate,
+  withLinkScheme,
   withScheme,
   type BuilderState,
   type Issue,
@@ -338,7 +339,7 @@ export function mountBuilder(root: HTMLElement): void {
     const index = Number(el.closest<HTMLElement>('[data-index]')?.dataset['index']);
     const item = state.items[index];
     if (item?.kind !== 'link' && item?.kind !== 'embed') return;
-    const fixed = withScheme(item.url);
+    const fixed = item.kind === 'link' ? withLinkScheme(item.url) : withScheme(item.url);
     if (fixed !== item.url) {
       item.url = el.value = fixed;
       update();

@@ -1,13 +1,16 @@
 import { z } from 'zod';
 import { parseSpotify, parseYouTubeId } from '../lib/embeds.ts';
 import { PLATFORMS, PLATFORM_IDS, isEmoji, isPlatform, resolveSocial } from '../lib/socials.ts';
+import { withLinkScheme, withScheme } from '../lib/urls.ts';
 
+const isWebUrl = (v: string) => /^https?:\/\/[^\s.]+\.[^\s]+$/i.test(v) && URL.canParse(v);
+
+/** A web address. A bare domain like jane.dev/shop gets https:// added rather than failing. */
 const webUrl = z
   .string()
   .trim()
-  .refine((v) => /^https?:\/\/[^\s.]+\.[^\s]+$/i.test(v) && URL.canParse(v), {
-    message: 'must be a full web address starting with https://',
-  });
+  .transform(withScheme)
+  .refine(isWebUrl, { message: 'must be a full web address starting with https://' });
 
 /** mailto:, tel: and sms: links, for "Email me", "Call" and "Text me" buttons. */
 const CONTACT_URL = /^(mailto:[^\s@]+@[^\s@]+\.[^\s@]+|(tel|sms):\+?[\d\s().-]{3,})$/i;
@@ -16,7 +19,8 @@ const CONTACT_URL = /^(mailto:[^\s@]+@[^\s@]+\.[^\s@]+|(tel|sms):\+?[\d\s().-]{3
 const linkUrl = z
   .string()
   .trim()
-  .refine((v) => webUrl.safeParse(v).success || CONTACT_URL.test(v), {
+  .transform(withLinkScheme)
+  .refine((v) => isWebUrl(v) || CONTACT_URL.test(v), {
     message:
       'must be a full web address starting with https://, or an email or phone link like mailto:hi@jane.dev or tel:+15550100',
   })

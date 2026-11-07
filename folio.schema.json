@@ -5,9 +5,6 @@
   "type": "object",
   "properties": {
     "site": {
-      "default": {
-        "lang": "en"
-      },
       "type": "object",
       "properties": {
         "url": {
@@ -395,9 +392,6 @@
       "additionalProperties": false
     },
     "analytics": {
-      "default": {
-        "provider": "none"
-      },
       "oneOf": [
         {
           "type": "object",

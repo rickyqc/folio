@@ -1,6 +1,7 @@
 // The config builder's data, checks and YAML output. No DOM here, so it's unit tested
 // (tests/builder.test.ts runs every output through Folio's real config validator).
 import { parseSpotify, parseYouTubeId } from '../../../src/lib/embeds.ts';
+import { withLinkScheme, withScheme } from '../../../src/lib/urls.ts';
 import type { YamlValue } from './yaml-lite';
 
 export interface Platform {
@@ -149,7 +150,7 @@ export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
     if (!title && !url) return;
     if (!title) issues.push({ field: `item-${i}-title`, message: 'Add the button text.' });
     if (!url) issues.push({ field: `item-${i}-url`, message: 'Add where the button goes.' });
-    else if (!WEB_URL.test(withScheme(url)) && !CONTACT_URL.test(url)) {
+    else if (!WEB_URL.test(withLinkScheme(url)) && !CONTACT_URL.test(withLinkScheme(url))) {
       issues.push({
         field: `item-${i}-url`,
         message: 'Use a web address, or mailto:you@example.com or tel:+15550100.',
@@ -179,11 +180,7 @@ export function isEmoji(value: string): boolean {
   return graphemes.length === 1 && /\p{Extended_Pictographic}/u.test(value);
 }
 
-/** Fixes the most common slip, a link without https://. */
-export function withScheme(url: string): string {
-  const v = url.trim();
-  return v && !/^[a-z]+:/i.test(v) && /\./.test(v) ? `https://${v}` : v;
-}
+export { withLinkScheme, withScheme };
 
 // YAML reads some plain words as booleans, numbers or null, and treats ": " and " #" specially.
 const RESERVED = /^(true|false|yes|no|on|off|null|y|n|~)$/i;
@@ -276,7 +273,7 @@ export function toYaml(state: BuilderState): string {
       }
       out.push('  - type: link', `    title: ${scalar(item.title)}`);
       if (item.subtitle.trim()) out.push(`    subtitle: ${scalar(item.subtitle)}`);
-      out.push(`    url: ${scalar(withScheme(item.url))}`);
+      out.push(`    url: ${scalar(withLinkScheme(item.url))}`);
       if (item.icon.trim()) out.push(`    icon: ${JSON.stringify(item.icon.trim())}`);
       if (state.featured === index) out.push('    featured: true');
     }

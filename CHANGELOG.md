@@ -17,6 +17,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - Your featured link stays visible with any accent color: when the accent is too close to the page background (a very light accent in light mode, a very dark one in dark mode), the button gets a thin outline.
 - Pill buttons with a long, wrapping title keep pill-shaped ends instead of stretching into an oval.
 - Link buttons can start an email, a call or a text: `url: mailto:hi@jane.dev`, `tel:+15550100` or `sms:+15550100`. Spaces and brackets in phone numbers are tidied for you. The config builder accepts them too.
+- Links written without `https://` (`url: jane.dev/shop`) now work instead of failing the build, and a bare email address on a link button becomes an email link.
 
 ## 1.0.0 (2026-10-27)
 

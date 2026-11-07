@@ -181,9 +181,20 @@ describe('friendly errors', () => {
     ).toContain('or an email or phone link like mailto:hi@jane.dev');
   });
 
-  it('explains a url without https://', () => {
+  it('adds https:// to a bare domain, and mailto: to a bare email', () => {
+    const config = parse(
+      `${MINIMAL}site:\n  url: jane.dev\nblocks:\n  - type: link\n    title: Shop\n    url: jane.dev/shop\n  - type: link\n    title: Email\n    url: hi@jane.dev\n`,
+    );
+    expect(config.site.url).toBe('https://jane.dev/');
+    expect(config.blocks.map((b) => (b.type === 'link' ? b.url : ''))).toEqual([
+      'https://jane.dev/shop',
+      'mailto:hi@jane.dev',
+    ]);
+  });
+
+  it('explains a url that is not an address', () => {
     expect(
-      errorFor(`${MINIMAL}blocks:\n  - type: link\n    title: Shop\n    url: jane.dev/shop\n`),
+      errorFor(`${MINIMAL}blocks:\n  - type: link\n    title: Shop\n    url: my shop\n`),
     ).toContain('"url" in Block 1 (link “Shop”) must be a full web address starting with https://');
   });
 

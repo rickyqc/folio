@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { accentRing, contrast, expandHex, readableTextOn } from '../src/lib/color.ts';
 import { parseSpotify, parseYouTubeId, spotifyHeight } from '../src/lib/embeds.ts';
 import { PLATFORM_IDS, resolveSocial } from '../src/lib/socials.ts';
+import { withLinkScheme, withScheme } from '../src/lib/urls.ts';
 import { buildVCard } from '../src/lib/vcard.ts';
 
 describe('parseYouTubeId', () => {
@@ -153,5 +154,23 @@ describe('docs stay in sync', () => {
     const text = read(file);
     const missing = PLATFORM_IDS.filter((id) => !new RegExp(`\\b${id}\\b`).test(text));
     expect(missing).toEqual([]);
+  });
+});
+
+describe('withScheme', () => {
+  it('adds https:// to bare domains only', () => {
+    expect(withScheme('jane.dev')).toBe('https://jane.dev');
+    expect(withScheme(' www.jane.dev/shop?x=1 ')).toBe('https://www.jane.dev/shop?x=1');
+    expect(withScheme('jane.dev:8080')).toBe('https://jane.dev:8080');
+    expect(withScheme('http://jane.dev')).toBe('http://jane.dev');
+    expect(withScheme('hi@jane.dev')).toBe('hi@jane.dev');
+    expect(withScheme('not a link')).toBe('not a link');
+    expect(withScheme('hello')).toBe('hello');
+  });
+
+  it('turns a bare email into a mailto: link on buttons', () => {
+    expect(withLinkScheme('hi@jane.dev')).toBe('mailto:hi@jane.dev');
+    expect(withLinkScheme('jane.dev')).toBe('https://jane.dev');
+    expect(withLinkScheme('tel:+15550100')).toBe('tel:+15550100');
   });
 });
