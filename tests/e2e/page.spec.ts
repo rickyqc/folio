@@ -194,6 +194,16 @@ test.describe('every option switched on', () => {
     }
   });
 
+  test('shows a page of its own for a missing address, linking home', async ({ page }) => {
+    await page.goto('/full/404.html');
+    await expect(page.getByRole('heading', { name: 'This page doesn’t exist' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Go to Sam Rivera’s page' })).toHaveAttribute(
+      'href',
+      'http://localhost:4400/full/',
+    );
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(0, 0, 0)');
+  });
+
   test('forwards a short link to its address', async ({ page }) => {
     await page.route('https://example.com/shop', (route) =>
       route.fulfill({ contentType: 'text/html', body: '<title>The shop</title>' }),
