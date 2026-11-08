@@ -16,9 +16,8 @@ const shareImage = Astro.site ? new URL('og.png', Astro.site).toString() : undef
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#fbfbfd" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -115,23 +114,9 @@ const shareImage = Astro.site ? new URL('og.png', Astro.site).toString() : undef
     --wide: 1024px;
     --gutter: 16px;
 
-    color-scheme: light dark;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #000000;
-      --bg-alt: #0d0d0f;
-      --surface: #1c1c1e;
-      --text: #f5f5f7;
-      --muted: #a1a1a6;
-      --hairline: rgb(255 255 255 / 0.14);
-      --accent: #2997ff;
-      --nav-bg: rgb(0 0 0 / 0.72);
-      --code-bg: #1c1c1e;
-      --ok: #3fb950;
-      --error: #ff6961;
-    }
+    /* The site is light only. The builder's preview still shows dark when someone picks dark
+       (or auto on a dark device) for their own page. */
+    color-scheme: light;
   }
 
   @media (min-width: 640px) {
