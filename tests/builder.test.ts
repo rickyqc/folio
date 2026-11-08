@@ -298,7 +298,14 @@ describe('loading an existing config', () => {
     const { state: loaded, skipped } = fromConfig(parseYamlLite(full), platforms);
     expect(skipped).toEqual([]);
     expect(loaded.avatar).toBe('avatar.svg');
-    expect(loaded.items.map((i) => i.kind)).toEqual(['link', 'link', 'header', 'embed', 'image']);
+    expect(loaded.items.map((i) => i.kind)).toEqual([
+      'link',
+      'link',
+      'kept',
+      'header',
+      'embed',
+      'image',
+    ]);
     expect(build(loaded)).toEqual(parseConfig(full, { publicDir }));
   });
 

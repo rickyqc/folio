@@ -22,7 +22,14 @@ export type Item =
   /** A YouTube video or Spotify player; the link decides which. */
   | { kind: 'embed'; url: string; title: string }
   /** Only from a loaded config. Kept as is, since images live in the repo, not the builder. */
-  | { kind: 'image'; src: string; alt: string; url: string; caption: string };
+  | { kind: 'image'; src: string; alt: string; url: string; caption: string }
+  /** A block the builder has no fields for (e.g. a signup form), written back unchanged. */
+  | { kind: 'kept'; type: string; label: string; fields: Record<string, string | boolean> };
+
+/** Block types the builder carries through untouched, with how to describe them. */
+const KEPT_BLOCKS: Record<string, (b: Record<string, YamlValue>) => string> = {
+  signup: (b) => `Newsletter signup (${str(b['provider']) || 'provider not set'})`,
+};
 
 /** Settings from a loaded config that the builder has no fields for, written back unchanged. */
 export type Kept = Partial<
@@ -138,7 +145,7 @@ export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
   });
 
   state.items.forEach((item, i) => {
-    if (item.kind === 'header' || item.kind === 'image') return;
+    if (item.kind === 'header' || item.kind === 'image' || item.kind === 'kept') return;
     if (item.kind === 'embed') {
       const url = withScheme(item.url);
       if (!url) {
@@ -216,6 +223,7 @@ export function hasContent(item: Item): boolean {
     case 'embed':
       return !!item.url.trim();
     case 'image':
+    case 'kept':
       return true;
     default:
       return !!(item.title.trim() && item.url.trim());
@@ -279,6 +287,13 @@ export function toYaml(state: BuilderState): string {
         const url = withScheme(item.url);
         out.push(`  - type: ${embedType(url) ?? 'youtube'}`, `    url: ${scalar(url)}`);
         if (item.title.trim()) out.push(`    title: ${scalar(item.title)}`);
+        continue;
+      }
+      if (item.kind === 'kept') {
+        out.push(`  - type: ${item.type}`);
+        for (const [key, value] of Object.entries(item.fields)) {
+          out.push(`    ${key}: ${typeof value === 'boolean' ? value : scalar(value)}`);
+        }
         continue;
       }
       if (item.kind === 'image') {
@@ -417,8 +432,15 @@ export function fromConfig(
           caption: str(b['caption']),
         });
         break;
-      default:
-        skipped.push(`a block of type “${str(b['type']) || 'unknown'}”`);
+      default: {
+        const type = str(b['type']);
+        const describe = KEPT_BLOCKS[type];
+        if (describe) {
+          const fields = scalars(b);
+          delete fields['type'];
+          state.items.push({ kind: 'kept', type, label: describe(b), fields });
+        } else skipped.push(`a block of type “${type || 'unknown'}”`);
+      }
     }
   }
 

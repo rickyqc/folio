@@ -188,6 +188,33 @@ An image card, optionally linked.
   caption: April 12, Oakland
 ```
 
+### signup
+
+An email signup for your newsletter. It's a plain form that sends the address straight to your newsletter service: nothing loads from them until someone subscribes, and the page stays JavaScript-free. Their confirmation opens in a new tab, so visitors keep your page.
+
+| Option     | Default      | What it does                                                     |
+| ---------- | ------------ | ---------------------------------------------------------------- |
+| `provider` | **required** | `buttondown`, `kit`, `mailchimp` or `substack`.                  |
+| `account`  | see below    | Your Buttondown username, Kit form ID, or Substack name.         |
+| `url`      | see below    | Mailchimp only: the action address from your embedded form code. |
+| `title`    | none         | A line above the form, e.g. "Get my monthly letter".             |
+| `button`   | `Subscribe`  | The button text.                                                 |
+
+```yaml
+blocks:
+  - type: signup
+    provider: buttondown
+    account: janepark
+    title: Get my monthly letter
+```
+
+Where to find what each service needs:
+
+- **Buttondown:** your username, as in `buttondown.com/janepark`.
+- **Kit:** the form ID, the number in your form's share link (`…kit.com/forms/1234567/…`). Put it in quotes: `account: '1234567'`.
+- **Mailchimp:** in Mailchimp, open **Audience → Signup forms → Embedded forms** and copy the address after `action="` in the code. It looks like `https://….list-manage.com/subscribe/post?u=…&id=…`. Use it as `url:`.
+- **Substack:** your Substack name, the part before `.substack.com`. Visitors land on your Substack's subscribe page with their email filled in, one tap from done.
+
 ## embeds
 
 YouTube and Spotify players load with your page, so visitors see the real video and music straight away. That also means YouTube and Spotify can see that someone opened your page (YouTube uses its privacy-enhanced mode, which doesn't set cookies until someone plays the video).

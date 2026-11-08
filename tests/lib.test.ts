@@ -10,6 +10,7 @@ import {
   spotifyHeight,
 } from '../src/lib/embeds.ts';
 import { PLATFORM_IDS, resolveSocial } from '../src/lib/socials.ts';
+import { signupForm } from '../src/lib/signup.ts';
 import { withLinkScheme, withScheme } from '../src/lib/urls.ts';
 import { buildVCard } from '../src/lib/vcard.ts';
 
@@ -215,5 +216,27 @@ describe('clickAttributes', () => {
     });
     expect(clickAttributes('plausible', 'Shop', 'https://a.com')).toEqual({});
     expect(clickAttributes('none', 'Shop', 'https://a.com')).toEqual({});
+  });
+});
+
+describe('signupForm', () => {
+  it('posts to each provider with the field name it expects', () => {
+    expect(signupForm('buttondown', 'jane', undefined)).toEqual({
+      action: 'https://buttondown.com/api/emails/embed-subscribe/jane',
+      method: 'post',
+      field: 'email',
+    });
+    expect(signupForm('kit', '1234567', undefined).field).toBe('email_address');
+    const mc = 'https://jane.us21.list-manage.com/subscribe/post?u=a&id=b';
+    expect(signupForm('mailchimp', undefined, mc)).toEqual({
+      action: mc,
+      method: 'post',
+      field: 'EMAIL',
+    });
+    expect(signupForm('substack', 'jane', undefined)).toEqual({
+      action: 'https://jane.substack.com/subscribe',
+      method: 'get',
+      field: 'email',
+    });
   });
 });

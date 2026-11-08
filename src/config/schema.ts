@@ -98,7 +98,61 @@ const imageBlock = z.strictObject({
   caption: text.optional(),
 });
 
-export const BLOCK_TYPES = ['link', 'header', 'youtube', 'spotify', 'image'] as const;
+export const SIGNUP_PROVIDERS = ['buttondown', 'kit', 'mailchimp', 'substack'] as const;
+
+/** Where each provider's account goes, for docs and errors. */
+const SIGNUP_ACCOUNT: Record<(typeof SIGNUP_PROVIDERS)[number], string> = {
+  buttondown: 'account: your Buttondown username',
+  kit: 'account: your Kit form ID (the number in the form’s share link)',
+  mailchimp:
+    'url: your form’s action address, from Mailchimp’s embedded form code (…list-manage.com/subscribe/post?u=…&id=…)',
+  substack: 'account: your Substack name (the part before .substack.com)',
+};
+
+const signupBlock = z
+  .strictObject({
+    type: z.literal('signup'),
+    provider: z.enum(SIGNUP_PROVIDERS).describe('Your newsletter service.'),
+    account: text
+      .optional()
+      .describe('Buttondown username, Kit form ID or Substack name. Not used for Mailchimp.'),
+    url: webUrl
+      .optional()
+      .describe('Mailchimp only: the action address from your embedded form code.'),
+    title: text.optional().describe('A line above the form, e.g. "Get my monthly letter".'),
+    button: text.optional().describe('Button text. Defaults to Subscribe.'),
+  })
+  .superRefine((block, ctx) => {
+    if (block.provider === 'mailchimp') {
+      if (!block.url) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['url'],
+          message: `needs ${SIGNUP_ACCOUNT.mailchimp}`,
+        });
+      } else if (!/(^|\.)list-manage\.com$/.test(new URL(block.url).hostname)) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['url'],
+          message: 'must be the list-manage.com address from your Mailchimp embedded form code',
+        });
+      }
+    } else if (!block.account) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['account'],
+        message: `is missing. Add ${SIGNUP_ACCOUNT[block.provider]}`,
+      });
+    } else if (!/^[\w-]+$/.test(block.account)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['account'],
+        message: `should be just the name or number, e.g. ${block.provider === 'kit' ? '1234567' : 'janepark'}`,
+      });
+    }
+  });
+
+export const BLOCK_TYPES = ['link', 'header', 'youtube', 'spotify', 'image', 'signup'] as const;
 export const ANALYTICS_PROVIDERS = ['none', 'plausible', 'umami'] as const;
 
 const block = z.discriminatedUnion('type', [
@@ -107,6 +161,7 @@ const block = z.discriminatedUnion('type', [
   youtubeBlock,
   spotifyBlock,
   imageBlock,
+  signupBlock,
 ]);
 
 const socials = z

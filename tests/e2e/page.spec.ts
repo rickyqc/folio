@@ -200,6 +200,20 @@ test.describe('every option switched on', () => {
     }
   });
 
+  test('shows a signup form that posts to the provider', async ({ page }) => {
+    await page.goto('/full/');
+    const form = page.locator('form.signup');
+    await expect(form).toHaveAttribute(
+      'action',
+      'https://buttondown.com/api/emails/embed-subscribe/samrivera',
+    );
+    await expect(form.getByText('Hear about the next batch first')).toBeVisible();
+    const email = form.getByLabel('Email address');
+    await expect(email).toHaveAttribute('name', 'email');
+    await expect(email).toHaveAttribute('required', '');
+    await expect(form.getByRole('button', { name: 'Subscribe' })).toBeVisible();
+  });
+
   test('shows a picture on a link button', async ({ page }) => {
     await page.goto('/full/');
     const thumb = page.getByRole('link', { name: 'Spring catalog' }).locator('img');

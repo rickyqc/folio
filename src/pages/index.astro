@@ -6,6 +6,7 @@ import PageFooter from '../components/PageFooter.astro';
 import Profile from '../components/Profile.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import SetupBanner from '../components/SetupBanner.astro';
+import SignupForm from '../components/SignupForm.astro';
 import SocialRow from '../components/SocialRow.astro';
 import { resolve } from 'node:path';
 import { loadConfig } from '../config/load.ts';
@@ -154,6 +155,20 @@ const extras = [
                 title={block.title ?? `Listen on Spotify`}
                 provider="Spotify"
                 height={block.height}
+              />
+            )}
+            {block.type === 'signup' && (
+              <SignupForm
+                action={block.action}
+                method={block.method}
+                field={block.field}
+                title={block.title}
+                button={block.button}
+                events={clickAttributes(
+                  analytics.provider,
+                  `Signup: ${block.button}`,
+                  block.action,
+                )}
               />
             )}
             {block.type === 'image' && (

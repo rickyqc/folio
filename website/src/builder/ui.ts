@@ -29,6 +29,7 @@ const TEMPLATES: Record<Item['kind'], string> = {
   header: 'tpl-header',
   embed: 'tpl-embed',
   image: 'tpl-image',
+  kept: 'tpl-kept',
 };
 
 function load(): BuilderState {
@@ -213,6 +214,7 @@ export function mountBuilder(root: HTMLElement): void {
       ? filled
           .map(({ item, i }) => {
             if (item.kind === 'header') return `<p class="bp-header">${escape(item.title)}</p>`;
+            if (item.kind === 'kept') return `<div class="bp-media">✉️ ${escape(item.label)}</div>`;
             if (item.kind === 'image') {
               return `<div class="bp-media">🖼️ ${escape(item.caption || item.alt)}</div>`;
             }

@@ -346,6 +346,49 @@
               "alt"
             ],
             "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "signup"
+              },
+              "provider": {
+                "type": "string",
+                "enum": [
+                  "buttondown",
+                  "kit",
+                  "mailchimp",
+                  "substack"
+                ],
+                "description": "Your newsletter service."
+              },
+              "account": {
+                "description": "Buttondown username, Kit form ID or Substack name. Not used for Mailchimp.",
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "description": "Mailchimp only: the action address from your embedded form code.",
+                "type": "string"
+              },
+              "title": {
+                "description": "A line above the form, e.g. \"Get my monthly letter\".",
+                "type": "string",
+                "minLength": 1
+              },
+              "button": {
+                "description": "Button text. Defaults to Subscribe.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "type",
+              "provider"
+            ],
+            "additionalProperties": false
           }
         ]
       }

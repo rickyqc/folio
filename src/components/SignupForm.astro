@@ -1,0 +1,99 @@
+---
+// A newsletter signup that posts straight to the owner's provider. Opens the provider's
+// confirmation in a new tab, so visitors keep the page.
+import type { SignupForm } from '../lib/signup.ts';
+
+interface Props extends SignupForm {
+  title?: string | undefined;
+  button: string;
+  /** Click-tracking attributes, only when the owner turned on analytics. */
+  events?: Record<string, string>;
+}
+
+const { action, method, field, title, button, events = {} } = Astro.props;
+const id = `signup-${Math.abs([...action].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0))}`;
+---
+
+<form class="signup" action={action} method={method} target="_blank">
+  {title && <p class="signup-title">{title}</p>}
+  <div class="signup-row">
+    <label class="visually-hidden" for={id}>
+      Email address
+    </label>
+    <input
+      id={id}
+      type="email"
+      name={field}
+      required
+      autocomplete="email"
+      placeholder="you@example.com"
+    />
+    <button type="submit" {...events}>
+      {button}
+    </button>
+  </div>
+</form>
+
+<style>
+  .signup {
+    display: grid;
+    gap: 10px;
+  }
+
+  .signup-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .signup-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  input,
+  button {
+    min-height: var(--button-height);
+    border: 0;
+    border-radius: var(--radius);
+    font: inherit;
+    font-size: 17px;
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: 0 18px;
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+    color: var(--text);
+  }
+
+  input::placeholder {
+    color: var(--muted);
+  }
+
+  button {
+    padding: 0 22px;
+    background: var(--accent);
+    box-shadow: inset 0 0 0 1.5px var(--accent-ring, transparent);
+    color: var(--on-accent);
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 200ms var(--ease);
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

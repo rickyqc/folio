@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
 import { LineCounter, parseDocument } from 'yaml';
 import { parseSpotify, parseYouTubeId, spotifyHeight, type SpotifyKind } from '../lib/embeds.ts';
+import { signupForm, type SignupForm } from '../lib/signup.ts';
 import { PLATFORMS, isEmoji, isPlatform, resolveSocial, type Icon } from '../lib/socials.ts';
 import { FolioConfigError, issueToProblems, lineOf, type Problem } from './errors.ts';
 import { configSchema, isImageFile, type FolioConfig } from './schema.ts';
@@ -29,7 +30,8 @@ export type ResolvedBlock =
   | { type: 'header'; title: string }
   | { type: 'youtube'; id: string; title?: string }
   | { type: 'spotify'; kind: SpotifyKind; id: string; height: number; title?: string }
-  | { type: 'image'; src: string; alt: string; url?: string; caption?: string };
+  | { type: 'image'; src: string; alt: string; url?: string; caption?: string }
+  | ({ type: 'signup'; title?: string; button: string } & SignupForm);
 
 /** Everything the page needs, with defaults filled in and links resolved. */
 export interface ResolvedConfig {
@@ -332,6 +334,13 @@ function resolveConfig(config: FolioConfig, fallbackUrl?: string): ResolvedConfi
           alt: b.alt,
           ...(b.url && { url: b.url }),
           ...(b.caption && { caption: b.caption }),
+        };
+      case 'signup':
+        return {
+          type: 'signup',
+          ...signupForm(b.provider, b.account, b.url),
+          button: b.button ?? 'Subscribe',
+          ...(b.title && { title: b.title }),
         };
     }
   });

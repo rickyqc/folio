@@ -24,6 +24,10 @@ blocks:
     title: Spring catalog
     url: https://example.com/catalog
     icon: avatar.svg
+  - type: signup
+    provider: buttondown
+    account: samrivera
+    title: Hear about the next batch first
   - type: header
     title: Watch
   - type: youtube

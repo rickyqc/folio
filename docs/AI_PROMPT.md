@@ -20,6 +20,7 @@ Rules:
   - youtube: url (a YouTube video link), optional title.
   - spotify: url (a Spotify track, album, playlist, episode, show or artist link), optional title.
   - image: src (a file name in the public folder, or a full https:// link), alt (a short description for screen readers; required), optional url and caption.
+  - signup (only if I have a newsletter on Buttondown, Kit, Mailchimp or Substack): provider, account (Buttondown username, Kit form ID in quotes, or Substack name; for Mailchimp use url with the form's list-manage.com action address instead), optional title and button.
 - contact.vcard: true adds a "Save contact" button. Only add contact.phone if I ask for it, because it will be public.
 - analytics.provider is none unless I ask for Plausible or Umami.
 - footer.share: true adds a Share button; footer.credit: false hides the small "Made with Folio" link. Leave footer out unless I ask.

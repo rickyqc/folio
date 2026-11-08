@@ -377,6 +377,28 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
   </div>
 </template>
 
+<template id="tpl-kept">
+  <div class="item item--header">
+    <p class="item-main item-note">
+      <span>
+        <b data-text="label"></b>
+      </span>
+      <small>Kept as is. Change it in folio.config.yaml on GitHub.</small>
+    </p>
+    <div class="item-tools">
+      <button type="button" class="icon-btn" data-action="up" aria-label="Move up">
+        ↑
+      </button>
+      <button type="button" class="icon-btn" data-action="down" aria-label="Move down">
+        ↓
+      </button>
+      <button type="button" class="icon-btn" data-action="remove" aria-label="Remove">
+        ×
+      </button>
+    </div>
+  </div>
+</template>
+
 <template id="tpl-header">
   <div class="item item--header">
     <div class="item-main">

@@ -348,6 +348,34 @@ describe('link pictures', () => {
   });
 });
 
+describe('signup forms', () => {
+  const signup = (fields: string) => `${MINIMAL}blocks:\n  - type: signup\n${fields}`;
+
+  it('resolves a provider and account to a form', () => {
+    const config = parse(signup(`    provider: kit\n    account: '1234567'\n    button: Join\n`));
+    expect(config.blocks[0]).toEqual({
+      type: 'signup',
+      action: 'https://app.kit.com/forms/1234567/subscriptions',
+      method: 'post',
+      field: 'email_address',
+      button: 'Join',
+    });
+  });
+
+  it('says what each provider needs', () => {
+    expect(errorFor(signup(`    provider: buttondown\n`))).toContain(
+      'Add account: your Buttondown username',
+    );
+    expect(errorFor(signup(`    provider: mailchimp\n`))).toContain('needs url:');
+    expect(
+      errorFor(signup(`    provider: mailchimp\n    url: https://example.com/form\n`)),
+    ).toContain('must be the list-manage.com address');
+    expect(
+      errorFor(signup(`    provider: substack\n    account: https://jane.substack.com\n`)),
+    ).toContain('should be just the name or number');
+  });
+});
+
 describe('short links', () => {
   it('resolves names to addresses, adding https://', () => {
     const config = parse(
