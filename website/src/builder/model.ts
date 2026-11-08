@@ -1,6 +1,12 @@
 // The config builder's data, checks and YAML output. No DOM here, so it's unit tested
 // (tests/builder.test.ts runs every output through Folio's real config validator).
-import { isYouTubeChannel, parseSpotify, parseYouTubeId } from '../../../src/lib/embeds.ts';
+import {
+  isYouTubeChannel,
+  parseAppleMusic,
+  parseSoundCloud,
+  parseSpotify,
+  parseYouTubeId,
+} from '../../../src/lib/embeds.ts';
 import { withLinkScheme, withScheme } from '../../../src/lib/urls.ts';
 
 /** A picture in the owner's public folder, used as a link button's icon. Mirrors the schema. */
@@ -150,7 +156,7 @@ export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
       const url = withScheme(item.url);
       if (!url) {
         if (item.title.trim())
-          issues.push({ field: `item-${i}-url`, message: 'Add the YouTube or Spotify link.' });
+          issues.push({ field: `item-${i}-url`, message: 'Add the video or music link.' });
       } else if (isYouTubeChannel(url)) {
         issues.push({
           field: `item-${i}-url`,
@@ -159,7 +165,7 @@ export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
       } else if (!embedType(url)) {
         issues.push({
           field: `item-${i}-url`,
-          message: 'Paste a YouTube video link or a Spotify share link.',
+          message: 'Paste a YouTube video, or a Spotify, Apple Music or SoundCloud link.',
         });
       }
       return;
@@ -190,10 +196,16 @@ export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
   return issues;
 }
 
-/** Which player a link gets, or null when it's neither a YouTube video nor a Spotify item. */
-export function embedType(url: string): 'youtube' | 'spotify' | null {
+export type EmbedType = 'youtube' | 'spotify' | 'applemusic' | 'soundcloud';
+
+/** Which player a link gets, or null when no supported player plays it. */
+export function embedType(url: string): EmbedType | null {
   const v = withScheme(url);
-  return parseYouTubeId(v) ? 'youtube' : parseSpotify(v) ? 'spotify' : null;
+  if (parseYouTubeId(v)) return 'youtube';
+  if (parseSpotify(v)) return 'spotify';
+  if (parseAppleMusic(v)) return 'applemusic';
+  if (parseSoundCloud(v)) return 'soundcloud';
+  return null;
 }
 
 export function isEmoji(value: string): boolean {
@@ -421,6 +433,8 @@ export function fromConfig(
         break;
       case 'youtube':
       case 'spotify':
+      case 'applemusic':
+      case 'soundcloud':
         state.items.push({ kind: 'embed', url: str(b['url']), title: str(b['title']) });
         break;
       case 'image':

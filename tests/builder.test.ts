@@ -210,6 +210,26 @@ describe('helpers', () => {
 });
 
 describe('video and music in the builder', () => {
+  it('writes Apple Music and SoundCloud players too', () => {
+    const config = build(
+      state({
+        name: 'Sam',
+        items: [
+          {
+            kind: 'embed',
+            url: 'https://music.apple.com/us/album/x/1440833098?i=1440833521',
+            title: '',
+          },
+          { kind: 'embed', url: 'soundcloud.com/artist/track', title: '' },
+        ],
+      }),
+    );
+    expect(config.blocks).toMatchObject([
+      { type: 'applemusic', height: 175 },
+      { type: 'soundcloud', url: 'https://soundcloud.com/artist/track', height: 166 },
+    ]);
+  });
+
   it('writes YouTube and Spotify players from the link alone', () => {
     const config = build(
       state({
@@ -231,7 +251,7 @@ describe('video and music in the builder', () => {
     ]);
   });
 
-  it('asks for a YouTube or Spotify link', () => {
+  it('asks for a link a player can play', () => {
     const fields = (url: string, title = '') =>
       validate(state({ name: 'Sam', items: [{ kind: 'embed', url, title }] }), platforms).map(
         (i) => i.field,
@@ -303,6 +323,7 @@ describe('loading an existing config', () => {
       'link',
       'kept',
       'header',
+      'embed',
       'embed',
       'image',
     ]);

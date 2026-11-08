@@ -4,7 +4,11 @@ import { describe, expect, it } from 'vitest';
 import { clickAttributes } from '../src/lib/analytics.ts';
 import { accentRing, contrast, expandHex, readableTextOn } from '../src/lib/color.ts';
 import {
+  appleMusicHeight,
   isYouTubeChannel,
+  parseAppleMusic,
+  parseSoundCloud,
+  soundCloudPlayer,
   parseSpotify,
   parseYouTubeId,
   spotifyHeight,
@@ -238,5 +242,51 @@ describe('signupForm', () => {
       method: 'get',
       field: 'email',
     });
+  });
+});
+
+describe('Apple Music', () => {
+  it('turns share links into embed players', () => {
+    expect(parseAppleMusic('https://music.apple.com/us/album/folklore/1528112358')).toEqual({
+      kind: 'album',
+      src: 'https://embed.music.apple.com/us/album/folklore/1528112358',
+    });
+    expect(
+      parseAppleMusic('https://music.apple.com/gb/album/folklore/1528112358?i=1528112362'),
+    ).toEqual({
+      kind: 'song',
+      src: 'https://embed.music.apple.com/gb/album/folklore/1528112358?i=1528112362',
+    });
+    expect(
+      parseAppleMusic(
+        'https://music.apple.com/us/playlist/todays-hits/pl.f4d106fed2bd41149aaacabb233eb5eb',
+      )?.kind,
+    ).toBe('playlist');
+    expect(parseAppleMusic('https://music.apple.com/us/artist/taylor-swift/159260351')).toBeNull();
+    expect(parseAppleMusic('https://open.spotify.com/album/x')).toBeNull();
+    expect(appleMusicHeight('song')).toBe(175);
+    expect(appleMusicHeight('album')).toBe(450);
+  });
+});
+
+describe('SoundCloud', () => {
+  it('accepts tracks and playlists, not short or browse links', () => {
+    expect(parseSoundCloud('https://soundcloud.com/artist/track?si=abc')).toEqual({
+      url: 'https://soundcloud.com/artist/track',
+      playlist: false,
+    });
+    expect(parseSoundCloud('https://m.soundcloud.com/artist/sets/ep')).toEqual({
+      url: 'https://soundcloud.com/artist/sets/ep',
+      playlist: true,
+    });
+    expect(parseSoundCloud('https://on.soundcloud.com/abc123')).toBeNull();
+    expect(parseSoundCloud('https://soundcloud.com/artist')).toBeNull();
+    expect(parseSoundCloud('https://soundcloud.com/discover/sets')).toBeNull();
+  });
+
+  it('builds the player in the accent color', () => {
+    expect(soundCloudPlayer('https://soundcloud.com/a/b', '#ff375f')).toBe(
+      'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fa%2Fb&color=%23ff375f&visual=false&show_comments=false&show_reposts=false',
+    );
   });
 });

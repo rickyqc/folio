@@ -19,6 +19,8 @@ Rules:
   - header: title. Use short headers like "Listen" or "Shop" to group related links.
   - youtube: url (a YouTube video link), optional title.
   - spotify: url (a Spotify track, album, playlist, episode, show or artist link), optional title.
+  - applemusic: url (a music.apple.com song, album or playlist link), optional title.
+  - soundcloud: url (a full soundcloud.com track or playlist link), optional title.
   - image: src (a file name in the public folder, or a full https:// link), alt (a short description for screen readers; required), optional url and caption.
   - signup (only if I have a newsletter on Buttondown, Kit, Mailchimp or Substack): provider, account (Buttondown username, Kit form ID in quotes, or Substack name; for Mailchimp use url with the form's list-manage.com action address instead), optional title and button.
 - contact.vcard: true adds a "Save contact" button. Only add contact.phone if I ask for it, because it will be public.

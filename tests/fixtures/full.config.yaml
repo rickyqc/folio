@@ -33,6 +33,8 @@ blocks:
   - type: youtube
     url: https://youtu.be/aqz-KE-bpKQ
     title: Throwing a mug
+  - type: soundcloud
+    url: https://soundcloud.com/artist/track
   - type: image
     src: avatar.svg
     alt: Sam in the studio

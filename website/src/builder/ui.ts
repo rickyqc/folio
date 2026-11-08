@@ -24,6 +24,13 @@ type PlatformWithIcon = Platform & { icon: Icon };
 
 const STORAGE_KEY = 'folio-builder-v1';
 
+const EMBED_LABELS = {
+  youtube: '▶ YouTube',
+  spotify: '♫ Spotify',
+  applemusic: '♫ Apple Music',
+  soundcloud: '♫ SoundCloud',
+} as const;
+
 const TEMPLATES: Record<Item['kind'], string> = {
   link: 'tpl-link',
   header: 'tpl-header',
@@ -220,8 +227,7 @@ export function mountBuilder(root: HTMLElement): void {
             }
             if (item.kind === 'embed') {
               const kind = embedType(item.url);
-              const label =
-                kind === 'spotify' ? '♫ Spotify' : kind === 'youtube' ? '▶ YouTube' : '▶';
+              const label = kind ? EMBED_LABELS[kind] : '▶';
               const title = item.title.trim() ? ` · ${escape(item.title)}` : '';
               return `<div class="bp-media">${label}${title}</div>`;
             }

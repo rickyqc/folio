@@ -12,6 +12,7 @@ import { resolve } from 'node:path';
 import { loadConfig } from '../config/load.ts';
 import { PLAUSIBLE_SRC, UMAMI_SRC, clickAttributes } from '../lib/analytics.ts';
 import { accentRing, expandHex, readableTextOn } from '../lib/color.ts';
+import { soundCloudPlayer } from '../lib/embeds.ts';
 import { optimize } from '../lib/images.ts';
 import { setupInfo } from '../lib/links.ts';
 import '../themes/tokens.css';
@@ -169,6 +170,25 @@ const extras = [
                   `Signup: ${block.button}`,
                   block.action,
                 )}
+              />
+            )}
+            {block.type === 'applemusic' && (
+              <Embed
+                src={block.src}
+                loadOnTap={embeds.loadOnTap}
+                title={block.title ?? 'Listen on Apple Music'}
+                provider="Apple Music"
+                height={block.height}
+              />
+            )}
+            {block.type === 'soundcloud' && (
+              <Embed
+                src={soundCloudPlayer(block.url, accent)}
+                tapSrc={`${soundCloudPlayer(block.url, accent)}&auto_play=true`}
+                loadOnTap={embeds.loadOnTap}
+                title={block.title ?? 'Listen on SoundCloud'}
+                provider="SoundCloud"
+                height={block.height}
               />
             )}
             {block.type === 'image' && (

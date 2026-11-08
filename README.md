@@ -62,7 +62,8 @@ blocks:
 ## What you get
 
 - Profile, social icons, link buttons, section headers and one featured link
-- YouTube, Spotify and image embeds, with an optional tap-to-load mode for extra privacy
+- YouTube, Spotify, Apple Music, SoundCloud and image embeds, with an optional tap-to-load mode for extra privacy
+- Newsletter signup for Buttondown, Kit, Mailchimp and Substack, and short links like `your-page/shop`
 - Light, dark or automatic theme, your accent color, rounded or pill buttons
 - A share preview card, a QR code for print, "Save contact" and an optional Share button
 - Search-friendly tags and a sitemap

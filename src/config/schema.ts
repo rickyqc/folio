@@ -1,5 +1,11 @@
 import { z } from 'zod';
-import { isYouTubeChannel, parseSpotify, parseYouTubeId } from '../lib/embeds.ts';
+import {
+  isYouTubeChannel,
+  parseAppleMusic,
+  parseSoundCloud,
+  parseSpotify,
+  parseYouTubeId,
+} from '../lib/embeds.ts';
 import { PLATFORMS, PLATFORM_IDS, isEmoji, isPlatform, resolveSocial } from '../lib/socials.ts';
 import { withLinkScheme, withScheme } from '../lib/urls.ts';
 
@@ -90,6 +96,24 @@ const spotifyBlock = z.strictObject({
   title: text.optional().describe('Shown on the player before it loads.'),
 });
 
+const appleMusicBlock = z.strictObject({
+  type: z.literal('applemusic'),
+  url: webUrl.refine((v) => parseAppleMusic(v) !== null, {
+    message:
+      'must be an Apple Music share link for a song, album or playlist, like https://music.apple.com/us/album/…',
+  }),
+  title: text.optional().describe('Shown on the player before it loads.'),
+});
+
+const soundCloudBlock = z.strictObject({
+  type: z.literal('soundcloud'),
+  url: webUrl.refine((v) => parseSoundCloud(v) !== null, {
+    message:
+      'must be a SoundCloud track or playlist link, like https://soundcloud.com/artist/track. Short on.soundcloud.com links won’t work: open it and copy the full address',
+  }),
+  title: text.optional().describe('Shown on the player before it loads.'),
+});
+
 const imageBlock = z.strictObject({
   type: z.literal('image'),
   src: imageSource.describe('A file in the public folder (e.g. poster.jpg) or a full image URL.'),
@@ -152,7 +176,16 @@ const signupBlock = z
     }
   });
 
-export const BLOCK_TYPES = ['link', 'header', 'youtube', 'spotify', 'image', 'signup'] as const;
+export const BLOCK_TYPES = [
+  'link',
+  'header',
+  'youtube',
+  'spotify',
+  'applemusic',
+  'soundcloud',
+  'image',
+  'signup',
+] as const;
 export const ANALYTICS_PROVIDERS = ['none', 'plausible', 'umami'] as const;
 
 const block = z.discriminatedUnion('type', [
@@ -160,6 +193,8 @@ const block = z.discriminatedUnion('type', [
   headerBlock,
   youtubeBlock,
   spotifyBlock,
+  appleMusicBlock,
+  soundCloudBlock,
   imageBlock,
   signupBlock,
 ]);

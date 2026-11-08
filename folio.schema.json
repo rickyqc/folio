@@ -319,6 +319,50 @@
             "properties": {
               "type": {
                 "type": "string",
+                "const": "applemusic"
+              },
+              "url": {
+                "type": "string"
+              },
+              "title": {
+                "description": "Shown on the player before it loads.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "type",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "soundcloud"
+              },
+              "url": {
+                "type": "string"
+              },
+              "title": {
+                "description": "Shown on the player before it loads.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "type",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
                 "const": "image"
               },
               "src": {

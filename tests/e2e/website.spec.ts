@@ -121,7 +121,7 @@ test('loading an existing config fills the builder and writes it back', async ({
 
   await builder.getByRole('button', { name: '+ Add a video or song' }).click();
   await builder
-    .getByLabel('YouTube or Spotify link')
+    .getByLabel('Video or music link')
     .last()
     .fill('https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC');
   await expect(builder.locator('[data-preview] .bp-media').last()).toContainText('Spotify');

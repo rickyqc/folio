@@ -143,13 +143,20 @@ test.describe('every option switched on', () => {
 
   test('loads embeds only when tapped', async ({ page }) => {
     await page.goto('/full/');
-    const frame = page.locator('iframe');
+    const frame = page.locator('iframe[title="Throwing a mug"]');
     await expect(frame).not.toHaveAttribute('src', /.+/);
     await expect(frame).toHaveAttribute('srcdoc', /Tap to load from YouTube/);
     await expect(frame).toHaveAttribute(
       'srcdoc',
       /youtube-nocookie\.com\/embed\/aqz-KE-bpKQ\?autoplay=1/,
     );
+  });
+
+  test('loads the SoundCloud player only when tapped, too', async ({ page }) => {
+    await page.goto('/full/');
+    const frame = page.locator('iframe[title="Listen on SoundCloud"]');
+    await expect(frame).toHaveAttribute('srcdoc', /Tap to load from SoundCloud/);
+    await expect(frame).toHaveAttribute('srcdoc', /w\.soundcloud\.com\/player\/.*auto_play=true/);
   });
 
   test('shows an image card with alt text and a caption', async ({ page }) => {

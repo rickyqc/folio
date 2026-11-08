@@ -169,6 +169,30 @@ A Spotify player for a track, album, playlist, podcast episode, show or artist. 
   url: https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC
 ```
 
+### applemusic
+
+An Apple Music player for a song, album or playlist. Same options as [spotify](#spotify).
+
+```yaml
+blocks:
+  - type: applemusic
+    url: https://music.apple.com/us/album/folklore/1528112358
+```
+
+In Apple Music, use **Share → Copy Link**. A song shared from an album plays on its own.
+
+### soundcloud
+
+A SoundCloud player for a track or playlist, in your accent color. Same options as [spotify](#spotify).
+
+```yaml
+blocks:
+  - type: soundcloud
+    url: https://soundcloud.com/artist/track-name
+```
+
+Use the full `soundcloud.com/…` address from your browser. Short `on.soundcloud.com` links from the app won't work: open one and copy the address it goes to.
+
 ### image
 
 An image card, optionally linked.

@@ -1,7 +1,15 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
 import { LineCounter, parseDocument } from 'yaml';
-import { parseSpotify, parseYouTubeId, spotifyHeight, type SpotifyKind } from '../lib/embeds.ts';
+import {
+  appleMusicHeight,
+  parseAppleMusic,
+  parseSoundCloud,
+  parseSpotify,
+  parseYouTubeId,
+  spotifyHeight,
+  type SpotifyKind,
+} from '../lib/embeds.ts';
 import { signupForm, type SignupForm } from '../lib/signup.ts';
 import { PLATFORMS, isEmoji, isPlatform, resolveSocial, type Icon } from '../lib/socials.ts';
 import { FolioConfigError, issueToProblems, lineOf, type Problem } from './errors.ts';
@@ -30,6 +38,8 @@ export type ResolvedBlock =
   | { type: 'header'; title: string }
   | { type: 'youtube'; id: string; title?: string }
   | { type: 'spotify'; kind: SpotifyKind; id: string; height: number; title?: string }
+  | { type: 'applemusic'; src: string; height: number; title?: string }
+  | { type: 'soundcloud'; url: string; height: number; title?: string }
   | { type: 'image'; src: string; alt: string; url?: string; caption?: string }
   | ({ type: 'signup'; title?: string; button: string } & SignupForm);
 
@@ -324,6 +334,24 @@ function resolveConfig(config: FolioConfig, fallbackUrl?: string): ResolvedConfi
           kind,
           id,
           height: spotifyHeight(kind),
+          ...(b.title && { title: b.title }),
+        };
+      }
+      case 'applemusic': {
+        const { kind, src } = parseAppleMusic(b.url) ?? { kind: 'song' as const, src: '' };
+        return {
+          type: 'applemusic',
+          src,
+          height: appleMusicHeight(kind),
+          ...(b.title && { title: b.title }),
+        };
+      }
+      case 'soundcloud': {
+        const { url, playlist } = parseSoundCloud(b.url) ?? { url: b.url, playlist: false };
+        return {
+          type: 'soundcloud',
+          url,
+          height: playlist ? 450 : 166,
           ...(b.title && { title: b.title }),
         };
       }
