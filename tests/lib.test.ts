@@ -2,7 +2,14 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { clickAttributes } from '../src/lib/analytics.ts';
-import { accentRing, contrast, expandHex, readableTextOn } from '../src/lib/color.ts';
+import {
+  accentRing,
+  contrast,
+  expandHex,
+  mixHex,
+  pageBackground,
+  readableTextOn,
+} from '../src/lib/color.ts';
 import {
   appleMusicHeight,
   isYouTubeChannel,
@@ -115,6 +122,30 @@ describe('color', () => {
     for (const accent of ['#0071e3', '#ffd60a', '#34c759', '#ff375f', '#888888']) {
       expect(contrast(accent, readableTextOn(accent))).toBeGreaterThanOrEqual(3);
     }
+  });
+});
+
+describe('tinted background', () => {
+  it('mixes the accent into the page background like CSS color-mix', () => {
+    expect(mixHex('#ffffff', '#000000', 0.5)).toBe('#808080');
+    expect(pageBackground('dark', '#ffd60a', 'tinted')).toBe('#1f1a01');
+    expect(pageBackground('light', '#ffd60a', 'plain')).toBe('#fbfbfd');
+  });
+});
+
+describe('tinted background contrast', () => {
+  it('keeps secondary text readable on every light tint (WCAG AA)', () => {
+    const css = readFileSync(resolve(import.meta.dirname, '../src/themes/tokens.css'), 'utf8');
+    const muted = /data-background='tinted'[^}]*--muted: light-dark\((#[0-9a-f]{6})/.exec(css)?.[1];
+    expect(muted).toBeDefined();
+    for (let r = 0; r < 256; r += 51)
+      for (let g = 0; g < 256; g += 51)
+        for (let b = 0; b < 256; b += 51) {
+          const accent = `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
+          expect(
+            contrast(muted ?? '', pageBackground('light', accent, 'tinted')),
+          ).toBeGreaterThanOrEqual(4.5);
+        }
   });
 });
 

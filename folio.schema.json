@@ -62,7 +62,8 @@
       "default": {
         "mode": "auto",
         "accent": "#0071e3",
-        "buttons": "rounded"
+        "buttons": "rounded",
+        "background": "plain"
       },
       "type": "object",
       "properties": {
@@ -89,6 +90,15 @@
           "enum": [
             "rounded",
             "pill"
+          ]
+        },
+        "background": {
+          "default": "plain",
+          "description": "tinted gives the page a soft wash of your accent color.",
+          "type": "string",
+          "enum": [
+            "plain",
+            "tinted"
           ]
         }
       },

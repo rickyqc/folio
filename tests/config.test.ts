@@ -46,7 +46,12 @@ describe('defaults', () => {
   it('needs only a name', () => {
     const config = parse(MINIMAL);
     expect(config.site.title).toBe('Jane Park');
-    expect(config.theme).toEqual({ mode: 'auto', accent: '#0071e3', buttons: 'rounded' });
+    expect(config.theme).toEqual({
+      mode: 'auto',
+      accent: '#0071e3',
+      buttons: 'rounded',
+      background: 'plain',
+    });
     expect(config.blocks).toEqual([]);
     expect(config.footer.credit).toBe(true);
     expect(config.contact.vcard).toBe(false);

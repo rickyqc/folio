@@ -139,6 +139,7 @@ export function mountBuilder(root: HTMLElement): void {
       r.checked = false;
     if (!radio('accent', state.accent))
       text('accentCustom' as keyof BuilderState).value = state.accent;
+    text('tinted').checked = state.tinted ?? false;
     text('vcard').checked = state.vcard;
     text('share').checked = state.share;
   }
@@ -203,6 +204,7 @@ export function mountBuilder(root: HTMLElement): void {
     const accent = state.accent;
     preview.dataset['mode'] = state.mode;
     preview.dataset['buttons'] = state.buttons;
+    preview.dataset['background'] = state.tinted ? 'tinted' : 'plain';
     preview.style.setProperty('--p-accent', accent);
     preview.style.setProperty('--p-on-accent', readableTextOn(accent));
 
@@ -333,7 +335,7 @@ export function mountBuilder(root: HTMLElement): void {
         r.checked = false;
     } else if (el.name === 'mode') state.mode = el.value as BuilderState['mode'];
     else if (el.name === 'buttons') state.buttons = el.value as BuilderState['buttons'];
-    else if (el.name === 'vcard' || el.name === 'share')
+    else if (el.name === 'vcard' || el.name === 'share' || el.name === 'tinted')
       state[el.name] = (el as HTMLInputElement).checked;
     else if (el.name in state) (state as unknown as Record<string, string>)[el.name] = el.value;
     update();

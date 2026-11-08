@@ -16,7 +16,8 @@ const home = site.url ?? '/';
   lang={site.lang}
   data-mode={theme.mode}
   data-buttons={theme.buttons}
-  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}; --accent-ring: ${accentRing(accent)}`}
+  data-background={theme.background}
+  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}; --accent-ring: ${accentRing(accent, theme.background)}`}
 >
   <head>
     <meta charset="utf-8" />

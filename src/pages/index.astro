@@ -11,7 +11,7 @@ import SocialRow from '../components/SocialRow.astro';
 import { resolve } from 'node:path';
 import { loadConfig } from '../config/load.ts';
 import { PLAUSIBLE_SRC, UMAMI_SRC, clickAttributes } from '../lib/analytics.ts';
-import { accentRing, expandHex, readableTextOn } from '../lib/color.ts';
+import { accentRing, expandHex, pageBackground, readableTextOn } from '../lib/color.ts';
 import { soundCloudPlayer } from '../lib/embeds.ts';
 import { optimize } from '../lib/images.ts';
 import { setupInfo } from '../lib/links.ts';
@@ -47,6 +47,11 @@ const setup = setupInfo(profile.name);
 const accent = expandHex(theme.accent);
 const absolute = (path: string) => (site.url ? new URL(path, site.url).toString() : undefined);
 const ogImage = absolute('og.png');
+// The browser bar matches the page, tinted or not.
+const bg = {
+  light: pageBackground('light', accent, theme.background),
+  dark: pageBackground('dark', accent, theme.background),
+};
 // og.png and qr.png need a public address; contact.vcf only exists when vcard is on.
 const extras = [
   ...(site.url
@@ -64,7 +69,8 @@ const extras = [
   lang={site.lang}
   data-mode={theme.mode}
   data-buttons={theme.buttons}
-  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}; --accent-ring: ${accentRing(accent)}`}
+  data-background={theme.background}
+  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}; --accent-ring: ${accentRing(accent, theme.background)}`}
 >
   <head>
     <meta charset="utf-8" />
@@ -87,11 +93,11 @@ const extras = [
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     {theme.mode === 'auto' ? (
       <>
-        <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content={bg.light} media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content={bg.dark} media="(prefers-color-scheme: dark)" />
       </>
     ) : (
-      <meta name="theme-color" content={theme.mode === 'dark' ? '#000000' : '#fbfbfd'} />
+      <meta name="theme-color" content={bg[theme.mode]} />
     )}
     {avatar && <link rel="icon" href={avatar.smallest ?? avatar.src} />}
     {profile.emoji && (

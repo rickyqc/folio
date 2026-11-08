@@ -37,6 +37,7 @@ test('the config builder makes a file Folio accepts, with a live preview', async
 
   await builder.getByRole('radio', { name: 'Dark' }).check({ force: true });
   await builder.getByRole('radio', { name: 'Pill' }).check({ force: true });
+  await builder.getByRole('checkbox', { name: 'Tint the background with my color' }).check();
   await builder.getByRole('radio', { name: '#ff375f' }).check({ force: true });
 
   await builder.getByLabel('Username or link').first().fill('@rileymakes');
@@ -85,7 +86,12 @@ test('the config builder makes a file Folio accepts, with a live preview', async
     bio: 'Barista: latte art & #coffee',
     emoji: '👨‍🍳',
   });
-  expect(config.theme).toEqual({ mode: 'dark', accent: '#ff375f', buttons: 'pill' });
+  expect(config.theme).toEqual({
+    mode: 'dark',
+    accent: '#ff375f',
+    buttons: 'pill',
+    background: 'tinted',
+  });
   expect(config.socials.map((s) => s.url)).toEqual([
     'https://instagram.com/rileymakes',
     'mailto:riley@example.com',

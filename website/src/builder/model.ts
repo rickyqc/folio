@@ -53,6 +53,8 @@ export interface BuilderState {
   mode: 'auto' | 'light' | 'dark';
   accent: string;
   buttons: 'rounded' | 'pill';
+  /** Tints the page background with the accent. */
+  tinted: boolean;
   socials: { platform: string; value: string }[];
   items: Item[];
   /** Index into items of the featured link, if any. */
@@ -97,6 +99,7 @@ export function emptyState(): BuilderState {
     mode: 'auto',
     accent: '#0071e3',
     buttons: 'rounded',
+    tinted: false,
     socials: [{ platform: 'instagram', value: '' }],
     items: [
       { kind: 'link', title: '', url: '', subtitle: '', icon: '' },
@@ -275,6 +278,7 @@ export function toYaml(state: BuilderState): string {
     `  accent: ${JSON.stringify(state.accent)}`,
     `  buttons: ${state.buttons}`,
   );
+  if (state.tinted) out.push('  background: tinted');
 
   const socials = state.socials.filter((s) => s.value.trim());
   if (socials.length) {
@@ -399,6 +403,7 @@ export function fromConfig(
     mode: mode === 'light' || mode === 'dark' ? mode : 'auto',
     accent: /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(accent) ? accent : ACCENTS[0],
     buttons: theme['buttons'] === 'pill' ? 'pill' : 'rounded',
+    tinted: theme['background'] === 'tinted',
     socials: [],
     items: [],
     featured: null,

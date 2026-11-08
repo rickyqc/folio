@@ -295,8 +295,12 @@ export const configSchema = z
           .describe('auto follows the visitor’s device setting.'),
         accent: hexColor.default('#0071e3').describe('Color of your featured link and highlights.'),
         buttons: z.enum(['rounded', 'pill']).default('rounded').describe('Button shape.'),
+        background: z
+          .enum(['plain', 'tinted'])
+          .default('plain')
+          .describe('tinted gives the page a soft wash of your accent color.'),
       })
-      .default({ mode: 'auto', accent: '#0071e3', buttons: 'rounded' }),
+      .default({ mode: 'auto', accent: '#0071e3', buttons: 'rounded', background: 'plain' }),
 
     socials: socials.default({}),
 

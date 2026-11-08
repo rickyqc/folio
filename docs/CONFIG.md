@@ -56,17 +56,19 @@ profile:
 
 ## theme
 
-| Option    | Default     | Choices                                                                                                                            |
-| --------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `mode`    | `auto`      | `auto` follows each visitor's light/dark setting. `light` or `dark` forces one.                                                    |
-| `accent`  | `"#0071e3"` | Any hex color, in quotes. Used for your featured link. Folio picks white or black text automatically, whichever is easier to read. |
-| `buttons` | `rounded`   | `rounded` or `pill`.                                                                                                               |
+| Option       | Default     | Choices                                                                                                                            |
+| ------------ | ----------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `mode`       | `auto`      | `auto` follows each visitor's light/dark setting. `light` or `dark` forces one.                                                    |
+| `accent`     | `"#0071e3"` | Any hex color, in quotes. Used for your featured link. Folio picks white or black text automatically, whichever is easier to read. |
+| `buttons`    | `rounded`   | `rounded` or `pill`.                                                                                                               |
+| `background` | `plain`     | `tinted` gives the page a soft wash of your accent color, in light and dark mode.                                                  |
 
 ```yaml
 theme:
   mode: auto
   accent: '#ff375f'
   buttons: pill
+  background: tinted
 ```
 
 ## socials

@@ -76,7 +76,12 @@ describe('config builder output', () => {
       emoji: '👨‍🍳',
       location: 'Austin, TX',
     });
-    expect(config.theme).toEqual({ mode: 'dark', accent: '#ff375f', buttons: 'pill' });
+    expect(config.theme).toEqual({
+      mode: 'dark',
+      accent: '#ff375f',
+      buttons: 'pill',
+      background: 'plain',
+    });
     expect(config.socials.map((s) => s.url)).toEqual([
       'https://instagram.com/rileymakes',
       'mailto:riley@example.com',

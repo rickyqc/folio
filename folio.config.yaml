@@ -25,6 +25,7 @@ theme:
   mode: auto # auto (follows the visitor's device) | light | dark
   accent: '#0071e3' # any hex color, in quotes
   buttons: rounded # rounded | pill
+  # background: tinted # a soft wash of your accent color
 
 # Your username on each platform, or a full link. Delete the ones you don't use.
 # The samples below just point to each site's home page. Replace them with yours,

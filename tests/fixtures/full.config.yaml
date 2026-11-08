@@ -11,6 +11,7 @@ theme:
   mode: dark
   accent: '#ffd60a'
   buttons: pill
+  background: tinted
 socials:
   instagram: samrivera
   email: hi@example.com

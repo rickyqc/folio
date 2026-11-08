@@ -16,6 +16,9 @@ function watch(page: Page) {
   return { errors, scripts };
 }
 
+/** 12% of the full fixture's #ffd60a accent mixed into black, as Chromium reports it. */
+const TINTED_DARK_YELLOW = /^(color\(srgb 0\.12 0\.10\d* 0\.00\d*\)|rgb\(31, 26, 1\))$/;
+
 const ownErrors = (errors: string[]) => errors.filter((e) => !e.includes('net::ERR_FAILED'));
 
 test.describe('sample page', () => {
@@ -133,7 +136,8 @@ test.describe('every option switched on', () => {
     page,
   }) => {
     await page.goto('/full/');
-    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(0, 0, 0)');
+    // Dark, tinted with 12% of the yellow accent.
+    await expect(page.locator('body')).toHaveCSS('background-color', TINTED_DARK_YELLOW);
     const featured = page.getByRole('link', { name: /Shop the spring batch/ });
     await expect(featured).toHaveCSS('background-color', 'rgb(255, 214, 10)');
     await expect(featured).toHaveCSS('color', 'rgb(29, 29, 31)');
@@ -236,7 +240,7 @@ test.describe('every option switched on', () => {
       'href',
       'http://localhost:4400/full/',
     );
-    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(0, 0, 0)');
+    await expect(page.locator('body')).toHaveCSS('background-color', TINTED_DARK_YELLOW);
   });
 
   test('forwards a short link to its address', async ({ page }) => {

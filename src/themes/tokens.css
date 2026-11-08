@@ -38,3 +38,14 @@
 :root[data-buttons='pill'] {
   --radius: calc(var(--button-height) / 2);
 }
+
+/* A soft wash of the accent behind the page. Buttons keep their own surface, so they stand out
+   more. Amounts mirror TINT in src/lib/color.ts. */
+:root[data-background='tinted'] {
+  --bg: light-dark(
+    color-mix(in srgb, var(--accent) 7%, #fbfbfd),
+    color-mix(in srgb, var(--accent) 12%, #000000)
+  );
+  /* A slightly darker grey keeps secondary text above 4.5:1 on every light tint. */
+  --muted: light-dark(#636368, #a1a1a6);
+}

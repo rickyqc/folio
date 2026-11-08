@@ -121,6 +121,10 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
           </label>
         </div>
       </div>
+      <label class="check">
+        <input type="checkbox" name="tinted" />
+        <span>Tint the background with my color</span>
+      </label>
     </fieldset>
 
     <fieldset class="reveal">
@@ -1165,6 +1169,13 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
     color: var(--p-text);
     font-family: var(--font);
     text-align: center;
+  }
+
+  .bp:global([data-background='tinted']) {
+    --p-bg: light-dark(
+      color-mix(in srgb, var(--p-accent) 7%, #fbfbfd),
+      color-mix(in srgb, var(--p-accent) 12%, #000000)
+    );
   }
 
   .bp:global([data-mode='light']) {
