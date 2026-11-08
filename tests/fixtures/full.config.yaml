@@ -29,6 +29,8 @@ blocks:
     src: avatar.svg
     alt: Sam in the studio
     caption: In the studio
+redirects:
+  shop: https://example.com/shop
 embeds:
   loadOnTap: true
 contact:

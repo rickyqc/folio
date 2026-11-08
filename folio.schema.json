@@ -350,6 +350,16 @@
         ]
       }
     },
+    "redirects": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Short links on your own address: each name forwards to a web address, e.g. shop: https://… makes yoursite/shop."
+    },
     "embeds": {
       "default": {
         "loadOnTap": false

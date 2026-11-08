@@ -125,6 +125,44 @@ const socials = z
   })
   .describe(`Your social profiles. Supported: ${PLATFORM_IDS.join(', ')}.`);
 
+/** Paths Folio already uses, so a short link can't hide the share card, QR code or a photo. */
+export const RESERVED_SLUGS = [
+  'og',
+  'qr',
+  'contact',
+  'sitemap',
+  'robots',
+  'folio-images',
+  '404',
+  'index',
+] as const;
+
+const redirects = z
+  .record(z.string(), webUrl)
+  .superRefine((value, ctx) => {
+    for (const slug of Object.keys(value)) {
+      if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
+        ctx.addIssue({
+          code: 'custom',
+          path: [slug],
+          message:
+            'can only use lowercase letters, numbers and dashes, like shop or new-album, so it’s easy to type',
+          params: { folio: 'bad-slug' },
+        });
+      } else if ((RESERVED_SLUGS as readonly string[]).includes(slug)) {
+        ctx.addIssue({
+          code: 'custom',
+          path: [slug],
+          message: `is already used by Folio. Pick another name`,
+          params: { folio: 'bad-slug' },
+        });
+      }
+    }
+  })
+  .describe(
+    'Short links on your own address: each name forwards to a web address, e.g. shop: https://… makes yoursite/shop.',
+  );
+
 export const configSchema = z
   .strictObject({
     site: z
@@ -168,6 +206,8 @@ export const configSchema = z
     socials: socials.default({}),
 
     blocks: z.array(block).default([]).describe('Your links, headers and embeds, top to bottom.'),
+
+    redirects: redirects.default({}),
 
     embeds: z
       .strictObject({

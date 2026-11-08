@@ -329,3 +329,29 @@ describe('githubAnnotations', () => {
     );
   });
 });
+
+describe('short links', () => {
+  it('resolves names to addresses, adding https://', () => {
+    const config = parse(
+      `${MINIMAL}redirects:\n  shop: jane.dev/store\n  new-album: https://a.com/x\n`,
+    );
+    expect(config.redirects).toEqual([
+      { slug: 'shop', url: 'https://jane.dev/store' },
+      { slug: 'new-album', url: 'https://a.com/x' },
+    ]);
+  });
+
+  it('explains names that are hard to type or already used', () => {
+    const message = errorFor(`${MINIMAL}redirects:\n  Shop: https://a.com\n  qr: https://a.com\n`);
+    expect(message).toContain('Line 4: The short link "Shop" can only use lowercase letters');
+    expect(message).toContain('Line 5: The short link "qr" is already used by Folio.');
+  });
+
+  it('refuses a name that matches a file in public/', () => {
+    expect(errorFor(`${MINIMAL}redirects:\n  me.jpg: https://a.com\n`)).toContain('lowercase');
+    writeFileSync(join(publicDir, 'press'), '');
+    expect(errorFor(`${MINIMAL}redirects:\n  press: https://a.com\n`)).toContain(
+      'has the same name as public/press',
+    );
+  });
+});

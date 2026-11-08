@@ -34,6 +34,8 @@ export interface ResolvedConfig {
   contact: Omit<FolioConfig['contact'], 'email'> & { email?: string | undefined };
   analytics: FolioConfig['analytics'];
   footer: FolioConfig['footer'];
+  /** Short links: yoursite/<slug> forwards to url. */
+  redirects: { slug: string; url: string }[];
 }
 
 /** Turns "./avatar.jpg", "/avatar.jpg" or "public/avatar.jpg" into "avatar.jpg". */
@@ -162,7 +164,15 @@ export function parseConfig(
         : undefined,
     ),
   ].filter((p): p is Problem => p !== undefined);
-  if (imageProblems.length > 0) throw new FolioConfigError(imageProblems, fileName);
+  const clashes = Object.keys(config.redirects)
+    .filter((slug) => existsSync(join(options.publicDir, slug)))
+    .map((slug) => ({
+      line: locate(['redirects', slug]),
+      message: `The short link "${slug}" has the same name as public/${slug}, so one would hide the other.`,
+      fix: 'Rename the short link, or the file or folder in public/.',
+    }));
+  const fileProblems = [...imageProblems, ...clashes];
+  if (fileProblems.length > 0) throw new FolioConfigError(fileProblems, fileName);
 
   return resolveConfig(config, options.fallbackUrl);
 }
@@ -340,6 +350,7 @@ function resolveConfig(config: FolioConfig, fallbackUrl?: string): ResolvedConfi
     contact: { ...config.contact, ...(email && { email }) },
     analytics: config.analytics,
     footer: config.footer,
+    redirects: Object.entries(config.redirects).map(([slug, url]) => ({ slug, url })),
   };
 }
 

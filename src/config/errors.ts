@@ -379,6 +379,9 @@ export function issueToProblems(
           },
         ];
       }
+      if (params.folio === 'bad-slug' && field) {
+        return [{ line, message: `The short link "${field}" ${issue.message}.` }];
+      }
       if (path[0] === 'socials' && field && field in PLATFORMS) {
         return [{ line, message: `${quoted} in socials ${issue.message}.` }];
       }

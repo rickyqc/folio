@@ -22,7 +22,10 @@ export type Item =
 
 /** Settings from a loaded config that the builder has no fields for, written back unchanged. */
 export type Kept = Partial<
-  Record<'site' | 'contact' | 'embeds' | 'analytics' | 'footer', Record<string, string | boolean>>
+  Record<
+    'site' | 'contact' | 'embeds' | 'redirects' | 'analytics' | 'footer',
+    Record<string, string | boolean>
+  >
 >;
 
 export interface BuilderState {
@@ -286,6 +289,7 @@ export function toYaml(state: BuilderState): string {
 
   out.push(
     ...section('embeds', kept.embeds),
+    ...section('redirects', kept.redirects),
     '',
     'contact:',
     `  vcard: ${state.vcard}`,
@@ -325,6 +329,7 @@ const SECTIONS = [
   'socials',
   'blocks',
   'embeds',
+  'redirects',
   'contact',
   'analytics',
   'footer',
@@ -413,6 +418,7 @@ export function fromConfig(
     site: scalars(data['site']),
     contact: scalars(contact, ['phone', 'email', 'organization']),
     embeds: scalars(data['embeds']),
+    redirects: scalars(data['redirects']),
     analytics: scalars(data['analytics']),
     footer: scalars(footer, ['credit']),
   };

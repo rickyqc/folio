@@ -11,6 +11,7 @@ In VS Code with the [YAML extension](https://marketplace.visualstudio.com/items?
 - [blocks](#blocks): [link](#link) · [header](#header) · [youtube](#youtube) · [spotify](#spotify) · [image](#image)
 - [embeds](#embeds)
 - [contact](#contact)
+- [redirects](#redirects)
 - [analytics](#analytics)
 - [footer](#footer)
 
@@ -212,6 +213,18 @@ contact:
   vcard: true
   organization: Park Studio
 ```
+
+## redirects
+
+Short links on your own address. Each name forwards visitors to a web address, so `shop` makes `your-page/shop`. They're handy on posters, business cards and QR codes, and for saying out loud ("it's jane.dev/shop"). Later you can change where a link goes without reprinting anything.
+
+```yaml
+redirects:
+  shop: https://jane-park.myshopify.com
+  new-album: https://open.spotify.com/album/…
+```
+
+Names use lowercase letters, numbers and dashes. A few names are taken by Folio (`og`, `qr`, `contact`, `sitemap`, `robots`, `folio-images`, `404`, `index`), and a name can't match a file in `public/`.
 
 ## analytics
 

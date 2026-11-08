@@ -81,6 +81,12 @@ blocks:
   #   alt: Poster for my spring show
   #   url: https://example.com/tickets
 
+# Short links on your own address, for QR codes, print and saying out loud.
+# Each name forwards to a web address: "shop" makes your-page/shop. Change where
+# it goes any time without reprinting anything.
+# redirects:
+#   shop: https://example.com/shop
+
 contact:
   vcard: true # show a "Save contact" button
   # phone: "+1 555 0100"

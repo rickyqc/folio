@@ -194,6 +194,15 @@ test.describe('every option switched on', () => {
     }
   });
 
+  test('forwards a short link to its address', async ({ page }) => {
+    await page.route('https://example.com/shop', (route) =>
+      route.fulfill({ contentType: 'text/html', body: '<title>The shop</title>' }),
+    );
+    await page.goto('/full/shop/');
+    await expect(page).toHaveURL('https://example.com/shop');
+    await expect(page).toHaveTitle('The shop');
+  });
+
   test('hides the credit when turned off', async ({ page }) => {
     await page.goto('/full/');
     await expect(page.getByText('Made with Folio')).toHaveCount(0);

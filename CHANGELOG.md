@@ -25,6 +25,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - “Save contact” now includes your picture and your social profiles, so the saved contact shows your photo and links.
 - Hovering a social icon on a computer shows the platform's name.
 - If an edit breaks your config, the check next to your commit on GitHub turns red and shows the problem on the right line of `folio.config.yaml`. GitHub emails you too. (New copies only: workflow files aren't changed by updates. To add it to an existing copy, add the “Check folio.config.yaml” step from `.github/workflows/ci.yml`.)
+- Short links on your own address: `redirects: { shop: https://… }` makes `your-page/shop` forward there. Put them on posters and QR codes, and change where they go any time. The config builder keeps them when it loads your config.
 
 ## 1.0.0 (2026-10-27)
 
