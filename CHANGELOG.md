@@ -33,6 +33,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - Apple Music and SoundCloud players (`type: applemusic`, `type: soundcloud`), with tap-to-load support. The SoundCloud player uses your accent color. The config builder recognizes both from the link alone.
 - `theme.background: tinted` gives your page a soft wash of your accent color, in light and dark mode. Buttons keep their own surface, so they stand out a little more. The config builder has a checkbox for it.
 - Fixed: on phones narrower than about 375px, the signup form made the whole page wider than the screen, so it zoomed out. The email box and button now stack on small phones.
+- The website is easier to take in at a glance: illustrated steps, a side-by-side view of the config and the page it makes, a page-weight chart, a who-owns-what diagram, and the AI prompt folded behind a button with one-tap copy. It's now light mode for everyone.
 
 ## 1.0.0 (2026-10-27)
 

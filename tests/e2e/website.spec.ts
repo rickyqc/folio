@@ -229,3 +229,20 @@ test('the website screenshots', async ({ page }) => {
       .screenshot({ path: `test-results/screenshots/website-builder-${scheme}.png` });
   }
 });
+
+test('stays light on a device set to dark mode', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('http://localhost:4401/');
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(251, 251, 253)');
+});
+
+test('folds the AI prompt away, and copies it in one tap', async ({ page }) => {
+  await page.goto('http://localhost:4401/#ai');
+  const prompt = page.getByLabel('AI prompt for writing your Folio config');
+  await expect(prompt).toBeHidden();
+  await page.getByText('Show the prompt').click();
+  await expect(prompt).toBeVisible();
+  await page.getByRole('button', { name: 'Copy', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Copied' })).toBeVisible();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('folio.config.yaml');
+});
