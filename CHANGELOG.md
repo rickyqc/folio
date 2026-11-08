@@ -32,6 +32,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - Newsletter signup block for Buttondown, Kit, Mailchimp and Substack. It's a plain form that sends the email straight to your service, so it loads nothing from them and adds no JavaScript. The config builder keeps it when loading your config.
 - Apple Music and SoundCloud players (`type: applemusic`, `type: soundcloud`), with tap-to-load support. The SoundCloud player uses your accent color. The config builder recognizes both from the link alone.
 - `theme.background: tinted` gives your page a soft wash of your accent color, in light and dark mode. Buttons keep their own surface, so they stand out a little more. The config builder has a checkbox for it.
+- Fixed: on phones narrower than about 375px, the signup form made the whole page wider than the screen, so it zoomed out. The email box and button now stack on small phones.
 
 ## 1.0.0 (2026-10-27)
 

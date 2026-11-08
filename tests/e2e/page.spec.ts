@@ -258,6 +258,29 @@ test.describe('every option switched on', () => {
   });
 });
 
+// The narrowest phones in use (Galaxy Fold 280px, iPhone SE 320px). A single element wider
+// than the screen makes the whole page zoom out, so check every page at both.
+test.describe('small phones', () => {
+  for (const path of ['/sample/', '/full/', '/full/404.html']) {
+    for (const width of [280, 320]) {
+      test(`${path} fits a ${width}px screen`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 700 });
+        await page.goto(path);
+        expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
+      });
+    }
+  }
+
+  test('stacks the signup form when the email box would be cramped', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 700 });
+    await page.goto('/full/');
+    const input = await page.locator('form.signup input').boundingBox();
+    const button = await page.locator('form.signup button').boundingBox();
+    expect(button?.y).toBeGreaterThan((input?.y ?? 0) + (input?.height ?? 0) - 1);
+    expect(button?.width).toBe(input?.width);
+  });
+});
+
 // Screenshots for review, saved as a CI artifact: each theme at phone and desktop widths.
 test.describe('screenshots', () => {
   for (const [name, path] of [

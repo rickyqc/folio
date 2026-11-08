@@ -37,6 +37,7 @@ const id = `signup-${Math.abs([...action].reduce((h, c) => (h * 31 + c.charCodeA
 <style>
   .signup {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
   }
 
@@ -47,8 +48,11 @@ const id = `signup-${Math.abs([...action].reduce((h, c) => (h * 31 + c.charCodeA
     text-align: center;
   }
 
+  /* Side by side when the email box can be at least 12em wide (room for a whole address);
+     on narrower phones the button wraps onto its own full-width line. */
   .signup-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
   }
 
@@ -61,8 +65,13 @@ const id = `signup-${Math.abs([...action].reduce((h, c) => (h * 31 + c.charCodeA
     font-size: 17px;
   }
 
+  /* width: 0 drops the browser's built-in ~20-character input width, which otherwise kept
+     the row (and the whole page) wider than small phones; flex-basis sizes it instead.
+     The large grow factor gives it nearly all spare space when it shares a line with the
+     button, while a wrapped button still fills its own line. */
   input {
-    flex: 1;
+    flex: 999 1 12em;
+    width: 0;
     min-width: 0;
     padding: 0 18px;
     background: var(--surface);
@@ -75,6 +84,7 @@ const id = `signup-${Math.abs([...action].reduce((h, c) => (h * 31 + c.charCodeA
   }
 
   button {
+    flex: 1 0 auto;
     padding: 0 22px;
     background: var(--accent);
     box-shadow: inset 0 0 0 1.5px var(--accent-ring, transparent);
