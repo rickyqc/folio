@@ -2,6 +2,10 @@
 // (tests/builder.test.ts runs every output through Folio's real config validator).
 import { isYouTubeChannel, parseSpotify, parseYouTubeId } from '../../../src/lib/embeds.ts';
 import { withLinkScheme, withScheme } from '../../../src/lib/urls.ts';
+
+/** A picture in the owner's public folder, used as a link button's icon. Mirrors the schema. */
+export const isImageFile = (v: string) =>
+  !/^https?:\/\//i.test(v) && /\.(jpe?g|png|webp|avif|gif|svg|heic|heif)$/i.test(v);
 import type { YamlValue } from './yaml-lite';
 
 export interface Platform {
@@ -167,9 +171,13 @@ export function validate(state: BuilderState, platforms: Platform[]): Issue[] {
     if (
       item.icon.trim() &&
       !isEmoji(item.icon) &&
+      !isImageFile(item.icon.trim()) &&
       !platforms.some((p) => p.id === item.icon.trim())
     ) {
-      issues.push({ field: `item-${i}-icon`, message: 'Use one emoji.' });
+      issues.push({
+        field: `item-${i}-icon`,
+        message: 'Use one emoji, or a picture’s file name like cover.jpg.',
+      });
     }
   });
   return issues;

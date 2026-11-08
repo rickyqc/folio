@@ -4,7 +4,7 @@ import { LineCounter, parseDocument } from 'yaml';
 import { parseSpotify, parseYouTubeId, spotifyHeight, type SpotifyKind } from '../lib/embeds.ts';
 import { PLATFORMS, isEmoji, isPlatform, resolveSocial, type Icon } from '../lib/socials.ts';
 import { FolioConfigError, issueToProblems, lineOf, type Problem } from './errors.ts';
-import { configSchema, type FolioConfig } from './schema.ts';
+import { configSchema, isImageFile, type FolioConfig } from './schema.ts';
 
 export const CONFIG_FILE = 'folio.config.yaml';
 
@@ -16,7 +16,16 @@ export interface Social {
 }
 
 export type ResolvedBlock =
-  | { type: 'link'; title: string; url: string; subtitle?: string; icon?: Icon; featured: boolean }
+  | {
+      type: 'link';
+      title: string;
+      url: string;
+      subtitle?: string;
+      icon?: Icon;
+      /** A picture from public/ shown instead of an icon. */
+      thumb?: string;
+      featured: boolean;
+    }
   | { type: 'header'; title: string }
   | { type: 'youtube'; id: string; title?: string }
   | { type: 'spotify'; kind: SpotifyKind; id: string; height: number; title?: string }
@@ -161,7 +170,9 @@ export function parseConfig(
     ...config.blocks.map((b, i) =>
       b.type === 'image'
         ? checkImage(b.src, ['blocks', i, 'src'], options.publicDir, locate)
-        : undefined,
+        : b.type === 'link' && b.icon && isImageFile(b.icon)
+          ? checkImage(b.icon, ['blocks', i, 'icon'], options.publicDir, locate)
+          : undefined,
     ),
   ].filter((p): p is Problem => p !== undefined);
   const clashes = Object.keys(config.redirects)
@@ -287,11 +298,14 @@ function resolveConfig(config: FolioConfig, fallbackUrl?: string): ResolvedConfi
           url: b.url,
           featured: b.featured ?? false,
           ...(b.subtitle && { subtitle: b.subtitle }),
-          ...(b.icon && {
-            icon: isPlatform(b.icon)
-              ? PLATFORMS[b.icon].icon
-              : { kind: 'emoji' as const, char: b.icon },
-          }),
+          ...(b.icon &&
+            (isImageFile(b.icon)
+              ? { thumb: imageUrl(b.icon) }
+              : {
+                  icon: isPlatform(b.icon)
+                    ? PLATFORMS[b.icon].icon
+                    : { kind: 'emoji' as const, char: b.icon },
+                })),
         };
       case 'header':
         return b;

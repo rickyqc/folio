@@ -200,6 +200,14 @@ test.describe('every option switched on', () => {
     }
   });
 
+  test('shows a picture on a link button', async ({ page }) => {
+    await page.goto('/full/');
+    const thumb = page.getByRole('link', { name: 'Spring catalog' }).locator('img');
+    await expect(thumb).toHaveAttribute('alt', '');
+    await expect(thumb).toBeVisible();
+    expect(await thumb.boundingBox()).toMatchObject({ width: 40, height: 40 });
+  });
+
   test('shows a page of its own for a missing address, linking home', async ({ page }) => {
     await page.goto('/full/404.html');
     await expect(page.getByRole('heading', { name: 'This page doesn’t exist' })).toBeVisible();

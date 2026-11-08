@@ -103,13 +103,13 @@ Your page, top to bottom. Each block starts with `- type:` followed by the type.
 
 A full-width button.
 
-| Option     | Default      | What it does                                                                                                             |
-| ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `title`    | **required** | The button text. Keep it short.                                                                                          |
-| `url`      | **required** | Where it goes: a web address starting with `https://`, or `mailto:`, `tel:` or `sms:` for an email, call or text button. |
-| `subtitle` | none         | A smaller second line.                                                                                                   |
-| `icon`     | none         | An icon on the left: any name from [socials](#socials) (e.g. `youtube`) or a single emoji in quotes (e.g. `"🎨"`).       |
-| `featured` | `false`      | Fills the button with your accent color. Only one link can be featured.                                                  |
+| Option     | Default      | What it does                                                                                                                                                                                              |
+| ---------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`    | **required** | The button text. Keep it short.                                                                                                                                                                           |
+| `url`      | **required** | Where it goes: a web address starting with `https://`, or `mailto:`, `tel:` or `sms:` for an email, call or text button.                                                                                  |
+| `subtitle` | none         | A smaller second line.                                                                                                                                                                                    |
+| `icon`     | none         | Shown on the left: any name from [socials](#socials) (e.g. `youtube`), a single emoji in quotes (e.g. `"🎨"`), or a picture in the public folder (e.g. `cover.jpg`), like a product photo or album cover. |
+| `featured` | `false`      | Fills the button with your accent color. Only one link can be featured.                                                                                                                                   |
 
 ```yaml
 blocks:

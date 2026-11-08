@@ -20,6 +20,10 @@ blocks:
     url: https://example.com/shop
     icon: '🏺'
     featured: true
+  - type: link
+    title: Spring catalog
+    url: https://example.com/catalog
+    icon: avatar.svg
   - type: header
     title: Watch
   - type: youtube

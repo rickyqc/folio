@@ -44,6 +44,13 @@ describe('optimize', () => {
     });
   });
 
+  it('makes small square sizes for link button pictures', async () => {
+    const img = await optimize(publicDir, 'Big Photo.jpg', 'thumb');
+    expect(img.srcset).toBe(
+      'folio-images/Big-Photo-40-sq.webp 40w, folio-images/Big-Photo-80-sq.webp 80w, folio-images/Big-Photo-120-sq.webp 120w',
+    );
+  });
+
   it('keeps the shape of images and reports their size to prevent layout shift', async () => {
     const img = await optimize(publicDir, 'Big Photo.jpg', 'image');
     expect(img.srcset).toContain('Big-Photo-1440.webp 1440w');

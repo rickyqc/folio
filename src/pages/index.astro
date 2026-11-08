@@ -31,6 +31,16 @@ const images = new Map(
   ),
 );
 
+const thumbs = new Map(
+  await Promise.all(
+    blocks.flatMap((b) =>
+      b.type === 'link' && b.thumb
+        ? [optimize(publicDir, b.thumb, 'thumb').then((img) => [b.thumb, img] as const)]
+        : [],
+    ),
+  ),
+);
+
 const setup = setupInfo(profile.name);
 const accent = expandHex(theme.accent);
 const absolute = (path: string) => (site.url ? new URL(path, site.url).toString() : undefined);
@@ -121,6 +131,7 @@ const extras = [
                 url={block.url}
                 subtitle={block.subtitle}
                 icon={block.icon}
+                thumb={block.thumb ? (thumbs.get(block.thumb) ?? { src: block.thumb }) : undefined}
                 featured={block.featured}
                 events={clickAttributes(analytics.provider, block.title, block.url)}
               />

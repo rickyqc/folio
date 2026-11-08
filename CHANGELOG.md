@@ -28,6 +28,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - Short links on your own address: `redirects: { shop: https://… }` makes `your-page/shop` forward there. Put them on posters and QR codes, and change where they go any time. The config builder keeps them when it loads your config.
 - A mistyped address on your site shows your own “This page doesn’t exist” page, in your colors, with a button back to your page, instead of the host’s generic error.
 - Your QR code, share card and contact card are easier to find: the “Your Folio is live!” note links them, and the README lists every extra and its address.
+- Link buttons can show a picture, like a product photo or album cover: `icon: cover.jpg` (a file in `public/`). It's resized for you, like your avatar.
 
 ## 1.0.0 (2026-10-27)
 

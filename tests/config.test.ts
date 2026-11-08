@@ -75,7 +75,7 @@ describe('link icons', () => {
 
   it('explains anything else', () => {
     expect(errorFor(link('calendar'))).toContain(
-      'must be a platform name like youtube, or a single emoji in quotes like "🎨"',
+      'must be a platform name like youtube, a single emoji in quotes like "🎨", or a picture in the public folder like cover.jpg',
     );
     expect(errorFor(link('"🎨🎨"'))).toContain('a single emoji');
   });
@@ -327,6 +327,24 @@ describe('githubAnnotations', () => {
         `::error file=folio.config.yaml,title=Your page wasn't updated::100%25 empty`,
       ].join('\n'),
     );
+  });
+});
+
+describe('link pictures', () => {
+  it('uses a picture from public/ in place of an icon', () => {
+    const config = parse(
+      `${MINIMAL}blocks:\n  - type: link\n    title: Shop\n    url: https://a.com\n    icon: ./me.jpg\n`,
+    );
+    expect(config.blocks[0]).toMatchObject({ thumb: 'me.jpg' });
+    expect(config.blocks[0]).not.toHaveProperty('icon');
+  });
+
+  it('points to a missing picture', () => {
+    expect(
+      errorFor(
+        `${MINIMAL}blocks:\n  - type: link\n    title: Shop\n    url: https://a.com\n    icon: cover.png\n`,
+      ),
+    ).toContain('Line 7: Can\'t find the image "cover.png"');
   });
 });
 

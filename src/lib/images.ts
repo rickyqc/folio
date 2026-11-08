@@ -9,8 +9,11 @@ export const IMAGE_DIR = 'folio-images';
 
 const RASTER = /\.(jpe?g|png|webp|avif|tiff?)$/i;
 
-/** Avatars show at 96 CSS px; images fill a column up to 480 CSS px. Covers 1x–3x screens. */
-const WIDTHS = { avatar: [96, 192, 288], image: [480, 960, 1440] } as const;
+/**
+ * Avatars show at 96 CSS px, link button pictures at 40, and images fill a column up to 480.
+ * Covers 1x–3x screens.
+ */
+const WIDTHS = { avatar: [96, 192, 288], image: [480, 960, 1440], thumb: [40, 80, 120] } as const;
 
 export type ImageRole = keyof typeof WIDTHS;
 
@@ -53,7 +56,7 @@ export async function variants(
   role: ImageRole,
 ): Promise<Variant[]> {
   const { width: original } = await size(publicDir, source);
-  const square = role === 'avatar';
+  const square = role !== 'image';
   const widths = [...new Set(WIDTHS[role].map((w) => Math.min(w, original)))].filter((w) => w > 0);
   const stem = parse(source).name.replace(/[^\w-]+/g, '-');
   return widths.map((width) => ({
@@ -80,7 +83,7 @@ export async function optimize(
     src: url(largest),
     smallest: url(smallest),
     srcset: list.map((v) => `${url(v)} ${v.width}w`).join(', '),
-    ...(role === 'avatar' ? { width: 96, height: 96 } : { width, height }),
+    ...(role === 'image' ? { width, height } : { width: 96, height: 96 }),
   };
 }
 

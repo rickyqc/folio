@@ -1250,6 +1250,14 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
     transform: translateY(-50%);
   }
 
+  .bp :global(.bp-thumb) {
+    left: 6px;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    background: color-mix(in srgb, currentColor 18%, transparent);
+  }
+
   .bp :global(.bp-header) {
     margin: 8px 0 0 2px;
     font-size: 12px;

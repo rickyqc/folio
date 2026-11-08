@@ -236,7 +236,7 @@
                 "minLength": 1
               },
               "icon": {
-                "description": "An icon on the left of the button: a platform name (e.g. youtube) or an emoji (e.g. \"🎨\").",
+                "description": "Shown on the left of the button: a platform name (e.g. youtube), an emoji (e.g. \"🎨\"), or a picture in the public folder (e.g. cover.jpg).",
                 "type": "string"
               },
               "featured": {

@@ -29,6 +29,10 @@ const linkUrl = z
 
 const text = z.string().trim().min(1);
 
+/** True for an image file name, like cover.jpg or covers/album.png. */
+export const isImageFile = (v: string) =>
+  !/^https?:\/\//i.test(v) && /\.(jpe?g|png|webp|avif|gif|svg|heic|heif)$/i.test(v);
+
 /** A file in public/ (e.g. "me.jpg") or a full image URL. Existence is checked by the loader. */
 const imageSource = z.string().trim().min(1);
 
@@ -47,12 +51,13 @@ const linkBlock = z.strictObject({
   icon: z
     .string()
     .trim()
-    .refine((v) => isPlatform(v) || isEmoji(v), {
-      message: 'must be a platform name like youtube, or a single emoji in quotes like "🎨"',
+    .refine((v) => isPlatform(v) || isEmoji(v) || isImageFile(v), {
+      message:
+        'must be a platform name like youtube, a single emoji in quotes like "🎨", or a picture in the public folder like cover.jpg',
     })
     .optional()
     .describe(
-      'An icon on the left of the button: a platform name (e.g. youtube) or an emoji (e.g. "🎨").',
+      'Shown on the left of the button: a platform name (e.g. youtube), an emoji (e.g. "🎨"), or a picture in the public folder (e.g. cover.jpg).',
     ),
   featured: z.boolean().optional().describe('Make this your one highlighted link.'),
 });

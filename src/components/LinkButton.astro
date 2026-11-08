@@ -1,4 +1,5 @@
 ---
+import type { OptimizedImage } from '../lib/images.ts';
 import type { Icon as IconType } from '../lib/socials.ts';
 import Icon from './Icon.astro';
 
@@ -7,18 +8,20 @@ interface Props {
   url: string;
   subtitle?: string | undefined;
   icon?: IconType | undefined;
+  /** A picture shown on the left instead of an icon, e.g. a product photo or album cover. */
+  thumb?: OptimizedImage | undefined;
   featured?: boolean;
   /** Click-tracking attributes, only when the owner turned on analytics. */
   events?: Record<string, string>;
 }
 
-const { title, url, subtitle, icon, featured = false, events = {} } = Astro.props;
+const { title, url, subtitle, icon, thumb, featured = false, events = {} } = Astro.props;
 // Email, call and text links open the visitor's app, so they don't need a new tab.
 const web = /^https?:/i.test(url);
 ---
 
 <a
-  class:list={['button', { featured, 'has-icon': icon }]}
+  class:list={['button', { featured, 'has-icon': icon, 'has-thumb': thumb }]}
   href={url}
   rel={web ? 'noopener' : undefined}
   target={web ? '_blank' : undefined}
@@ -28,6 +31,19 @@ const web = /^https?:/i.test(url);
     <span class="icon">
       <Icon icon={icon} size={22} />
     </span>
+  )}
+  {thumb && (
+    <img
+      class="thumb"
+      src={thumb.src}
+      srcset={thumb.srcset}
+      sizes={thumb.srcset ? '40px' : undefined}
+      width="40"
+      height="40"
+      alt=""
+      loading="lazy"
+      decoding="async"
+    />
   )}
   <span class="text">
     <span class="title">{title}</span>
@@ -73,6 +89,21 @@ const web = /^https?:/i.test(url);
     display: grid;
     place-items: center;
     width: 24px;
+  }
+
+  /* The picture is decorative (the title says where the link goes), so its alt is empty. */
+  .has-thumb {
+    padding-inline: 64px;
+  }
+
+  .thumb {
+    position: absolute;
+    left: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: calc(var(--radius) - 6px);
+    object-fit: cover;
+    background: var(--surface-press);
   }
 
   .text {

@@ -9,6 +9,7 @@ import {
   isEmoji,
   toYaml,
   validate,
+  isImageFile,
   withLinkScheme,
   withScheme,
   type BuilderState,
@@ -228,7 +229,10 @@ export function mountBuilder(root: HTMLElement): void {
               ? `<span class="bp-icon">${svg(platform.icon)}</span>`
               : isEmoji(iconValue)
                 ? `<span class="bp-icon">${escape(iconValue)}</span>`
-                : '';
+                : isImageFile(iconValue)
+                  ? // The picture lives in the owner's repo, so the preview shows where it goes.
+                    `<span class="bp-icon bp-thumb" title="${escape(iconValue)}"></span>`
+                  : '';
             const sub = item.subtitle.trim() ? `<small>${escape(item.subtitle)}</small>` : '';
             const featured = state.featured === i ? ' is-featured' : '';
             return `<div class="bp-link${featured}">${icon}${escape(item.title)}${sub}</div>`;

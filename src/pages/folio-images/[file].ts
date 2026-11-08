@@ -1,16 +1,22 @@
 import { resolve } from 'node:path';
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { loadConfig } from '../../config/load.ts';
-import { isOptimizable, render, variants, type Variant } from '../../lib/images.ts';
+import { isOptimizable, render, variants, type ImageRole, type Variant } from '../../lib/images.ts';
 
 const publicDir = resolve('public');
 
-// One file per size of each local photo in the config (avatar and image blocks).
+// One file per size of each local photo in the config (avatar, image blocks, link pictures).
 export const getStaticPaths = (async () => {
   const { profile, blocks } = loadConfig();
-  const wanted: [string, 'avatar' | 'image'][] = [
-    ...(profile.avatar ? [[profile.avatar, 'avatar'] as [string, 'avatar']] : []),
-    ...blocks.flatMap((b) => (b.type === 'image' ? [[b.src, 'image'] as [string, 'image']] : [])),
+  const wanted: [string, ImageRole][] = [
+    ...(profile.avatar ? [[profile.avatar, 'avatar'] as [string, ImageRole]] : []),
+    ...blocks.flatMap((b): [string, ImageRole][] =>
+      b.type === 'image'
+        ? [[b.src, 'image']]
+        : b.type === 'link' && b.thumb
+          ? [[b.thumb, 'thumb']]
+          : [],
+    ),
   ];
   const all = await Promise.all(
     wanted
