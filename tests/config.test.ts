@@ -2,7 +2,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { FolioConfigError } from '../src/config/errors.ts';
+import { FolioConfigError, githubAnnotations } from '../src/config/errors.ts';
 import { loadConfig, parseConfig } from '../src/config/load.ts';
 import { toJsonSchema } from '../src/config/schema.ts';
 
@@ -311,5 +311,21 @@ describe('friendly errors', () => {
 
   it('handles an empty file', () => {
     expect(errorFor('')).toContain('The file is empty.');
+  });
+});
+
+describe('githubAnnotations', () => {
+  it('puts each problem on its line, with the fix', () => {
+    expect(
+      githubAnnotations([
+        { line: 4, message: 'Bad "url".', fix: 'Use https://.' },
+        { message: '100% empty' },
+      ]),
+    ).toBe(
+      [
+        `::error file=folio.config.yaml,line=4,title=Your page wasn't updated::Bad "url".%0AFix: Use https://.`,
+        `::error file=folio.config.yaml,title=Your page wasn't updated::100%25 empty`,
+      ].join('\n'),
+    );
   });
 });

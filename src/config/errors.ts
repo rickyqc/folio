@@ -47,6 +47,21 @@ export function renderProblems(problems: Problem[], fileName = 'folio.config.yam
   return lines.join('\n').trimEnd();
 }
 
+/**
+ * The problems as GitHub Actions annotations, so a failed check shows each message on the
+ * right line of the file in GitHub, next to the commit that broke it.
+ */
+export function githubAnnotations(problems: Problem[], fileName = 'folio.config.yaml'): string {
+  const escape = (s: string) => s.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+  return problems
+    .map((p) => {
+      const where = p.line ? `,line=${p.line}` : '';
+      const body = p.fix ? `${p.message}\nFix: ${p.fix}` : p.message;
+      return `::error file=${fileName}${where},title=Your page wasn't updated::${escape(body)}`;
+    })
+    .join('\n');
+}
+
 function getAt(raw: unknown, path: Path): unknown {
   let node: unknown = raw;
   for (const key of path) {

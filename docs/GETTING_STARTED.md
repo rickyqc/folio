@@ -34,6 +34,8 @@ Everything on your page comes from one file called `folio.config.yaml`.
 
 Vercel notices the change and rebuilds your page. Refresh it after about a minute. Once your name is in, the "Your Folio is live!" note disappears.
 
+**Page didn't change?** There's probably a typo in the file, and your old page stays up until it's fixed. Open your repository on GitHub: a red **✗** next to your latest commit means Folio found a problem. Click it, then **Details**, to see which line it's on and how to fix it. GitHub also emails you when this happens.
+
 > **Tip:** Rather not edit by hand? Copy the [AI prompt](AI_PROMPT.md) into Claude or ChatGPT with your details, and paste what it writes over the whole file.
 
 ### A few rules that keep the file happy

@@ -21,6 +21,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      # First, so a mistake in your config shows as a note on the right line of the file.
+      - name: Check folio.config.yaml
+        run: npm run check
       - run: npm run lint
       - run: npm run format:check
       - run: npm run typecheck

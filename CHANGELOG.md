@@ -24,6 +24,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - With analytics on, you can see which links get tapped. Plausible now loads its outbound-links script (add the “Outbound Link: Click” goal once to see them), and Umami records a “Link click” event for each button, social icon and image link. No change for pages with analytics off.
 - “Save contact” now includes your picture and your social profiles, so the saved contact shows your photo and links.
 - Hovering a social icon on a computer shows the platform's name.
+- If an edit breaks your config, the check next to your commit on GitHub turns red and shows the problem on the right line of `folio.config.yaml`. GitHub emails you too. (New copies only: workflow files aren't changed by updates. To add it to an existing copy, add the “Check folio.config.yaml” step from `.github/workflows/ci.yml`.)
 
 ## 1.0.0 (2026-10-27)
 
