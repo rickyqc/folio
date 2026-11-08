@@ -35,6 +35,16 @@ const setup = setupInfo(profile.name);
 const accent = expandHex(theme.accent);
 const absolute = (path: string) => (site.url ? new URL(path, site.url).toString() : undefined);
 const ogImage = absolute('og.png');
+// og.png and qr.png need a public address; contact.vcf only exists when vcard is on.
+const extras = [
+  ...(site.url
+    ? [
+        { label: 'QR code', href: 'qr.png' },
+        { label: 'share card', href: 'og.png' },
+      ]
+    : []),
+  ...(contact.vcard ? [{ label: 'contact card', href: 'contact.vcf' }] : []),
+];
 ---
 
 <!doctype html>
@@ -93,7 +103,7 @@ const ogImage = absolute('og.png');
   </head>
   <body>
     <main class="page">
-      {setup && <SetupBanner setup={setup} />}
+      {setup && <SetupBanner setup={setup} extras={extras} />}
       <div class="enter" style="--i: 0">
         <Profile profile={profile} avatar={avatar} />
       </div>

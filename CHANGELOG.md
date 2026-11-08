@@ -27,6 +27,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - If an edit breaks your config, the check next to your commit on GitHub turns red and shows the problem on the right line of `folio.config.yaml`. GitHub emails you too. (New copies only: workflow files aren't changed by updates. To add it to an existing copy, add the “Check folio.config.yaml” step from `.github/workflows/ci.yml`.)
 - Short links on your own address: `redirects: { shop: https://… }` makes `your-page/shop` forward there. Put them on posters and QR codes, and change where they go any time. The config builder keeps them when it loads your config.
 - A mistyped address on your site shows your own “This page doesn’t exist” page, in your colors, with a button back to your page, instead of the host’s generic error.
+- Your QR code, share card and contact card are easier to find: the “Your Folio is live!” note links them, and the README lists every extra and its address.
 
 ## 1.0.0 (2026-10-27)
 

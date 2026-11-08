@@ -63,7 +63,8 @@ No photo handy? Use an emoji instead: `avatar: "👩‍💻"`. Otherwise:
 Your page comes with a few extras, made automatically:
 
 - **A preview card.** Paste your link into Messages, Slack or X and it shows your photo, name and bio.
-- **A QR code.** Open `your-page-address/qr.png` (e.g. `my-folio-abc123.vercel.app/qr.png`) and save it for business cards or posters.
+- **A QR code.** Open `your-page-address/qr.png` (e.g. `my-folio-abc123.vercel.app/qr.png`) and save it for business cards or posters. Print shops may ask for `qr.svg`, which stays sharp at any size.
+- **Short links** for print and saying out loud, like `your-page-address/shop`. See [redirects](CONFIG.md#redirects).
 - **A Share button**, if you want one: set `share: true` under `footer:`.
 
 ## 5. Optional: use your own domain

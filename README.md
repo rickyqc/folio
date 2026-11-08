@@ -69,6 +69,17 @@ blocks:
 - 0 KB of JavaScript and about 15 KB in total, so it loads instantly even on a weak signal
 - No cookies or trackers; optional Plausible or Umami analytics
 
+## Your page's extras
+
+Folio makes these for you on every build. Add the name to your page's address, e.g. `my-folio.vercel.app/qr.png`:
+
+| Address        | What it is                                                                          |
+| -------------- | ----------------------------------------------------------------------------------- |
+| `/qr.png`      | A QR code for your page, for business cards and posters (`/qr.svg` for print shops) |
+| `/og.png`      | The preview card shown when your link is shared                                     |
+| `/contact.vcf` | Your contact card, when `contact.vcard` is on                                       |
+| `/your-name`   | Any [short link](docs/CONFIG.md#redirects) you set up under `redirects`             |
+
 ## Which files matter?
 
 | You edit                         | Leave alone (unless you're a developer)                       |

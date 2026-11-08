@@ -5,9 +5,11 @@ import { BUILDER_URL, GUIDE_URL, type SetupInfo } from '../lib/links.ts';
 
 interface Props {
   setup: SetupInfo;
+  /** The extras this build made, so the owner learns where they live on day one. */
+  extras: { label: string; href: string }[];
 }
 
-const { setup } = Astro.props;
+const { setup, extras } = Astro.props;
 ---
 
 <aside class="setup" aria-label="Finish setting up your page">
@@ -26,6 +28,17 @@ const { setup } = Astro.props;
   {setup.editUrl && (
     <p class="setup-hint">
       Opens your <code>folio.config.yaml</code>. Change it, then click <b>Commit changes</b>.
+    </p>
+  )}
+  {extras.length > 0 && (
+    <p class="setup-hint">
+      Also made for you, and kept up to date:{' '}
+      {extras.map((e, i) => (
+        <>
+          {i > 0 && ' · '}
+          <a href={e.href}>{e.label}</a>
+        </>
+      ))}
     </p>
   )}
 </aside>
@@ -62,6 +75,10 @@ const { setup } = Astro.props;
 
   .setup-hint code {
     font-size: 12px;
+  }
+
+  .setup-hint a {
+    color: var(--text);
   }
 
   .setup-actions {

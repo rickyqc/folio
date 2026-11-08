@@ -111,6 +111,12 @@ test.describe('a freshly deployed copy', () => {
       'href',
       /#build$/,
     );
+    // No public address in this build, so only the contact card exists to point to.
+    await expect(banner.getByRole('link', { name: 'contact card' })).toHaveAttribute(
+      'href',
+      'contact.vcf',
+    );
+    await expect(banner.getByRole('link', { name: 'QR code' })).toHaveCount(0);
     expect(scripts).toEqual([]);
   });
 
