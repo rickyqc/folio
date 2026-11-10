@@ -28,6 +28,22 @@ import { GUIDE_URL } from '../site';
             <a href="/ai/">Let AI write it</a>.
           </p>
         </div>
+        <ul class="before reveal" aria-label="Before you start">
+          <li>
+            <b>Have your links ready.</b>
+            <span>The addresses of what you want on your page: your shop, newsletter, videos.</span>
+          </li>
+          <li>
+            <b>Emoji now, photo later.</b>
+            <span>Pick an emoji here. You can upload a photo to your copy any time after.</span>
+          </li>
+          <li>
+            <b>Already have a page?</b>
+            <span>
+              Use <b>Load your current config</b> below to change it here, then copy it back.
+            </span>
+          </li>
+        </ul>
         <ConfigBuilder />
       </div>
     </section>
@@ -37,6 +53,39 @@ import { GUIDE_URL } from '../site';
 </Layout>
 
 <style>
+  .before {
+    display: grid;
+    gap: 12px;
+    max-width: 960px;
+    margin: 0 auto 32px;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  @media (min-width: 760px) {
+    .before {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+  }
+
+  .before li {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  .before b {
+    color: var(--text);
+    font-weight: 600;
+  }
+
   .hint {
     font-size: 15px;
     color: var(--muted);
