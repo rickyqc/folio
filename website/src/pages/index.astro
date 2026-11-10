@@ -78,6 +78,64 @@ const facts = [
 
     <HowItWorks summary />
 
+    <section class="section" aria-labelledby="explore-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Explore</p>
+          <h2 id="explore-title" class="headline">
+            Find out more.
+          </h2>
+        </div>
+        <ul class="explore">
+          <li class="reveal">
+            <a href="/features/">
+              <span class="explore-art" aria-hidden="true">
+                <span class="tag">jane.dev</span>
+                <span class="tag">0 trackers</span>
+                <span class="tag">♫ Music</span>
+                <span class="tag">Short links</span>
+                <span class="tag">Signup</span>
+              </span>
+              <b>Features</b>
+              <span>Everything a link page needs, and nothing it doesn’t.</span>
+            </a>
+          </li>
+          <li class="reveal">
+            <a href="/why/">
+              <span class="explore-art" aria-hidden="true">
+                <span class="tag tag--ok">You</span>
+                <span class="arrow">→</span>
+                <span class="tag tag--ok">Your GitHub</span>
+                <span class="arrow">→</span>
+                <span class="tag tag--ok">jane.dev</span>
+              </span>
+              <b>Why Folio</b>
+              <span>Owned, not rented: every piece of your page is yours.</span>
+            </a>
+          </li>
+          <li class="reveal">
+            <a href="/ai/">
+              <span class="explore-art" aria-hidden="true">
+                <span class="bubble">I’m a ceramicist in Portland. Here are my links…</span>
+              </span>
+              <b>Write it with AI</b>
+              <span>Describe yourself to any AI chat, and paste what it writes.</span>
+            </a>
+          </li>
+          <li class="reveal">
+            <a href="/faq/">
+              <span class="explore-art" aria-hidden="true">
+                <span class="q">Is it really free?</span>
+                <span class="q">Do I need to know GitHub?</span>
+              </span>
+              <b>Questions</b>
+              <span>Cost, GitHub, domains, privacy and moving from Linktree.</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
     <Closing />
   </main>
 
@@ -85,6 +143,100 @@ const facts = [
 </Layout>
 
 <style>
+  /* Explore: one card per page, each with a small picture of what's there */
+  .explore {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 720px) {
+    .explore {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  .explore a {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    height: 100%;
+    padding: 28px;
+    border-radius: 28px;
+    background: var(--bg-alt);
+    color: var(--muted);
+    transition: transform 200ms var(--ease);
+  }
+
+  .explore a:hover {
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+
+  .explore b {
+    color: var(--text);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .explore b::after {
+    content: ' ›';
+    color: var(--accent);
+  }
+
+  .explore-art {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    gap: 8px;
+    min-height: 96px;
+    margin-bottom: 12px;
+  }
+
+  .tag,
+  .q,
+  .bubble {
+    padding: 6px 12px;
+    border-radius: 980px;
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .tag--ok {
+    box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ok) 45%, transparent);
+  }
+
+  .arrow {
+    color: var(--muted);
+  }
+
+  .bubble {
+    max-width: 280px;
+    padding: 10px 14px;
+    border-radius: 16px 16px 16px 4px;
+    font-weight: 400;
+  }
+
+  .q {
+    width: 100%;
+    max-width: 260px;
+    border-radius: 12px;
+  }
+
+  .q::after {
+    content: ' +';
+    float: right;
+    color: var(--muted);
+  }
+
   /* Hero */
   .hero {
     display: flex;

@@ -260,3 +260,21 @@ test('the AI prompt page shows the prompt and copies it in one tap', async ({ pa
   await expect(page.getByRole('button', { name: 'Copied' })).toBeVisible();
   expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('folio.config.yaml');
 });
+
+test('every page has one main heading and marks itself in the nav', async ({ page }) => {
+  for (const path of ['/how-it-works/', '/features/', '/why/', '/faq/', '/build/', '/ai/']) {
+    const response = await page.goto(`http://localhost:4401${path}`);
+    expect(response?.ok()).toBe(true);
+    await expect(page.locator('h1')).toHaveCount(1);
+    if (path !== '/ai/') {
+      await expect(page.locator('.nav-links [aria-current="page"]')).toHaveAttribute('href', path);
+    }
+  }
+});
+
+test('the home page links to every other page', async ({ page }) => {
+  await page.goto('http://localhost:4401/');
+  for (const path of ['/features/', '/why/', '/ai/', '/faq/', '/how-it-works/', '/build/']) {
+    await expect(page.locator(`main a[href="${path}"]`).first()).toBeVisible();
+  }
+});

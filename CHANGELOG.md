@@ -34,7 +34,7 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - `theme.background: tinted` gives your page a soft wash of your accent color, in light and dark mode. Buttons keep their own surface, so they stand out a little more. The config builder has a checkbox for it.
 - Fixed: on phones narrower than about 375px, the signup form made the whole page wider than the screen, so it zoomed out. The email box and button now stack on small phones.
 - The website is easier to take in at a glance: illustrated steps, a side-by-side view of the config and the page it makes, a page-weight chart, a who-owns-what diagram, and the AI prompt folded behind a button with one-tap copy. It's now light mode for everyone.
-- The website is now several pages. The config builder lives at `/build/`; old `/#build` links forward there, and the setup note, README and guide point to the new address.
+- The website is now several pages instead of one long scroll: a short home page, How it works (with what to do after you're live), Features, Why Folio, Questions, the config builder at `/build/` and the AI prompt at `/ai/`. Old links to the sections (like `/#build`, which every copy's setup note uses) forward to the new pages.
 
 ## 1.0.0 (2026-10-27)
 

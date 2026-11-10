@@ -136,6 +136,16 @@ const { current } = Astro.props;
     transition: color 200ms var(--ease);
   }
 
+  /* The page you're on. */
+  .nav-links a[aria-current='page'] {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .nav-menu-panel li a[aria-current='page'] {
+    color: var(--accent);
+  }
+
   .nav-links a:hover {
     color: var(--text);
   }
