@@ -1,16 +1,26 @@
 ---
 // The three steps from nothing to a live page, each with a small picture of the moment.
+// The home page shows a summary that links to the full How it works page.
 import { BUILD_HREF, CLONE_URL, GUIDE_URL } from '../site';
+
+interface Props {
+  /** On the home page: link to the full page instead of the guide and terminal setup. */
+  summary?: boolean;
+  /** 1 when this is the page's main heading. */
+  level?: 1 | 2;
+}
+
+const { summary = false, level = 2 } = Astro.props;
+const Heading = level === 1 ? 'h1' : 'h2';
 ---
 
-<!-- How it works -->
-<section id="how-it-works" class="section section--alt" aria-labelledby="how-title">
+<section class="section section--alt" aria-labelledby="how-title">
   <div class="container">
     <div class="section-head reveal">
       <p class="eyebrow">How it works</p>
-      <h2 id="how-title" class="headline">
+      <Heading id="how-title" class="headline">
         Three steps. About five minutes.
-      </h2>
+      </Heading>
     </div>
 
     <ol class="flow">
@@ -86,17 +96,25 @@ import { BUILD_HREF, CLONE_URL, GUIDE_URL } from '../site';
       <a class="button" href={BUILD_HREF}>
         Start building
       </a>
-      <a class="more" href={GUIDE_URL}>
-        Step-by-step guide with every click
-      </a>
+      {summary ? (
+        <a class="more" href="/how-it-works/">
+          See how it all works
+        </a>
+      ) : (
+        <a class="more" href={GUIDE_URL}>
+          Step-by-step guide with every click
+        </a>
+      )}
     </p>
 
-    <details class="dev reveal">
-      <summary>Prefer the terminal?</summary>
-      <pre class="terminal"><code><span class="p">$</span> git clone {CLONE_URL}
+    {!summary && (
+      <details class="dev reveal">
+        <summary>Prefer the terminal?</summary>
+        <pre class="terminal"><code><span class="p">$</span> git clone {CLONE_URL}
 <span class="p">$</span> cd folio && npm install
 <span class="p">$</span> npm run dev</code></pre>
-    </details>
+      </details>
+    )}
   </div>
 </section>
 

@@ -3,7 +3,6 @@ import AiPrompt from '../components/AiPrompt.astro';
 import Closing from '../components/Closing.astro';
 import Features from '../components/Features.astro';
 import HowItWorks from '../components/HowItWorks.astro';
-import OneFile from '../components/OneFile.astro';
 import PhonePreview from '../components/PhonePreview.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteNav from '../components/SiteNav.astro';
@@ -26,7 +25,7 @@ const facts = [
        note, for #build) still point at them. -->
   <script is:inline>
     (() => {
-      const moved = { '#build': '/build/', '#faq': '/faq/' };
+      const moved = { '#build': '/build/', '#faq': '/faq/', '#how-it-works': '/how-it-works/' };
       if (moved[location.hash]) location.replace(moved[location.hash]);
     })();
   </script>
@@ -73,8 +72,7 @@ const facts = [
       </div>
     </section>
 
-    <HowItWorks />
-    <OneFile />
+    <HowItWorks summary />
 
     <AiPrompt />
     <Features />

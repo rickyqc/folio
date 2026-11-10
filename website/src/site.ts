@@ -20,11 +20,11 @@ export const BUILD_HREF = '/build/';
 
 /** The site's sections, in the top bar and the phone menu. */
 export const NAV = [
-  { href: '/#how-it-works', label: 'How it works' },
+  { href: '/how-it-works/', label: 'How it works' },
   { href: '/build/', label: 'Build yours' },
   { href: '/#features', label: 'Features' },
   { href: '/faq/', label: 'FAQ' },
 ];
 
 /** Every page, for the sitemap. */
-export const PAGES = ['/', '/build/', '/faq/'];
+export const PAGES = ['/', '/how-it-works/', '/build/', '/faq/'];

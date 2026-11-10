@@ -1,0 +1,149 @@
+---
+import HowItWorks from '../components/HowItWorks.astro';
+import OneFile from '../components/OneFile.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteNav from '../components/SiteNav.astro';
+import Layout from '../layouts/Layout.astro';
+import { CONFIG_DOCS_URL, CUSTOM_DOMAIN_URL, GUIDE_URL, UPDATING_URL } from '../site';
+
+// What owners do once the page is live, each with an icon and a link to the details.
+const next = [
+  {
+    title: 'Add your photo',
+    body: 'Upload it to the public folder, any size. Or use an emoji instead.',
+    href: `${GUIDE_URL}#3-add-your-photo`,
+    icon: 'M4 7h3l2-2h6l2 2h3v12H4zM12 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6',
+  },
+  {
+    title: 'Use your own domain',
+    body: 'Point a domain like yourname.com at your page. HTTPS is set up for you.',
+    href: CUSTOM_DOMAIN_URL,
+    icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z',
+  },
+  {
+    title: 'See which links get tapped',
+    body: 'Turn on Plausible or Umami in one line. Off until you do.',
+    href: `${CONFIG_DOCS_URL}#analytics`,
+    icon: 'M4 20V10M10 20V4M16 20v-7M22 20H2',
+  },
+  {
+    title: 'Get updates',
+    body: 'New Folio versions arrive as a pull request. Merge it, and you’re up to date.',
+    href: UPDATING_URL,
+    icon: 'M4 12a8 8 0 0 1 14-5.3M20 4v4h-4M20 12a8 8 0 0 1-14 5.3M4 20v-4h4',
+  },
+  {
+    title: 'Fix a typo',
+    body: 'A red ✗ next to your commit on GitHub shows the line and the fix. Your page stays up.',
+    href: `${GUIDE_URL}#something-went-wrong`,
+    icon: 'M12 3l9 16H3zM12 10v4M12 17h.01',
+  },
+  {
+    title: 'Every option',
+    body: 'Short links, signup forms, music players, themes. All in one reference.',
+    href: CONFIG_DOCS_URL,
+    icon: 'M5 4h14v16H5zM9 9h6M9 13h6M9 17h3',
+  },
+];
+---
+
+<Layout
+  title="How it works · Folio"
+  description="Fill in the builder, click deploy, paste your config. How Folio goes from nothing to a live page in about five minutes, and what to do next."
+>
+  <SiteNav current="/how-it-works/" />
+
+  <main id="main">
+    <HowItWorks level={1} />
+    <OneFile />
+
+    <section class="section section--alt" aria-labelledby="next-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">After you’re live</p>
+          <h2 id="next-title" class="headline">
+            Make it yours.
+          </h2>
+        </div>
+        <ul class="next">
+          {next.map((item) => (
+            <li class="reveal">
+              <a href={item.href}>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d={item.icon}></path>
+                </svg>
+                <b>{item.title}</b>
+                <span>{item.body}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>
+
+<style>
+  .next {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 640px) {
+    .next {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .next {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+  }
+
+  .next a {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    height: 100%;
+    padding: 24px;
+    border-radius: 24px;
+    background: var(--surface);
+    color: var(--muted);
+    transition: transform 200ms var(--ease);
+  }
+
+  .next a:hover {
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+
+  .next b {
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .next b::after {
+    content: ' ›';
+    color: var(--accent);
+  }
+
+  .next svg {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 8px;
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>
