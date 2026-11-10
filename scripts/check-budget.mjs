@@ -1,8 +1,9 @@
 // Enforces the Quality bar on the built site: zero JavaScript and under 50 KB before images.
-// Usage: node scripts/check-budget.mjs <dist-dir> [--allow-js] [--max-kb <n>]
-// The flags are for Folio's own website, which isn't a published Folio page.
-import { readdirSync, statSync } from 'node:fs';
-import { extname, join, relative } from 'node:path';
+// Usage: node scripts/check-budget.mjs <dist-dir> [--allow-js] [--max-kb <n>] [--per-page]
+// The flags are for Folio's own website, which isn't a published Folio page. --per-page checks
+// each HTML page plus the scripts and stylesheets it loads, instead of the whole folder.
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { dirname, extname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const PAGE_BUDGET_BYTES = 50 * 1024;
@@ -17,13 +18,41 @@ function listFiles(dir) {
 }
 
 /**
+ * One HTML page plus the local scripts and stylesheets it references.
  * @param {string} distDir
- * @returns {{ pageBytes: number, jsFiles: string[], errors: string[] }}
+ * @param {string} htmlFile
  */
-export function checkBudget(distDir, { allowJs = false, maxBytes = PAGE_BUDGET_BYTES } = {}) {
+function pageWeight(distDir, htmlFile) {
+  const html = readFileSync(htmlFile, 'utf8');
+  const assets = new Set();
+  for (const [, ref] of html.matchAll(/(?:src|href)="([^"#?]+\.(?:m?js|css))"/g)) {
+    if (/^[a-z]+:\/\//i.test(ref)) continue;
+    const path = ref.startsWith('/') ? join(distDir, ref) : join(dirname(htmlFile), ref);
+    if (existsSync(path)) assets.add(path);
+  }
+  return [...assets].reduce((sum, f) => sum + statSync(f).size, statSync(htmlFile).size);
+}
+
+/**
+ * @param {string} distDir
+ * @returns {{ pageBytes: number, heaviest?: string, jsFiles: string[], errors: string[] }}
+ */
+export function checkBudget(
+  distDir,
+  { allowJs = false, maxBytes = PAGE_BUDGET_BYTES, perPage = false } = {},
+) {
   const files = listFiles(distDir);
   const pageFiles = files.filter((f) => PAGE_EXTENSIONS.has(extname(f)));
-  const pageBytes = pageFiles.reduce((sum, f) => sum + statSync(f).size, 0);
+  let pageBytes = pageFiles.reduce((sum, f) => sum + statSync(f).size, 0);
+  /** @type {string | undefined} */
+  let heaviest;
+  if (perPage) {
+    pageBytes = 0;
+    for (const html of files.filter((f) => extname(f) === '.html')) {
+      const bytes = pageWeight(distDir, html);
+      if (bytes > pageBytes) [pageBytes, heaviest] = [bytes, relative(distDir, html)];
+    }
+  }
   const jsFiles = files
     .filter((f) => JS_EXTENSIONS.has(extname(f)))
     .map((f) => relative(distDir, f));
@@ -35,11 +64,12 @@ export function checkBudget(distDir, { allowJs = false, maxBytes = PAGE_BUDGET_B
     );
   }
   if (pageBytes > maxBytes) {
+    const which = heaviest ? `${heaviest} weighs` : 'Page weighs';
     errors.push(
-      `Page weighs ${(pageBytes / 1024).toFixed(1)} KB before images; the budget is ${maxBytes / 1024} KB.`,
+      `${which} ${(pageBytes / 1024).toFixed(1)} KB before images; the budget is ${maxBytes / 1024} KB.`,
     );
   }
-  return { pageBytes, jsFiles, errors };
+  return { pageBytes, ...(heaviest && { heaviest }), jsFiles, errors };
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -47,9 +77,11 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const distDir =
     args.find((a) => !a.startsWith('--') && args[args.indexOf(a) - 1] !== '--max-kb') ?? 'dist';
   const allowJs = args.includes('--allow-js');
+  const perPage = args.includes('--per-page');
   const maxKb = args.includes('--max-kb') ? Number(args[args.indexOf('--max-kb') + 1]) : undefined;
-  const { pageBytes, jsFiles, errors } = checkBudget(distDir, {
+  const { pageBytes, heaviest, jsFiles, errors } = checkBudget(distDir, {
     allowJs,
+    perPage,
     ...(maxKb && { maxBytes: maxKb * 1024 }),
   });
   if (errors.length > 0) {
@@ -57,5 +89,6 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     process.exit(1);
   }
   const js = jsFiles.length ? `${jsFiles.length} script file(s)` : '0 KB JavaScript';
-  console.log(`✓ ${(pageBytes / 1024).toFixed(1)} KB before images, ${js}.`);
+  const where = heaviest ? ` (heaviest page: ${heaviest})` : '';
+  console.log(`✓ ${(pageBytes / 1024).toFixed(1)} KB before images${where}, ${js}.`);
 }

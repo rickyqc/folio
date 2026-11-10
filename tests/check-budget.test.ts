@@ -45,4 +45,23 @@ describe('checkBudget', () => {
     writeFileSync(join(dist, 'avatar.jpg'), Buffer.alloc(PAGE_BUDGET_BYTES * 2));
     expect(checkBudget(dist).errors).toEqual([]);
   });
+
+  it('can weigh each page with the scripts it loads, instead of the whole folder', () => {
+    mkdirSync(join(dist, 'build'));
+    mkdirSync(join(dist, '_astro'));
+    writeFileSync(join(dist, '_astro', 'builder.js'), 'x'.repeat(30 * 1024));
+    writeFileSync(join(dist, 'index.html'), 'x'.repeat(40 * 1024));
+    writeFileSync(
+      join(dist, 'build', 'index.html'),
+      `<script src="/_astro/builder.js"></script>${'x'.repeat(30 * 1024)}`,
+    );
+    const options = { allowJs: true, maxBytes: 50 * 1024 };
+    expect(checkBudget(dist, options).errors).toHaveLength(1);
+    const perPage = checkBudget(dist, { ...options, perPage: true });
+    expect(perPage.errors).toHaveLength(1);
+    expect(perPage.heaviest).toBe(join('build', 'index.html'));
+    expect(perPage.errors[0]).toMatch(/^build\/index\.html weighs 60\.\d KB/);
+    writeFileSync(join(dist, '_astro', 'builder.js'), 'x');
+    expect(checkBudget(dist, { ...options, perPage: true }).errors).toEqual([]);
+  });
 });
