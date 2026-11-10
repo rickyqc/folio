@@ -76,6 +76,35 @@ const facts = [
       </div>
     </section>
 
+    <section class="primer container reveal" aria-labelledby="primer-title">
+      <div class="primer-art" aria-hidden="true">
+        <span class="bio">
+          <b>@janepark</b>
+          Product designer. Writing about craft.
+          <span class="bio-link">jane.dev</span>
+        </span>
+        <span class="primer-arrow">→</span>
+        <span class="primer-page">
+          <i class="pp-avatar"></i>
+          <i class="pp-line pp-line--accent"></i>
+          <i class="pp-line"></i>
+          <i class="pp-line"></i>
+        </span>
+      </div>
+      <div class="primer-text">
+        <h2 id="primer-title">New to link-in-bio pages?</h2>
+        <p>
+          Instagram, TikTok and most apps give you one spot for a link. A link-in-bio page is where
+          that link goes: one simple page with everything you want people to find, like your shop,
+          your newsletter and your latest video.
+        </p>
+        <p>
+          Folio makes that page for you, at your own address, without a monthly fee or an app to
+          sign up for.
+        </p>
+      </div>
+    </section>
+
     <HowItWorks summary />
 
     <section class="section" aria-labelledby="explore-title">
@@ -85,6 +114,7 @@ const facts = [
           <h2 id="explore-title" class="headline">
             Find out more.
           </h2>
+          <p class="lede">Each page covers one thing. Start wherever you like.</p>
         </div>
         <ul class="explore">
           <li class="reveal">
@@ -143,6 +173,107 @@ const facts = [
 </Layout>
 
 <style>
+  /* Primer: what a link-in-bio page is, for people who've never used one */
+  .primer {
+    display: grid;
+    gap: 28px;
+    align-items: center;
+    max-width: 960px;
+    margin-bottom: clamp(64px, 10vw, 112px);
+  }
+
+  @media (min-width: 820px) {
+    .primer {
+      grid-template-columns: 1fr 1.1fr;
+      gap: 48px;
+    }
+  }
+
+  .primer-art {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 28px 20px;
+    border-radius: 28px;
+    background: var(--bg-alt);
+  }
+
+  .bio {
+    display: grid;
+    gap: 4px;
+    max-width: 180px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .bio b {
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  .bio-link {
+    justify-self: start;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .primer-arrow {
+    color: var(--muted);
+    font-size: 22px;
+  }
+
+  .primer-page {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    width: 96px;
+    padding: 14px 10px;
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  .pp-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--accent) 22%, var(--bg-alt));
+  }
+
+  .pp-line {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: var(--bg-alt);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  .pp-line--accent {
+    background: var(--button-bg);
+    box-shadow: none;
+  }
+
+  .primer-text {
+    display: grid;
+    gap: 12px;
+  }
+
+  .primer-text h2 {
+    font-size: clamp(28px, 3.4vw, 36px);
+  }
+
+  .primer-text p {
+    color: var(--muted);
+  }
+
   /* Explore: one card per page, each with a small picture of what's there */
   .explore {
     display: grid;
