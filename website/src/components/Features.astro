@@ -1,6 +1,6 @@
 ---
 // Everything Folio does, one card each, each with a small visual.
-import { REPO_URL, SPEC_URL } from '../site';
+import { CONFIG_DOCS_URL, CUSTOM_DOMAIN_URL, REPO_URL, SPEC_URL } from '../site';
 
 // Page weights for the chart. Folio: the sample page's HTML and CSS (npm run budget reports
 // it). Typical: the median mobile page in HTTP Archive's 2024 Web Almanac, rounded down.
@@ -25,12 +25,19 @@ const Heading = level === 1 ? 'h1' : 'h2';
         <br />
         Nothing it doesn’t.
       </Heading>
+      <p class="lede">
+        Every feature is free and built in. Most are turned on with one line in your config, shown
+        at the bottom of each card.
+      </p>
     </div>
 
     <div class="bento">
       <article class="card card--wide reveal">
         <h3>Loads in a blink.</h3>
-        <p>A whole Folio page weighs less than most single photos, with no JavaScript at all.</p>
+        <p>
+          A whole Folio page weighs less than most single photos, with no JavaScript at all. Always
+          on, nothing to set up.
+        </p>
         <figure class="weight" aria-labelledby="weight-caption">
           <div class="weight-row">
             <span class="weight-name">Folio page</span>
@@ -71,6 +78,9 @@ const Heading = level === 1 ? 'h1' : 'h2';
         </div>
         <h3>Your own domain.</h3>
         <p>Point any domain at it. HTTPS is set up for you.</p>
+        <p class="hint">
+          In your host’s settings, <a href={CUSTOM_DOMAIN_URL}>with a guide</a>
+        </p>
       </article>
 
       <article class="card reveal">
@@ -83,7 +93,12 @@ const Heading = level === 1 ? 'h1' : 'h2';
           </span>
         </div>
         <h3>Private by default.</h3>
-        <p>Want visitor numbers? Turn on Plausible or Umami in one line.</p>
+        <p>
+          Nothing follows your visitors around. Want visitor numbers? Turn on Plausible or Umami.
+        </p>
+        <p class="hint">
+          In your config: <code>analytics:</code>
+        </p>
       </article>
 
       <article class="card reveal">
@@ -95,7 +110,10 @@ const Heading = level === 1 ? 'h1' : 'h2';
           <span class="swatch" style="background: #34c759"></span>
         </div>
         <h3>Your colors.</h3>
-        <p>Light, dark or auto, any accent color, rounded or pill buttons.</p>
+        <p>Light, dark or auto, any accent color, a tinted background, rounded or pill buttons.</p>
+        <p class="hint">
+          In your config: <code>theme:</code>
+        </p>
       </article>
 
       <article class="card reveal">
@@ -104,6 +122,9 @@ const Heading = level === 1 ? 'h1' : 'h2';
         </svg>
         <h3>Made to be shared.</h3>
         <p>A share card, a QR code for print and a “Save contact” button, all made for you.</p>
+        <p class="hint">
+          In your config: <code>contact:</code>
+        </p>
       </article>
 
       <article class="card reveal">
@@ -115,6 +136,9 @@ const Heading = level === 1 ? 'h1' : 'h2';
         </div>
         <h3>Music and video.</h3>
         <p>Players right on your page. Or load them only on tap, for extra privacy.</p>
+        <p class="hint">
+          In your config: <code>type: spotify</code>
+        </p>
       </article>
 
       <article class="card reveal">
@@ -127,6 +151,9 @@ const Heading = level === 1 ? 'h1' : 'h2';
         </div>
         <h3>Short links.</h3>
         <p>Easy addresses for posters and QR codes. Change where they go any time.</p>
+        <p class="hint">
+          In your config: <code>redirects:</code>
+        </p>
       </article>
 
       <article class="card reveal">
@@ -135,7 +162,13 @@ const Heading = level === 1 ? 'h1' : 'h2';
           <b>Subscribe</b>
         </div>
         <h3>Newsletter signup.</h3>
-        <p>Works with Buttondown, Kit, Mailchimp and Substack.</p>
+        <p>
+          Let visitors subscribe right from your page. Works with Buttondown, Kit, Mailchimp and
+          Substack.
+        </p>
+        <p class="hint">
+          In your config: <code>type: signup</code>
+        </p>
       </article>
 
       <article class="card card--full reveal">
@@ -153,6 +186,12 @@ const Heading = level === 1 ? 'h1' : 'h2';
         </p>
       </article>
     </div>
+
+    <p class="all reveal">
+      <a class="more" href={CONFIG_DOCS_URL}>
+        See every option, with examples
+      </a>
+    </p>
   </div>
 </section>
 
@@ -203,6 +242,31 @@ const Heading = level === 1 ? 'h1' : 'h2';
 
   .section:not(.section--alt) .card {
     background: var(--bg-alt);
+  }
+
+  /* Where each feature is switched on, pinned to the bottom of its card. */
+  .card .hint {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 13px;
+  }
+
+  .hint code {
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: var(--bg-alt);
+    color: var(--text);
+    font-size: 12.5px;
+  }
+
+  .all {
+    margin-top: 32px;
+    text-align: center;
+  }
+
+  .lede {
+    max-width: 640px;
+    margin-inline: auto;
   }
 
   .card .more {
