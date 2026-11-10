@@ -23,8 +23,8 @@ export const NAV = [
   { href: '/#how-it-works', label: 'How it works' },
   { href: '/build/', label: 'Build yours' },
   { href: '/#features', label: 'Features' },
-  { href: '/#faq', label: 'FAQ' },
+  { href: '/faq/', label: 'FAQ' },
 ];
 
 /** Every page, for the sitemap. */
-export const PAGES = ['/', '/build/'];
+export const PAGES = ['/', '/build/', '/faq/'];

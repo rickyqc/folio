@@ -161,14 +161,14 @@ test.describe('on a phone', () => {
     await page.setViewportSize({ width: 390, height: 844 });
   });
 
-  test('the menu jumps to a section and closes', async ({ page }) => {
+  test('the menu opens a page and closes', async ({ page }) => {
     await page.goto('http://localhost:4401/');
     await expect(page.locator('.nav-links')).toBeHidden();
     const menu = page.locator('.nav-menu');
     await menu.locator('summary[aria-label="Menu"]').click();
     await expect(menu.getByRole('link', { name: 'FAQ' })).toBeVisible();
     await menu.getByRole('link', { name: 'FAQ' }).click();
-    await expect(page).toHaveURL(/#faq$/);
+    await expect(page).toHaveURL(/\/faq\/$/);
     await expect(menu).not.toHaveAttribute('open', '');
   });
 
@@ -207,7 +207,7 @@ test.describe('on a phone', () => {
 test('the FAQ opens and closes without JavaScript', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
-  await page.goto('http://localhost:4401/#faq');
+  await page.goto('http://localhost:4401/faq/');
   const faq = page.locator('.faq');
   const question = faq.getByText('Is it really free?');
   const answer = faq.getByText(/open source under the MIT license/);
@@ -232,9 +232,14 @@ test('the website screenshots', async ({ page }) => {
   }
 });
 
-test('old links to /#build still reach the builder', async ({ page }) => {
-  await page.goto('http://localhost:4401/#build');
-  await expect(page).toHaveURL(/\/build\/$/);
+test('old links to sections that became pages still get there', async ({ page }) => {
+  for (const [hash, path] of [
+    ['#build', '/build/'],
+    ['#faq', '/faq/'],
+  ]) {
+    await page.goto(`http://localhost:4401/${hash}`);
+    await expect(page).toHaveURL(new RegExp(`${path}$`));
+  }
 });
 
 test('stays light on a device set to dark mode', async ({ page }) => {

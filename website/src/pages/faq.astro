@@ -1,0 +1,60 @@
+---
+import Faq from '../components/Faq.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteNav from '../components/SiteNav.astro';
+import Layout from '../layouts/Layout.astro';
+import { GUIDE_URL, ISSUES_URL } from '../site';
+---
+
+<Layout
+  title="Questions · Folio"
+  description="Is Folio really free? Do you need to know GitHub? Answers to the common questions about Folio."
+>
+  <SiteNav current="/faq/" />
+
+  <main id="main">
+    <section id="faq" class="section" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Questions</p>
+          <h1 id="faq-title" class="headline">
+            Good to know.
+          </h1>
+        </div>
+        <Faq />
+
+        <div class="still reveal">
+          <h2>Still have a question?</h2>
+          <p>
+            The <a href={GUIDE_URL}>step-by-step guide</a> covers every click. Stuck on something
+            else? <a href={ISSUES_URL}>Ask on GitHub</a>, and someone will help.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>
+
+<style>
+  .still {
+    display: grid;
+    gap: 8px;
+    max-width: 820px;
+    margin: clamp(48px, 7vw, 72px) auto 0;
+    padding: 28px;
+    border-radius: 24px;
+    background: var(--bg-alt);
+    text-align: center;
+  }
+
+  .still h2 {
+    font-size: 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .still p {
+    color: var(--muted);
+  }
+</style>
