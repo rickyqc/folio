@@ -29,11 +29,11 @@ const faqs: { q: string; a: string }[] = [
   },
   {
     q: 'Does it track my visitors?',
-    a: 'No. Folio adds no cookies and no trackers. If you want to know how many people visit, you can turn on Plausible or Umami, two privacy-friendly analytics services, in one line.',
+    a: 'No. Folio adds no cookies and no trackers. If you want to know how many people visit and which links they tap, you can turn on Plausible or Umami, two privacy-friendly analytics services, in one line.',
   },
   {
     q: 'What if I make a mistake in the file?',
-    a: 'Your page doesn’t break. The update stops, your last working page stays online, and you get a message with the line number and how to fix it.',
+    a: 'Your page doesn’t break. The update stops and your last working page stays online. On GitHub, a red ✗ appears next to your change; click it to see the line number and how to fix it.',
   },
   {
     q: 'How do I change my page later?',
@@ -41,7 +41,19 @@ const faqs: { q: string; a: string }[] = [
   },
   {
     q: 'Can I change the design?',
-    a: `You pick light, dark or automatic, your accent color, and rounded or pill buttons. Folio keeps the rest consistent on purpose, so every page looks polished. Developers can <a href="${REPO_URL}">fork it</a> and change anything.`,
+    a: `You pick light, dark or automatic, your accent color, an optional tinted background, and rounded or pill buttons. Folio keeps the rest consistent on purpose, so every page looks polished. Developers can <a href="${REPO_URL}">fork it</a> and change anything.`,
+  },
+  {
+    q: 'Will my page work on phones?',
+    a: 'Yes. Folio pages are made for phones first, since that’s where people tap a link in your bio. They load quickly even on a weak signal and fit any screen, down to the smallest phones.',
+  },
+  {
+    q: 'Can I have more than one page?',
+    a: 'Each copy of Folio is one page. Need another, say for a side project or a band? Make a second copy the same way. Each gets its own address and its own config.',
+  },
+  {
+    q: 'How do I remove “Made with Folio”?',
+    a: 'Add <code>credit: false</code> under <code>footer:</code> in your config. It’s a small link at the bottom of your page, and it’s up to you whether it stays.',
   },
 ];
 ---
@@ -99,6 +111,15 @@ const faqs: { q: string; a: string }[] = [
 
   summary:focus-visible {
     outline-offset: -3px;
+  }
+
+  /* Answers are set as HTML, so their code needs :global to be styled. */
+  details p :global(code) {
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: var(--bg-alt);
+    color: var(--text);
+    font-size: 0.88em;
   }
 
   details p {
