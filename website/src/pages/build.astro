@@ -1,0 +1,44 @@
+---
+import ConfigBuilder from '../components/ConfigBuilder.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteNav from '../components/SiteNav.astro';
+import Layout from '../layouts/Layout.astro';
+import { GUIDE_URL } from '../site';
+---
+
+<Layout
+  title="Build your page · Folio"
+  description="Fill in a form, watch your Folio page take shape, and copy the config. Nothing leaves your browser."
+>
+  <SiteNav current="/build/" />
+
+  <main id="main">
+    <section id="build" class="section section--alt" aria-labelledby="build-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Config builder</p>
+          <h1 id="build-title" class="headline">
+            Build yours in two minutes.
+          </h1>
+          <p class="lede">
+            Fill it in, watch your page take shape, then copy it. Nothing leaves your browser.
+          </p>
+          <p class="hint">
+            First time? <a href={GUIDE_URL}>Here’s every click</a>, from copying Folio to going
+            live.
+          </p>
+        </div>
+        <ConfigBuilder />
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>
+
+<style>
+  .hint {
+    font-size: 15px;
+    color: var(--muted);
+  }
+</style>

@@ -26,7 +26,7 @@ Vercel copies Folio into your GitHub account and builds your page. After about a
 
 Everything on your page comes from one file called `folio.config.yaml`.
 
-**Easiest way:** fill in the **[config builder](https://folio-rouge-kappa-88.vercel.app/#build)**. You'll see a live preview as you type, then click **Copy my config**. In the steps below, select everything in the file and paste instead of editing line by line.
+**Easiest way:** fill in the **[config builder](https://folio-rouge-kappa-88.vercel.app/build/)**. You'll see a live preview as you type, then click **Copy my config**. In the steps below, select everything in the file and paste instead of editing line by line.
 
 1. Click **Edit my page on GitHub** in the note at the top of your page. (Or go to [github.com](https://github.com), open your new `my-folio` repository, click **folio.config.yaml**, then the **pencil icon**.)
 2. Change the sample details to yours (or paste from the builder): name, bio, links and social accounts. The sample social links just point to each site's home page; replace them with your usernames, e.g. `instagram: your-username`. The notes after `#` explain each option.

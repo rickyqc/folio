@@ -10,7 +10,7 @@ test.beforeEach(async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], {
     origin: 'http://localhost:4401',
   });
-  await page.goto('http://localhost:4401/#build');
+  await page.goto('http://localhost:4401/build/');
 });
 
 test('the config builder makes a file Folio accepts, with a live preview', async ({ page }) => {
@@ -148,7 +148,8 @@ test('the hero leads to the builder, and search engines get a sitemap', async ({
 }) => {
   await page.goto('http://localhost:4401/');
   await page.locator('.hero').getByRole('link', { name: 'Build your page' }).click();
-  await expect(page).toHaveURL(/#build$/);
+  await expect(page).toHaveURL(/\/build\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Build yours in two minutes.');
   expect((await request.get('http://localhost:4401/robots.txt')).ok()).toBe(true);
   expect(await (await request.get('http://localhost:4401/sitemap.xml')).text()).toContain(
     '<urlset',
@@ -172,9 +173,10 @@ test.describe('on a phone', () => {
   });
 
   test('the builder preview opens in a sheet while filling in the form', async ({ page }) => {
-    await page.goto('http://localhost:4401/');
+    await page.goto('http://localhost:4401/build/');
     const fab = page.getByRole('button', { name: 'Preview' });
-    await expect(fab).not.toHaveClass(/is-shown/);
+    // The builder fills this page, so the button is there from the start.
+    await expect(fab).toHaveClass(/is-shown/);
 
     await page.getByLabel('Name', { exact: true }).scrollIntoViewIfNeeded();
     await page.getByLabel('Name', { exact: true }).fill('Riley Chen');
@@ -196,7 +198,7 @@ test.describe('on a phone', () => {
 
   test('desktop never shows the floating button or the menu', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('http://localhost:4401/#build');
+    await page.goto('http://localhost:4401/build/');
     await expect(page.getByRole('button', { name: 'Preview' })).toBeHidden();
     await expect(page.locator('.nav-menu')).toBeHidden();
   });
@@ -222,12 +224,17 @@ test('the website screenshots', async ({ page }) => {
   ] as const) {
     await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
     await page.setViewportSize({ width, height: 900 });
-    await page.goto('http://localhost:4401/');
+    await page.goto('http://localhost:4401/build/');
     await page.locator('#build').scrollIntoViewIfNeeded();
     await page
       .locator('#build')
       .screenshot({ path: `test-results/screenshots/website-builder-${scheme}.png` });
   }
+});
+
+test('old links to /#build still reach the builder', async ({ page }) => {
+  await page.goto('http://localhost:4401/#build');
+  await expect(page).toHaveURL(/\/build\/$/);
 });
 
 test('stays light on a device set to dark mode', async ({ page }) => {

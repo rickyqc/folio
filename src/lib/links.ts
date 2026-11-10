@@ -1,7 +1,7 @@
 // Folio's own addresses, and the "make it yours" links a new owner needs.
 
 export const FOLIO_SITE = 'https://folio-rouge-kappa-88.vercel.app';
-export const BUILDER_URL = `${FOLIO_SITE}/#build`;
+export const BUILDER_URL = `${FOLIO_SITE}/build/`;
 export const GUIDE_URL = 'https://github.com/rickyqc/folio/blob/main/docs/GETTING_STARTED.md';
 export const FOLIO_REPO = 'rickyqc/folio';
 

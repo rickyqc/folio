@@ -112,7 +112,7 @@ test.describe('a freshly deployed copy', () => {
     );
     await expect(banner.getByRole('link', { name: 'Or fill in the builder' })).toHaveAttribute(
       'href',
-      /#build$/,
+      /\/build\/$/,
     );
     // No public address in this build, so only the contact card exists to point to.
     await expect(banner.getByRole('link', { name: 'contact card' })).toHaveAttribute(
