@@ -6,18 +6,25 @@ import { REPO_URL, SPEC_URL } from '../site';
 // it). Typical: the median mobile page in HTTP Archive's 2024 Web Almanac, rounded down.
 const FOLIO_KB = 21;
 const TYPICAL_KB = 2048;
+
+interface Props {
+  /** 1 when this is the page's main heading. */
+  level?: 1 | 2;
+}
+
+const { level = 2 } = Astro.props;
+const Heading = level === 1 ? 'h1' : 'h2';
 ---
 
-<!-- Features -->
-<section id="features" class="section section--alt" aria-labelledby="features-title">
+<section class="section section--alt" aria-labelledby="features-title">
   <div class="container">
     <div class="section-head reveal">
       <p class="eyebrow">What you get</p>
-      <h2 id="features-title" class="headline">
+      <Heading id="features-title" class="headline">
         Everything a link page needs.
         <br />
         Nothing it doesn’t.
-      </h2>
+      </Heading>
     </div>
 
     <div class="bento">

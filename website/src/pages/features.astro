@@ -1,0 +1,21 @@
+---
+import Closing from '../components/Closing.astro';
+import Features from '../components/Features.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteNav from '../components/SiteNav.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Features · Folio"
+  description="Your own domain, zero JavaScript, no trackers, music players, short links, newsletter signup and more. Everything a link page needs, nothing it doesn't."
+>
+  <SiteNav current="/features/" />
+
+  <main id="main">
+    <Features level={1} />
+    <Closing />
+  </main>
+
+  <SiteFooter />
+</Layout>

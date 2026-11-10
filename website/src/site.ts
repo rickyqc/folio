@@ -22,9 +22,9 @@ export const BUILD_HREF = '/build/';
 export const NAV = [
   { href: '/how-it-works/', label: 'How it works' },
   { href: '/build/', label: 'Build yours' },
-  { href: '/#features', label: 'Features' },
+  { href: '/features/', label: 'Features' },
   { href: '/faq/', label: 'FAQ' },
 ];
 
 /** Every page, for the sitemap. */
-export const PAGES = ['/', '/how-it-works/', '/build/', '/ai/', '/faq/'];
+export const PAGES = ['/', '/how-it-works/', '/features/', '/build/', '/ai/', '/faq/'];
