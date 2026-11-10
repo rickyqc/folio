@@ -3,6 +3,22 @@ import AiPrompt from '../components/AiPrompt.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteNav from '../components/SiteNav.astro';
 import Layout from '../layouts/Layout.astro';
+
+const tips = [
+  ['List every link with its address.', 'The AI can’t guess your URLs. Paste each one in full.'],
+  [
+    'Say which link matters most.',
+    'It becomes your featured button, the one in your accent color.',
+  ],
+  [
+    'Describe your style.',
+    'A few words like “dark, warm orange, rounded” are enough to pick your theme and color.',
+  ],
+  [
+    'Check it before you commit.',
+    'Paste the answer into the <a href="/build/">builder</a> with <b>Load your current config</b> to see it as a page first.',
+  ],
+];
 ---
 
 <Layout
@@ -13,7 +29,80 @@ import Layout from '../layouts/Layout.astro';
 
   <main id="main">
     <AiPrompt open level={1} />
+
+    <section class="section section--alt" aria-labelledby="tips-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Tips</p>
+          <h2 id="tips-title" class="headline">
+            For a better result.
+          </h2>
+        </div>
+        <ul class="tips">
+          {tips.map(([title, body]) => (
+            <li class="reveal">
+              <b>{title}</b>
+              <span set:html={body} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   </main>
 
   <SiteFooter />
 </Layout>
+
+<style>
+  .tips {
+    display: grid;
+    gap: 16px;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    counter-reset: tip;
+  }
+
+  @media (min-width: 720px) {
+    .tips {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  .tips li {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 24px 24px 24px 64px;
+    border-radius: 24px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 15px;
+    counter-increment: tip;
+  }
+
+  .tips li::before {
+    content: counter(tip);
+    position: absolute;
+    top: 22px;
+    left: 22px;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .tips b {
+    color: var(--text);
+    font-size: 17px;
+    font-weight: 600;
+  }
+</style>
