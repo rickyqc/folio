@@ -1,21 +1,30 @@
 ---
-// The AI prompt, folded behind a button with one-tap copy. The text lives in docs/AI_PROMPT.md
+// The AI prompt in three steps, with one-tap copy; folded behind a button unless `open`. The text lives in docs/AI_PROMPT.md
 // so the repo and the website always show the same prompt.
 import aiPromptDoc from '../../../docs/AI_PROMPT.md?raw';
 import { AI_PROMPT_URL } from '../site';
 
 const aiPrompt = aiPromptDoc.match(/```text\n([\s\S]*?)\n```/)?.[1];
 if (!aiPrompt) throw new Error('docs/AI_PROMPT.md must contain a ```text block with the prompt.');
+
+interface Props {
+  /** Show the prompt straight away, as on its own page, instead of behind a button. */
+  open?: boolean;
+  /** 1 when this is the page's main heading. */
+  level?: 1 | 2;
+}
+
+const { open = false, level = 2 } = Astro.props;
+const Heading = level === 1 ? 'h1' : 'h2';
 ---
 
-<!-- AI prompt -->
-<section id="ai" class="section" aria-labelledby="ai-title">
+<section class="section" aria-labelledby="ai-title">
   <div class="container">
     <div class="section-head reveal">
       <p class="eyebrow">Rather just describe it?</p>
-      <h2 id="ai-title" class="headline">
-        Or let AI write it for you.
-      </h2>
+      <Heading id="ai-title" class="headline">
+        Let AI write it for you.
+      </Heading>
     </div>
 
     <ol class="ai-steps">
@@ -48,7 +57,7 @@ if (!aiPrompt) throw new Error('docs/AI_PROMPT.md must contain a ```text block w
       </li>
     </ol>
 
-    <details class="prompt-details reveal">
+    <details class="prompt-details reveal" open={open}>
       <summary>Show the prompt</summary>
       <figure class="code-card prompt-card">
         <figcaption class="code-title">

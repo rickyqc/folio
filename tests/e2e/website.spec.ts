@@ -237,6 +237,7 @@ test('old links to sections that became pages still get there', async ({ page })
     ['#build', '/build/'],
     ['#faq', '/faq/'],
     ['#how-it-works', '/how-it-works/'],
+    ['#ai', '/ai/'],
   ]) {
     await page.goto(`http://localhost:4401/${hash}`);
     await expect(page).toHaveURL(new RegExp(`${path}$`));
@@ -249,11 +250,9 @@ test('stays light on a device set to dark mode', async ({ page }) => {
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(251, 251, 253)');
 });
 
-test('folds the AI prompt away, and copies it in one tap', async ({ page }) => {
-  await page.goto('http://localhost:4401/#ai');
+test('the AI prompt page shows the prompt and copies it in one tap', async ({ page }) => {
+  await page.goto('http://localhost:4401/ai/');
   const prompt = page.getByLabel('AI prompt for writing your Folio config');
-  await expect(prompt).toBeHidden();
-  await page.getByText('Show the prompt').click();
   await expect(prompt).toBeVisible();
   await page.getByRole('button', { name: 'Copy', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Copied' })).toBeVisible();

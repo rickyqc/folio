@@ -1,0 +1,19 @@
+---
+import AiPrompt from '../components/AiPrompt.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteNav from '../components/SiteNav.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Write your page with AI · Folio"
+  description="Copy this prompt into Claude, ChatGPT or any AI chat, add a few details about yourself, and paste the answer into your Folio config."
+>
+  <SiteNav current="/ai/" />
+
+  <main id="main">
+    <AiPrompt open level={1} />
+  </main>
+
+  <SiteFooter />
+</Layout>

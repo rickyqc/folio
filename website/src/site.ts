@@ -27,4 +27,4 @@ export const NAV = [
 ];
 
 /** Every page, for the sitemap. */
-export const PAGES = ['/', '/how-it-works/', '/build/', '/faq/'];
+export const PAGES = ['/', '/how-it-works/', '/build/', '/ai/', '/faq/'];
