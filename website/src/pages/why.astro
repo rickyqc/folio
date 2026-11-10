@@ -1,0 +1,21 @@
+---
+import Closing from '../components/Closing.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteNav from '../components/SiteNav.astro';
+import WhyFolio from '../components/WhyFolio.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Why Folio · Owned, not rented"
+  description="With a hosted link tool, they hold your page. With Folio, your files, your host and your domain are all yours, for free."
+>
+  <SiteNav current="/why/" />
+
+  <main id="main">
+    <WhyFolio level={1} />
+    <Closing />
+  </main>
+
+  <SiteFooter />
+</Layout>

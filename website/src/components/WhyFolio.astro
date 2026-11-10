@@ -6,16 +6,23 @@ const comparison = [
   ['Tracking', 'Built in', 'None unless you opt in'],
   ['If the company shuts down', 'Your link breaks', 'You still have the files'],
 ];
+
+interface Props {
+  /** 1 when this is the page's main heading. */
+  level?: 1 | 2;
+}
+
+const { level = 2 } = Astro.props;
+const Heading = level === 1 ? 'h1' : 'h2';
 ---
 
-<!-- Why -->
-<section id="why" class="section" aria-labelledby="why-title">
+<section class="section" aria-labelledby="why-title">
   <div class="container">
     <div class="section-head reveal">
       <p class="eyebrow">Why Folio</p>
-      <h2 id="why-title" class="headline">
+      <Heading id="why-title" class="headline">
         Owned, not rented.
-      </h2>
+      </Heading>
       <p class="lede">
         With a hosted link tool, they hold your page. With Folio, every piece is yours.
       </p>

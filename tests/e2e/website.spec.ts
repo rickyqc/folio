@@ -239,6 +239,7 @@ test('old links to sections that became pages still get there', async ({ page })
     ['#how-it-works', '/how-it-works/'],
     ['#ai', '/ai/'],
     ['#features', '/features/'],
+    ['#why', '/why/'],
   ]) {
     await page.goto(`http://localhost:4401/${hash}`);
     await expect(page).toHaveURL(new RegExp(`${path}$`));

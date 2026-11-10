@@ -4,7 +4,6 @@ import HowItWorks from '../components/HowItWorks.astro';
 import PhonePreview from '../components/PhonePreview.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteNav from '../components/SiteNav.astro';
-import WhyFolio from '../components/WhyFolio.astro';
 import Layout from '../layouts/Layout.astro';
 import { BUILD_HREF, DEMO_URL } from '../site';
 
@@ -29,6 +28,7 @@ const facts = [
         '#how-it-works': '/how-it-works/',
         '#ai': '/ai/',
         '#features': '/features/',
+        '#why': '/why/',
       };
       if (moved[location.hash]) location.replace(moved[location.hash]);
     })();
@@ -77,8 +77,6 @@ const facts = [
     </section>
 
     <HowItWorks summary />
-
-    <WhyFolio />
 
     <Closing />
   </main>

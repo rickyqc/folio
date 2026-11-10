@@ -21,10 +21,11 @@ export const BUILD_HREF = '/build/';
 /** The site's sections, in the top bar and the phone menu. */
 export const NAV = [
   { href: '/how-it-works/', label: 'How it works' },
-  { href: '/build/', label: 'Build yours' },
   { href: '/features/', label: 'Features' },
+  { href: '/why/', label: 'Why Folio' },
   { href: '/faq/', label: 'FAQ' },
+  { href: '/build/', label: 'Build yours' },
 ];
 
 /** Every page, for the sitemap. */
-export const PAGES = ['/', '/how-it-works/', '/features/', '/build/', '/ai/', '/faq/'];
+export const PAGES = ['/', '/how-it-works/', '/features/', '/why/', '/build/', '/ai/', '/faq/'];
