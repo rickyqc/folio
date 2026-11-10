@@ -1,0 +1,313 @@
+---
+// The config file next to the page it makes, with numbered markers tying them together.
+import { CONFIG_DOCS_URL } from '../site';
+---
+
+<!-- One file -->
+<section class="section" aria-labelledby="one-file-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">How it’s built</p>
+      <h2 id="one-file-title" class="headline">
+        One file runs your page.
+      </h2>
+      <p class="lede">Change a line, and your page changes. Nothing else to learn.</p>
+    </div>
+
+    <div class="mapping reveal">
+      <figure class="code-card">
+        <figcaption class="code-title">folio.config.yaml</figcaption>
+        <pre><code><span class="k">profile</span>:
+  <span class="k">name</span>: Jane Park             <span class="mark">1</span>
+  <span class="k">bio</span>: Designer and writer
+
+<span class="k">theme</span>:
+  <span class="k">accent</span>: <span class="a">"#0071e3"</span>           <span class="mark">2</span>
+
+<span class="k">blocks</span>:
+  - <span class="k">type</span>: link
+    <span class="k">title</span>: Read my newsletter
+    <span class="k">featured</span>: <span class="a">true</span>
+  - <span class="k">type</span>: header
+    <span class="k">title</span>: Work               <span class="mark">3</span></code></pre>
+      </figure>
+
+      <span class="mapping-arrow" aria-hidden="true">
+        <svg viewBox="0 0 48 24">
+          <path d="M2 12h40M34 4l8 8-8 8"></path>
+        </svg>
+      </span>
+
+      <figure class="mini-phone" aria-label="The page this file makes">
+        <div class="mini-screen">
+          <span class="mini-avatar" aria-hidden="true">
+            👩‍🎨
+          </span>
+          <p class="mini-name">
+            Jane Park <span class="mark">1</span>
+          </p>
+          <p class="mini-bio">Designer and writer</p>
+          <p class="mini-button mini-button--featured">
+            Read my newsletter <span class="mark mark--on-accent">2</span>
+          </p>
+          <p class="mini-group">
+            Work <span class="mark">3</span>
+          </p>
+          <p class="mini-button">Portfolio</p>
+        </div>
+      </figure>
+    </div>
+
+    <ul class="perks">
+      <li class="perk reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"></path>
+        </svg>
+        <span>
+          <b>Edit on GitHub.</b> Nothing to install.
+        </span>
+      </li>
+      <li class="perk reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3l9 16H3zM12 10v4M12 17h.01"></path>
+        </svg>
+        <span>
+          <b>Typos explained.</b> Your page stays up.
+        </span>
+      </li>
+      <li class="perk reveal">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v4h4"></path>
+        </svg>
+        <span>
+          <b>Undo anything.</b> Every change is saved.
+        </span>
+      </li>
+    </ul>
+    <p class="perks-more reveal">
+      <a class="more" href={CONFIG_DOCS_URL}>
+        See every option
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  /* One file: the config and the page it makes, with matching numbered markers */
+  .mapping {
+    display: grid;
+    gap: 24px;
+    align-items: center;
+    justify-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .mapping {
+      grid-template-columns: minmax(0, 1.25fr) auto minmax(0, 0.75fr);
+      gap: 32px;
+    }
+  }
+
+  .mapping .code-card {
+    width: 100%;
+  }
+
+  .mapping-arrow svg {
+    width: 48px;
+    height: 24px;
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (max-width: 899px) {
+    .mapping-arrow {
+      transform: rotate(90deg);
+    }
+  }
+
+  .mark {
+    display: inline-grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--button-bg);
+    color: #fff;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: 1px;
+  }
+
+  .mark--on-accent {
+    background: #fff;
+    color: var(--button-bg);
+  }
+
+  .mini-phone {
+    width: min(280px, 100%);
+    margin: 0;
+    padding: 10px;
+    border-radius: 40px;
+    background: var(--text);
+  }
+
+  .mini-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 32px 18px 36px;
+    border-radius: 31px;
+    background: var(--bg);
+    text-align: center;
+  }
+
+  .mini-avatar {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--button-bg) 16%, var(--surface));
+    font-size: 30px;
+  }
+
+  .mini-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 19px;
+    font-weight: 600;
+  }
+
+  .mini-bio {
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .mini-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    min-height: 40px;
+    border-radius: 11px;
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .mini-button--featured {
+    background: var(--button-bg);
+    box-shadow: none;
+    color: var(--button-text);
+  }
+
+  .mini-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .perks {
+    display: grid;
+    gap: 12px;
+    max-width: 960px;
+    margin: clamp(40px, 6vw, 64px) auto 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 760px) {
+    .perks {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .perk {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: var(--bg-alt);
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .perk b {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .perk svg {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .perks-more {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  /* Code cards */
+  .code-card {
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 24px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    box-shadow: 0 0 0 1px var(--hairline);
+  }
+
+  .code-title {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgb(255 255 255 / 0.1);
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--code-muted);
+  }
+
+  .code-card pre {
+    margin: 0;
+    padding: 20px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  .k {
+    color: var(--code-key);
+  }
+
+  .a {
+    color: var(--code-accent);
+  }
+
+  .code-title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 16px;
+  }
+</style>

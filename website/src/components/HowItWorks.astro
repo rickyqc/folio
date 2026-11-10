@@ -1,0 +1,381 @@
+---
+// The three steps from nothing to a live page, each with a small picture of the moment.
+import { BUILD_HREF, CLONE_URL, GUIDE_URL } from '../site';
+---
+
+<!-- How it works -->
+<section id="how-it-works" class="section section--alt" aria-labelledby="how-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">How it works</p>
+      <h2 id="how-title" class="headline">
+        Three steps. About five minutes.
+      </h2>
+    </div>
+
+    <ol class="flow">
+      <li class="flow-step reveal">
+        <div class="flow-art" aria-hidden="true">
+          <div class="mock-form">
+            <span class="mock-label">Name</span>
+            <span class="mock-field">Jane Park</span>
+            <span class="mock-label">Link</span>
+            <span class="mock-field">Read my newsletter</span>
+            <span class="mock-dots">
+              <i style="--c: #0071e3"></i>
+              <i style="--c: #ff375f"></i>
+              <i style="--c: #34c759"></i>
+              <i style="--c: #ff9f0a"></i>
+            </span>
+          </div>
+        </div>
+        <span class="flow-time">About 2 min</span>
+        <h3>
+          <span class="flow-n">1</span> Fill in the builder
+        </h3>
+        <p>Your name, picture and links. See your page as you type.</p>
+        <span class="flow-arrow" aria-hidden="true"></span>
+      </li>
+      <li class="flow-step reveal">
+        <div class="flow-art" aria-hidden="true">
+          <div class="mock-deploy">
+            <span class="mock-button">
+              Deploy
+              <svg class="mock-cursor" viewBox="0 0 24 24">
+                <path d="M5 3l14 8-6 1.5L9.5 19z"></path>
+              </svg>
+            </span>
+            <span class="mock-note">Free on GitHub + Vercel</span>
+          </div>
+        </div>
+        <span class="flow-time">About 1 min</span>
+        <h3>
+          <span class="flow-n">2</span> Click deploy
+        </h3>
+        <p>Folio copies itself into your GitHub and goes online. No card needed.</p>
+        <span class="flow-arrow" aria-hidden="true"></span>
+      </li>
+      <li class="flow-step reveal">
+        <div class="flow-art" aria-hidden="true">
+          <div class="mock-live">
+            <span class="mock-url">
+              <svg viewBox="0 0 24 24">
+                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+              </svg>
+              jane.dev
+            </span>
+            <span class="mock-page">
+              <i class="mock-avatar"></i>
+              <i class="mock-line mock-line--accent"></i>
+              <i class="mock-line"></i>
+              <i class="mock-line"></i>
+            </span>
+            <span class="mock-badge">● Live</span>
+          </div>
+        </div>
+        <span class="flow-time">About 1 min</span>
+        <h3>
+          <span class="flow-n">3</span> Paste, and you’re live
+        </h3>
+        <p>Paste what the builder made into your config. Your page updates in a minute.</p>
+      </li>
+    </ol>
+
+    <p class="steps-more reveal">
+      <a class="button" href={BUILD_HREF}>
+        Start building
+      </a>
+      <a class="more" href={GUIDE_URL}>
+        Step-by-step guide with every click
+      </a>
+    </p>
+
+    <details class="dev reveal">
+      <summary>Prefer the terminal?</summary>
+      <pre class="terminal"><code><span class="p">$</span> git clone {CLONE_URL}
+<span class="p">$</span> cd folio && npm install
+<span class="p">$</span> npm run dev</code></pre>
+    </details>
+  </div>
+</section>
+
+<style>
+  /* How it works: illustrated steps joined by arrows */
+  .flow {
+    display: grid;
+    gap: 56px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 860px) {
+    .flow {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+    }
+
+    .flow-art {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  .flow-step {
+    position: relative;
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .flow-step h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  .flow-step p {
+    color: var(--muted);
+  }
+
+  .flow-n {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 15px;
+  }
+
+  .flow-time {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* Wider on phones, where each step has the full width; 4:3 side by side. */
+  .flow-art {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    border-radius: 24px;
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  /* The arrow sits between cards: below each on phones, to the right on wide screens. */
+  .flow-arrow {
+    position: absolute;
+    left: 50%;
+    bottom: -44px;
+    width: 32px;
+    height: 32px;
+    transform: translateX(-50%) rotate(90deg);
+    background: var(--muted);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15M13 6l6 6-6 6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    opacity: 0.5;
+  }
+
+  @media (min-width: 860px) {
+    .flow-arrow {
+      /* Level with the middle of the 4:3 picture above each step. */
+      top: calc(37.5cqw - 16px);
+      right: -40px;
+      bottom: auto;
+      left: auto;
+      transform: none;
+    }
+  }
+
+  /* Mini illustrations inside the step cards */
+  .mock-form {
+    display: grid;
+    gap: 6px;
+    width: 72%;
+  }
+
+  .mock-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .mock-field {
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: var(--bg-alt);
+    font-size: 14px;
+  }
+
+  .mock-dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .mock-dots i {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--c);
+  }
+
+  .mock-dots i:first-child {
+    box-shadow:
+      0 0 0 2px var(--surface),
+      0 0 0 4px var(--c);
+  }
+
+  .mock-deploy {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+  }
+
+  .mock-button {
+    position: relative;
+    padding: 14px 36px;
+    border-radius: 980px;
+    background: var(--button-bg);
+    color: var(--button-text);
+    font-size: 19px;
+    font-weight: 600;
+  }
+
+  .mock-cursor {
+    position: absolute;
+    right: -14px;
+    bottom: -18px;
+    width: 28px;
+    height: 28px;
+    fill: var(--text);
+    stroke: var(--surface);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+
+  .mock-note {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .mock-live {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    width: 76%;
+  }
+
+  .mock-url {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: var(--bg-alt);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .mock-url svg {
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: var(--ok);
+    stroke-width: 2.5;
+  }
+
+  .mock-page {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    width: 70%;
+  }
+
+  .mock-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--accent) 22%, var(--bg-alt));
+  }
+
+  .mock-line {
+    width: 100%;
+    height: 14px;
+    border-radius: 7px;
+    background: var(--bg-alt);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  .mock-line--accent {
+    background: var(--button-bg);
+    box-shadow: none;
+  }
+
+  .mock-badge {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    padding: 4px 10px;
+    border-radius: 980px;
+    background: color-mix(in srgb, var(--ok) 14%, var(--surface));
+    color: var(--ok);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .steps-more {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px 28px;
+    margin-top: clamp(48px, 7vw, 72px);
+  }
+
+  .dev {
+    max-width: 560px;
+    margin: 32px auto 0;
+    text-align: center;
+  }
+
+  .dev summary {
+    display: inline-block;
+    color: var(--muted);
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .dev[open] summary {
+    margin-bottom: 16px;
+  }
+
+  .terminal {
+    margin: 0;
+    min-width: 0;
+    padding: 20px;
+    overflow-x: auto;
+    border-radius: 16px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    font-size: 14px;
+    line-height: 1.75;
+    text-align: left;
+  }
+
+  .p {
+    color: var(--code-muted);
+    user-select: none;
+  }
+</style>

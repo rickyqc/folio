@@ -1,0 +1,446 @@
+---
+// Everything Folio does, one card each, each with a small visual.
+import { REPO_URL, SPEC_URL } from '../site';
+
+// Page weights for the chart. Folio: the sample page's HTML and CSS (npm run budget reports
+// it). Typical: the median mobile page in HTTP Archive's 2024 Web Almanac, rounded down.
+const FOLIO_KB = 21;
+const TYPICAL_KB = 2048;
+---
+
+<!-- Features -->
+<section id="features" class="section section--alt" aria-labelledby="features-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">What you get</p>
+      <h2 id="features-title" class="headline">
+        Everything a link page needs.
+        <br />
+        Nothing it doesn’t.
+      </h2>
+    </div>
+
+    <div class="bento">
+      <article class="card card--wide reveal">
+        <h3>Loads in a blink.</h3>
+        <p>A whole Folio page weighs less than most single photos, with no JavaScript at all.</p>
+        <figure class="weight" aria-labelledby="weight-caption">
+          <div class="weight-row">
+            <span class="weight-name">Folio page</span>
+            <span class="weight-track">
+              <span
+                class="weight-bar weight-bar--us"
+                style={`--w: ${(FOLIO_KB / TYPICAL_KB) * 100}%`}
+                title={`Folio page: about ${FOLIO_KB} KB`}
+              ></span>
+            </span>
+            <span class="weight-value">~{FOLIO_KB} KB</span>
+          </div>
+          <div class="weight-row">
+            <span class="weight-name">Typical web page</span>
+            <span class="weight-track">
+              <span
+                class="weight-bar"
+                style="--w: 100%"
+                title="Typical web page on a phone: over 2 MB"
+              ></span>
+            </span>
+            <span class="weight-value">2 MB+</span>
+          </div>
+          <figcaption id="weight-caption" class="weight-caption">
+            Page size before photos. Typical page: the median mobile page, from the{' '}
+            <a href="https://almanac.httparchive.org/en/2024/page-weight">HTTP Archive</a>.
+          </figcaption>
+        </figure>
+      </article>
+
+      <article class="card reveal">
+        <div class="url-bar url-bar--small" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+            <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+          </svg>
+          jane.dev
+        </div>
+        <h3>Your own domain.</h3>
+        <p>Point any domain at it. HTTPS is set up for you.</p>
+      </article>
+
+      <article class="card reveal">
+        <div class="zeros" aria-hidden="true">
+          <span>
+            <b>0</b>cookies
+          </span>
+          <span>
+            <b>0</b>trackers
+          </span>
+        </div>
+        <h3>Private by default.</h3>
+        <p>Want visitor numbers? Turn on Plausible or Umami in one line.</p>
+      </article>
+
+      <article class="card reveal">
+        <div class="swatches" aria-hidden="true">
+          <span class="swatch swatch--light"></span>
+          <span class="swatch swatch--dark"></span>
+          <span class="swatch swatch--auto"></span>
+          <span class="swatch" style="background: #ff375f"></span>
+          <span class="swatch" style="background: #34c759"></span>
+        </div>
+        <h3>Your colors.</h3>
+        <p>Light, dark or auto, any accent color, rounded or pill buttons.</p>
+      </article>
+
+      <article class="card reveal">
+        <svg class="qr" viewBox="0 0 21 21" aria-hidden="true">
+          <path d="M0 0h7v7H0zM2 2v3h3V2zM14 0h7v7h-7zm2 2v3h3V2zM0 14h7v7H0zm2 2v3h3v-3zM9 0h2v2H9zm0 4h3v2H9zm-1 4h2v2H8zm4 0h2v3h-2zM0 9h2v2H0zm4 0h2v2H4zm11 0h3v2h-3zm4 0h2v4h-2zM9 12h2v2H9zm4 2h2v2h-2zm-4 2h3v2H9zm7 0h2v2h-2zm-6 3h2v2h-2zm5 0h6v2h-6z"></path>
+        </svg>
+        <h3>Made to be shared.</h3>
+        <p>A share card, a QR code for print and a “Save contact” button, all made for you.</p>
+      </article>
+
+      <article class="card reveal">
+        <div class="chips" aria-hidden="true">
+          <span>▶ YouTube</span>
+          <span>♫ Spotify</span>
+          <span>♫ Apple Music</span>
+          <span>♫ SoundCloud</span>
+        </div>
+        <h3>Music and video.</h3>
+        <p>Players right on your page. Or load them only on tap, for extra privacy.</p>
+      </article>
+
+      <article class="card reveal">
+        <div class="short-link" aria-hidden="true">
+          <span class="url-bar url-bar--small">jane.dev/shop</span>
+          <svg viewBox="0 0 48 24">
+            <path d="M2 12h40M34 4l8 8-8 8"></path>
+          </svg>
+          <span class="short-dest">your shop</span>
+        </div>
+        <h3>Short links.</h3>
+        <p>Easy addresses for posters and QR codes. Change where they go any time.</p>
+      </article>
+
+      <article class="card reveal">
+        <div class="mock-signup" aria-hidden="true">
+          <span>you@example.com</span>
+          <b>Subscribe</b>
+        </div>
+        <h3>Newsletter signup.</h3>
+        <p>Works with Buttondown, Kit, Mailchimp and Substack.</p>
+      </article>
+
+      <article class="card card--full reveal">
+        <div>
+          <h3>Open source. MIT licensed.</h3>
+          <p>Every line is on GitHub, and so is the plan. Fork it, change it, pitch in.</p>
+        </div>
+        <p class="card-links">
+          <a class="more" href={REPO_URL}>
+            Browse the code
+          </a>
+          <a class="more" href={SPEC_URL}>
+            Read the spec
+          </a>
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Bento */
+  .bento {
+    display: grid;
+    gap: 16px;
+  }
+
+  @media (min-width: 720px) {
+    .bento {
+      grid-template-columns: repeat(6, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      grid-column: span 2;
+    }
+
+    .card--wide {
+      grid-column: span 4;
+    }
+
+    .card--full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding: clamp(28px, 4vw, 40px);
+    border-radius: 28px;
+    background: var(--surface);
+  }
+
+  .card h3 {
+    font-size: clamp(24px, 2.6vw, 28px);
+    letter-spacing: -0.025em;
+  }
+
+  .card p {
+    color: var(--muted);
+  }
+
+  .section:not(.section--alt) .card {
+    background: var(--bg-alt);
+  }
+
+  .card .more {
+    margin-top: auto;
+    padding-top: 8px;
+  }
+
+  .card--wide h3 {
+    font-size: clamp(32px, 4.4vw, 48px);
+  }
+
+  .url-bar {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 8px;
+    margin-top: auto;
+    padding: 12px 22px;
+    border-radius: 14px;
+    background: var(--bg-alt);
+    font-size: clamp(20px, 2.6vw, 28px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .card--full > div {
+    display: grid;
+    gap: 8px;
+  }
+
+  .card--full {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 32px;
+  }
+
+  .card-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .card--full .more {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .url-bar--small {
+    margin-top: 0;
+    margin-bottom: 14px;
+    padding: 8px 14px;
+    font-size: 17px;
+  }
+
+  /* Page weight: one series, two bars, labelled directly. */
+  .weight {
+    display: grid;
+    gap: 14px;
+    margin: auto 0 0;
+    padding-top: 20px;
+  }
+
+  .weight-row {
+    display: grid;
+    grid-template-columns: 8.5em 1fr 4.5em;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+  }
+
+  .weight-name {
+    color: var(--muted);
+  }
+
+  .weight-value {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .weight-track {
+    height: 22px;
+  }
+
+  .weight-bar {
+    display: block;
+    width: max(var(--w), 6px);
+    height: 100%;
+    border-radius: 0 4px 4px 0;
+    background: #8e8e93;
+  }
+
+  .weight-bar--us {
+    background: var(--button-bg);
+  }
+
+  .weight-caption {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 480px) {
+    .weight-row {
+      grid-template-columns: 1fr 4.5em;
+    }
+
+    .weight-name {
+      grid-column: 1 / -1;
+      margin-bottom: -8px;
+    }
+  }
+
+  .zeros {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 14px;
+  }
+
+  .zeros span {
+    display: grid;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .zeros b {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--ok);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .chips span {
+    padding: 6px 12px;
+    border-radius: 980px;
+    background: var(--bg-alt);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .short-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .short-link .url-bar--small {
+    margin: 0;
+  }
+
+  .short-link svg {
+    flex: none;
+    width: 22px;
+    height: 12px;
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .short-dest {
+    white-space: nowrap;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .mock-signup {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .mock-signup span {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: var(--bg-alt);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .mock-signup b {
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: var(--button-bg);
+    color: var(--button-text);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .card--wide p {
+    max-width: 440px;
+  }
+
+  .url-bar svg {
+    width: 0.8em;
+    height: 0.8em;
+    fill: none;
+    stroke: var(--ok);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+
+  .swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  .swatch--light {
+    background: #fbfbfd;
+  }
+
+  .swatch--dark {
+    background: #1d1d1f;
+  }
+
+  .swatch--auto {
+    background: conic-gradient(#1d1d1f 0 50%, #fbfbfd 0 100%);
+  }
+
+  .qr {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 14px;
+    fill: var(--text);
+  }
+</style>

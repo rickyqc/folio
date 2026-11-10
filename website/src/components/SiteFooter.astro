@@ -1,0 +1,56 @@
+---
+import { ISSUES_URL, LICENSE_URL, REPO_URL, SHOWCASE_URL, SPEC_URL } from '../site';
+---
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <p>
+      <strong>Folio</strong> is open source under the <a href={LICENSE_URL}>MIT license</a>.
+    </p>
+    <ul>
+      <li>
+        <a href={REPO_URL}>GitHub</a>
+      </li>
+      <li>
+        <a href={SHOWCASE_URL}>Showcase</a>
+      </li>
+      <li>
+        <a href={SPEC_URL}>Spec</a>
+      </li>
+      <li>
+        <a href={ISSUES_URL}>Report an issue</a>
+      </li>
+    </ul>
+    <p class="copyright">© 2026 Ricky Chen</p>
+  </div>
+</footer>
+
+<style>
+  /* Footer */
+  .footer {
+    padding-block: 32px;
+    border-top: 1px solid var(--hairline);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+  }
+
+  .footer ul {
+    display: flex;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer strong {
+    color: var(--text);
+  }
+</style>

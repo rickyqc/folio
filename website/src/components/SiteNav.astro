@@ -1,0 +1,255 @@
+---
+// The site's top bar: wordmark, page links, GitHub, and a menu on phones.
+import { BUILD_HREF, NAV, REPO_URL } from '../site';
+
+interface Props {
+  /** The current page's path, so its link is marked as the current page. */
+  current?: string;
+}
+
+const { current } = Astro.props;
+---
+
+<header class="nav">
+  <nav class="container nav-inner" aria-label="Primary">
+    <a class="wordmark" href="/" aria-label="Folio home">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="currentColor"></rect>
+        <rect x="8" y="8" width="16" height="4" rx="2" fill="#2997ff"></rect>
+        <rect x="8" y="14" width="16" height="4" rx="2" fill="var(--bg)"></rect>
+        <rect x="8" y="20" width="16" height="4" rx="2" fill="var(--bg)" opacity=".55"></rect>
+      </svg>
+      Folio
+    </a>
+    <ul class="nav-links">
+      {NAV.map(({ href, label }) => (
+        <li>
+          <a href={href} aria-current={current === href ? 'page' : undefined}>
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a class="nav-github" href={REPO_URL}>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"
+        ></path>
+      </svg>
+      GitHub
+    </a>
+    <details class="nav-menu">
+      <summary aria-label="Menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+      </summary>
+      <div class="nav-menu-panel">
+        <ul>
+          {NAV.map(({ href, label }) => (
+            <li>
+              <a href={href} aria-current={current === href ? 'page' : undefined}>
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a class="button nav-menu-cta" href={BUILD_HREF}>
+          Build your page
+        </a>
+      </div>
+    </details>
+  </nav>
+</header>
+<!-- Closes the phone menu after a tap on a link, a tap outside it, or Escape. -->
+<script is:inline>
+  (() => {
+    const menu = document.querySelector('.nav-menu');
+    if (!menu) return;
+    menu.addEventListener('click', (e) => {
+      if (e.target.closest('a')) menu.open = false;
+    });
+    document.addEventListener('click', (e) => {
+      if (menu.open && !menu.contains(e.target)) menu.open = false;
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary').focus();
+      }
+    });
+  })();
+</script>
+
+<style>
+  /* Nav */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--nav-bg);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .wordmark svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .wordmark:hover,
+  .nav-links a:hover,
+  .nav-github:hover {
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: none;
+    gap: 32px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    font-size: 14px;
+    transition: color 200ms var(--ease);
+  }
+
+  .nav-links a:hover {
+    color: var(--text);
+  }
+
+  .nav-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 14px;
+    border-radius: 980px;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .nav-github svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Phones: a menu button in place of the hidden section links. */
+  .nav-menu {
+    margin-left: 8px;
+  }
+
+  @media (max-width: 719px) {
+    .nav-github {
+      margin-left: auto;
+    }
+  }
+
+  .nav-menu summary {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .nav-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .nav-menu summary:hover,
+  .nav-menu[open] summary {
+    background: var(--bg-alt);
+  }
+
+  .nav-menu summary svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+
+  .nav-menu-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    padding: 8px var(--gutter) 24px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--bg);
+    animation: menu-in 220ms var(--ease);
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  .nav-menu-panel ul {
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-menu-panel li a {
+    display: block;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--hairline);
+    color: var(--text);
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-menu-panel li a:hover {
+    text-decoration: none;
+  }
+
+  .nav-menu-cta {
+    width: 100%;
+  }
+
+  .nav-inner {
+    position: relative;
+  }
+
+  @media (min-width: 720px) {
+    .nav-links {
+      display: flex;
+    }
+
+    .nav-menu {
+      display: none;
+    }
+  }
+</style>
