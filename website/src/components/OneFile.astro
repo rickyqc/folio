@@ -11,7 +11,10 @@ import { CONFIG_DOCS_URL } from '../site';
       <h2 id="one-file-title" class="headline">
         One file runs your page.
       </h2>
-      <p class="lede">Change a line, and your page changes. Nothing else to learn.</p>
+      <p class="lede">
+        Everything on your page lives in one file, <code>folio.config.yaml</code>. Change a line,
+        and your page changes. Nothing else to learn.
+      </p>
     </div>
 
     <div class="mapping reveal">
@@ -57,6 +60,33 @@ import { CONFIG_DOCS_URL } from '../site';
         </div>
       </figure>
     </div>
+
+    <ol class="legend reveal" aria-label="What the numbers mean">
+      <li>
+        <span class="mark" aria-hidden="true">
+          1
+        </span>
+        <span>
+          <b>profile</b> is the top of your page: your name, bio and picture.
+        </span>
+      </li>
+      <li>
+        <span class="mark" aria-hidden="true">
+          2
+        </span>
+        <span>
+          <b>theme</b> sets your colors. The accent fills your featured link.
+        </span>
+      </li>
+      <li>
+        <span class="mark" aria-hidden="true">
+          3
+        </span>
+        <span>
+          <b>blocks</b> are your buttons and headings, top to bottom, in the order you list them.
+        </span>
+      </li>
+    </ol>
 
     <ul class="perks">
       <li class="perk reveal">
@@ -220,6 +250,47 @@ import { CONFIG_DOCS_URL } from '../site';
     font-size: 12px;
     font-weight: 600;
     color: var(--muted);
+  }
+
+  .lede code {
+    font-size: 0.85em;
+    color: var(--text);
+  }
+
+  .legend {
+    display: grid;
+    gap: 10px;
+    max-width: 960px;
+    margin: 32px auto 0;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  @media (min-width: 760px) {
+    .legend {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+  }
+
+  .legend li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .legend .mark {
+    flex: none;
+    margin-top: 2px;
+  }
+
+  .legend b {
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
   }
 
   .perks {

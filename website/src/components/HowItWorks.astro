@@ -21,6 +21,10 @@ const Heading = level === 1 ? 'h1' : 'h2';
       <Heading id="how-title" class="headline">
         Three steps. About five minutes.
       </Heading>
+      <p class="lede">
+        You need two free accounts: GitHub, where your page’s files live, and Vercel, which puts it
+        online. Everything happens in your browser.
+      </p>
     </div>
 
     <ol class="flow">
@@ -43,7 +47,10 @@ const Heading = level === 1 ? 'h1' : 'h2';
         <h3>
           <span class="flow-n">1</span> Fill in the builder
         </h3>
-        <p>Your name, picture and links. See your page as you type.</p>
+        <p>
+          Type your name, pick a picture and add your links. A live preview shows your page as you
+          go, and nothing leaves your browser.
+        </p>
         <span class="flow-arrow" aria-hidden="true"></span>
       </li>
       <li class="flow-step reveal">
@@ -62,7 +69,10 @@ const Heading = level === 1 ? 'h1' : 'h2';
         <h3>
           <span class="flow-n">2</span> Click deploy
         </h3>
-        <p>Folio copies itself into your GitHub and goes online. No card needed.</p>
+        <p>
+          One button copies Folio into your GitHub account and puts it online with Vercel. Free, and
+          no card needed.
+        </p>
         <span class="flow-arrow" aria-hidden="true"></span>
       </li>
       <li class="flow-step reveal">
@@ -88,7 +98,10 @@ const Heading = level === 1 ? 'h1' : 'h2';
         <h3>
           <span class="flow-n">3</span> Paste, and you’re live
         </h3>
-        <p>Paste what the builder made into your config. Your page updates in a minute.</p>
+        <p>
+          Open <code>folio.config.yaml</code> on GitHub, paste what the builder made and click
+          <b>Commit changes</b>. Your page updates in about a minute.
+        </p>
       </li>
     </ol>
 
@@ -157,6 +170,11 @@ const Heading = level === 1 ? 'h1' : 'h2';
 
   .flow-step p {
     color: var(--muted);
+  }
+
+  .flow-step p code {
+    font-size: 0.88em;
+    color: var(--text);
   }
 
   .flow-n {
