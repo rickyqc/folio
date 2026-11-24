@@ -7,6 +7,7 @@ import {
   parseSpotify,
   parseYouTubeId,
 } from '../../../src/lib/embeds.ts';
+import { FONT_STACKS, type Font } from '../../../src/lib/fonts.ts';
 import { withLinkScheme, withScheme } from '../../../src/lib/urls.ts';
 
 /** A picture in the owner's public folder, used as a link button's icon. Mirrors the schema. */
@@ -22,15 +23,32 @@ export interface Platform {
   needsUrl: boolean;
 }
 
-export type Item =
-  | { kind: 'link'; title: string; url: string; subtitle: string; icon: string }
+/** A block's hidden, from and until settings. The builder has no fields for them yet, but keeps them. */
+export interface Showing {
+  hidden?: boolean;
+  from?: string;
+  until?: string;
+}
+
+export type Item = (
+  | {
+      kind: 'link';
+      title: string;
+      url: string;
+      subtitle: string;
+      icon: string;
+      /** A second featured link from a loaded config, taking turns with the first by date. */
+      alsoFeatured?: boolean;
+    }
   | { kind: 'header'; title: string }
   /** A YouTube video or Spotify player; the link decides which. */
   | { kind: 'embed'; url: string; title: string }
   /** Only from a loaded config. Kept as is, since images live in the repo, not the builder. */
   | { kind: 'image'; src: string; alt: string; url: string; caption: string }
   /** A block the builder has no fields for (e.g. a signup form), written back unchanged. */
-  | { kind: 'kept'; type: string; label: string; fields: Record<string, string | boolean> };
+  | { kind: 'kept'; type: string; label: string; fields: Record<string, string | boolean> }
+) &
+  Showing;
 
 /** Block types the builder carries through untouched, with how to describe them. */
 const KEPT_BLOCKS: Record<string, (b: Record<string, YamlValue>) => string> = {
@@ -55,6 +73,7 @@ export interface BuilderState {
   buttons: 'rounded' | 'pill';
   /** Tints the page background with the accent. */
   tinted: boolean;
+  font: Font;
   socials: { platform: string; value: string }[];
   items: Item[];
   /** Index into items of the featured link, if any. */
@@ -100,6 +119,7 @@ export function emptyState(): BuilderState {
     accent: '#0071e3',
     buttons: 'rounded',
     tinted: false,
+    font: 'system',
     socials: [{ platform: 'instagram', value: '' }],
     items: [
       { kind: 'link', title: '', url: '', subtitle: '', icon: '' },
@@ -256,6 +276,24 @@ function section(name: string, values: Record<string, string | boolean> | undefi
   return lines.length ? ['', `${name}:`, ...lines] : [];
 }
 
+/** Dates are written quoted, so they stay text in any YAML reader. */
+function showingLines(item: Showing): string[] {
+  return [
+    ...(item.hidden ? ['    hidden: true'] : []),
+    ...(item.from ? [`    from: ${JSON.stringify(item.from)}`] : []),
+    ...(item.until ? [`    until: ${JSON.stringify(item.until)}`] : []),
+  ];
+}
+
+/** A loaded block's hidden, from and until settings. */
+function showingOf(b: YamlMap): Showing {
+  return {
+    ...(b['hidden'] === true && { hidden: true }),
+    ...(str(b['from']) && { from: str(b['from']) }),
+    ...(str(b['until']) && { until: str(b['until']) }),
+  };
+}
+
 export function toYaml(state: BuilderState): string {
   const avatar = state.avatar.trim();
   const kept = state.kept ?? {};
@@ -279,6 +317,7 @@ export function toYaml(state: BuilderState): string {
     `  buttons: ${state.buttons}`,
   );
   if (state.tinted) out.push('  background: tinted');
+  if (state.font && state.font !== 'system') out.push(`  font: ${state.font}`);
 
   const socials = state.socials.filter((s) => s.value.trim());
   if (socials.length) {
@@ -296,13 +335,14 @@ export function toYaml(state: BuilderState): string {
     out.push('', 'blocks:');
     for (const { item, index } of items) {
       if (item.kind === 'header') {
-        out.push('  - type: header', `    title: ${scalar(item.title)}`);
+        out.push('  - type: header', `    title: ${scalar(item.title)}`, ...showingLines(item));
         continue;
       }
       if (item.kind === 'embed') {
         const url = withScheme(item.url);
         out.push(`  - type: ${embedType(url) ?? 'youtube'}`, `    url: ${scalar(url)}`);
         if (item.title.trim()) out.push(`    title: ${scalar(item.title)}`);
+        out.push(...showingLines(item));
         continue;
       }
       if (item.kind === 'kept') {
@@ -316,13 +356,15 @@ export function toYaml(state: BuilderState): string {
         out.push('  - type: image', `    src: ${scalar(item.src)}`, `    alt: ${scalar(item.alt)}`);
         if (item.url.trim()) out.push(`    url: ${scalar(item.url)}`);
         if (item.caption.trim()) out.push(`    caption: ${scalar(item.caption)}`);
+        out.push(...showingLines(item));
         continue;
       }
       out.push('  - type: link', `    title: ${scalar(item.title)}`);
       if (item.subtitle.trim()) out.push(`    subtitle: ${scalar(item.subtitle)}`);
       out.push(`    url: ${scalar(withLinkScheme(item.url))}`);
       if (item.icon.trim()) out.push(`    icon: ${JSON.stringify(item.icon.trim())}`);
-      if (state.featured === index) out.push('    featured: true');
+      if (state.featured === index || item.alsoFeatured) out.push('    featured: true');
+      out.push(...showingLines(item));
     }
   }
 
@@ -404,6 +446,7 @@ export function fromConfig(
     accent: /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(accent) ? accent : ACCENTS[0],
     buttons: theme['buttons'] === 'pill' ? 'pill' : 'rounded',
     tinted: theme['background'] === 'tinted',
+    font: str(theme['font']) in FONT_STACKS ? (str(theme['font']) as Font) : 'system',
     socials: [],
     items: [],
     featured: null,
@@ -422,25 +465,33 @@ export function fromConfig(
   const blocks = Array.isArray(data['blocks']) ? data['blocks'] : [];
   for (const block of blocks) {
     const b = isMap(block) ? block : {};
+    const showing: Showing & { alsoFeatured?: boolean } = showingOf(b);
     switch (b['type']) {
       case 'link':
         if (b['featured'] === true && state.featured === null) state.featured = state.items.length;
+        else if (b['featured'] === true) showing.alsoFeatured = true;
         state.items.push({
           kind: 'link',
           title: str(b['title']),
           url: str(b['url']),
           subtitle: str(b['subtitle']),
           icon: str(b['icon']),
+          ...showing,
         });
         break;
       case 'header':
-        state.items.push({ kind: 'header', title: str(b['title']) });
+        state.items.push({ kind: 'header', title: str(b['title']), ...showing });
         break;
       case 'youtube':
       case 'spotify':
       case 'applemusic':
       case 'soundcloud':
-        state.items.push({ kind: 'embed', url: str(b['url']), title: str(b['title']) });
+        state.items.push({
+          kind: 'embed',
+          url: str(b['url']),
+          title: str(b['title']),
+          ...showing,
+        });
         break;
       case 'image':
         state.items.push({
@@ -449,6 +500,7 @@ export function fromConfig(
           alt: str(b['alt']),
           url: str(b['url']),
           caption: str(b['caption']),
+          ...showing,
         });
         break;
       default: {

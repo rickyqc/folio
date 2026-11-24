@@ -1,6 +1,7 @@
 // Wires the builder form to its live preview and YAML output. Lists are re-rendered only when
 // rows are added, removed or moved, so typing never loses focus.
 import { readableTextOn } from '../../../src/lib/color.ts';
+import { FONT_STACKS } from '../../../src/lib/fonts.ts';
 import {
   embedType,
   emptyState,
@@ -135,6 +136,7 @@ export function mountBuilder(root: HTMLElement): void {
     radio('avatar', state.avatar);
     radio('mode', state.mode);
     radio('buttons', state.buttons);
+    radio('font', state.font ?? 'system');
     for (const r of form.querySelectorAll<HTMLInputElement>('input[name="accent"]'))
       r.checked = false;
     if (!radio('accent', state.accent))
@@ -180,11 +182,13 @@ export function mountBuilder(root: HTMLElement): void {
         const row = template(TEMPLATES[item.kind]).cloneNode(true) as HTMLElement;
         row.dataset['index'] = String(i);
         for (const el of row.querySelectorAll<HTMLElement>('[data-text]')) {
-          el.textContent = String((item as Record<string, string>)[el.dataset['text'] ?? ''] ?? '');
+          el.textContent = String(
+            (item as unknown as Record<string, string>)[el.dataset['text'] ?? ''] ?? '',
+          );
         }
         for (const input of row.querySelectorAll<HTMLInputElement>('input[data-key]')) {
           const key = input.dataset['key'] as keyof Item;
-          input.value = String((item as Record<string, string>)[key] ?? '');
+          input.value = String((item as unknown as Record<string, string>)[key] ?? '');
           input.dataset['field'] = `item-${i}-${key}`;
         }
         const star = row.querySelector<HTMLButtonElement>('[data-action="feature"]');
@@ -207,6 +211,8 @@ export function mountBuilder(root: HTMLElement): void {
     preview.dataset['background'] = state.tinted ? 'tinted' : 'plain';
     preview.style.setProperty('--p-accent', accent);
     preview.style.setProperty('--p-on-accent', readableTextOn(accent));
+    preview.style.setProperty('--font', FONT_STACKS[state.font] ?? FONT_STACKS.system);
+    preview.dataset['font'] = state.font;
 
     const name = state.name.trim();
     const socials = state.socials
@@ -335,6 +341,7 @@ export function mountBuilder(root: HTMLElement): void {
         r.checked = false;
     } else if (el.name === 'mode') state.mode = el.value as BuilderState['mode'];
     else if (el.name === 'buttons') state.buttons = el.value as BuilderState['buttons'];
+    else if (el.name === 'font') state.font = el.value as BuilderState['font'];
     else if (el.name === 'vcard' || el.name === 'share' || el.name === 'tinted')
       state[el.name] = (el as HTMLInputElement).checked;
     else if (el.name in state) (state as unknown as Record<string, string>)[el.name] = el.value;

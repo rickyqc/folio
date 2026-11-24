@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { clickAttributes } from '../src/lib/analytics.ts';
+import { FONT_STACKS, fontStyle } from '../src/lib/fonts.ts';
 import {
   accentRing,
   contrast,
@@ -319,5 +320,15 @@ describe('SoundCloud', () => {
     expect(soundCloudPlayer('https://soundcloud.com/a/b', '#ff375f')).toBe(
       'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fa%2Fb&color=%23ff375f&visual=false&show_comments=false&show_reposts=false',
     );
+  });
+});
+
+describe('fontStyle', () => {
+  it('leaves the default font to tokens.css and sets the others inline', () => {
+    expect(fontStyle('system')).toBe('');
+    expect(fontStyle('serif')).toMatch(/^; --font: ui-serif, .*serif$/);
+    expect(fontStyle('mono')).toMatch(/monospace$/);
+    // Rounded falls back to the system font where the device has no rounded face.
+    expect(fontStyle('rounded')).toContain(FONT_STACKS.system);
   });
 });

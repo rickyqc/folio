@@ -7,6 +7,7 @@ import {
   parseYouTubeId,
 } from '../lib/embeds.ts';
 import { PLATFORMS, PLATFORM_IDS, isEmoji, isPlatform, resolveSocial } from '../lib/socials.ts';
+import { isDate, isTimeZone } from '../lib/schedule.ts';
 import { withLinkScheme, withScheme } from '../lib/urls.ts';
 
 const isWebUrl = (v: string) => /^https?:\/\/[^\s.]+\.[^\s]+$/i.test(v) && URL.canParse(v);
@@ -47,8 +48,30 @@ const hexColor = z
   .trim()
   .regex(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i, 'must be a hex color in quotes, like "#0071e3"');
 
+const date = z
+  .string()
+  .trim()
+  .refine(isDate, { message: 'must be a date written year-month-day, like 2026-12-01' });
+
+/** Options every block has: keep it off the page, or show it only between two days. */
+const showing = {
+  hidden: z
+    .boolean()
+    .optional()
+    .describe('true keeps this block in your config but off your page, e.g. a draft.'),
+  from: date
+    .optional()
+    .describe('First day to show this block, e.g. 2026-12-01. Uses site.timezone.'),
+  until: date
+    .optional()
+    .describe('Last day to show this block, e.g. 2026-12-24. Uses site.timezone.'),
+};
+
+export const FONTS = ['system', 'serif', 'rounded', 'mono'] as const;
+
 const linkBlock = z.strictObject({
   type: z.literal('link'),
+  ...showing,
   title: text.describe('The button text.'),
   url: linkUrl.describe(
     'Where the button goes: a web address starting with https://, or mailto:, tel: or sms: followed by an email or phone number.',
@@ -70,11 +93,13 @@ const linkBlock = z.strictObject({
 
 const headerBlock = z.strictObject({
   type: z.literal('header'),
+  ...showing,
   title: text.describe('Section heading, e.g. "Listen" or "Work with me".'),
 });
 
 const youtubeBlock = z.strictObject({
   type: z.literal('youtube'),
+  ...showing,
   url: webUrl
     .refine((v) => !isYouTubeChannel(v), {
       message:
@@ -89,6 +114,7 @@ const youtubeBlock = z.strictObject({
 
 const spotifyBlock = z.strictObject({
   type: z.literal('spotify'),
+  ...showing,
   url: webUrl.refine((v) => parseSpotify(v) !== null, {
     message:
       'must be a Spotify share link for a track, album, playlist, episode, show or artist, like https://open.spotify.com/track/…',
@@ -98,6 +124,7 @@ const spotifyBlock = z.strictObject({
 
 const appleMusicBlock = z.strictObject({
   type: z.literal('applemusic'),
+  ...showing,
   url: webUrl.refine((v) => parseAppleMusic(v) !== null, {
     message:
       'must be an Apple Music share link for a song, album or playlist, like https://music.apple.com/us/album/…',
@@ -107,6 +134,7 @@ const appleMusicBlock = z.strictObject({
 
 const soundCloudBlock = z.strictObject({
   type: z.literal('soundcloud'),
+  ...showing,
   url: webUrl.refine((v) => parseSoundCloud(v) !== null, {
     message:
       'must be a SoundCloud track or playlist link, like https://soundcloud.com/artist/track. Short on.soundcloud.com links won’t work: open it and copy the full address',
@@ -116,6 +144,7 @@ const soundCloudBlock = z.strictObject({
 
 const imageBlock = z.strictObject({
   type: z.literal('image'),
+  ...showing,
   src: imageSource.describe('A file in the public folder (e.g. poster.jpg) or a full image URL.'),
   alt: text.describe('Describes the image for people using screen readers. Required.'),
   url: webUrl.optional().describe('Make the image a link.'),
@@ -136,6 +165,7 @@ const SIGNUP_ACCOUNT: Record<(typeof SIGNUP_PROVIDERS)[number], string> = {
 const signupBlock = z
   .strictObject({
     type: z.literal('signup'),
+    ...showing,
     provider: z.enum(SIGNUP_PROVIDERS).describe('Your newsletter service.'),
     account: text
       .optional()
@@ -273,8 +303,18 @@ export const configSchema = z
           .string()
           .regex(/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/, 'must be a language code, like en or pt-BR')
           .default('en'),
+        timezone: z
+          .string()
+          .trim()
+          .refine(isTimeZone, {
+            message: 'must be a time zone name like America/New_York or Europe/London',
+          })
+          .default('UTC')
+          .describe(
+            'Your time zone, e.g. America/New_York. Blocks with from or until dates change at midnight here.',
+          ),
       })
-      .default({ lang: 'en' }),
+      .default({ lang: 'en', timezone: 'UTC' }),
 
     profile: z.strictObject({
       name: text.describe('Your name, shown at the top of the page.'),
@@ -299,8 +339,20 @@ export const configSchema = z
           .enum(['plain', 'tinted'])
           .default('plain')
           .describe('tinted gives the page a soft wash of your accent color.'),
+        font: z
+          .enum(FONTS)
+          .default('system')
+          .describe(
+            'system (the device’s own font), serif, rounded or mono. All are built into the visitor’s device, so nothing extra downloads.',
+          ),
       })
-      .default({ mode: 'auto', accent: '#0071e3', buttons: 'rounded', background: 'plain' }),
+      .default({
+        mode: 'auto',
+        accent: '#0071e3',
+        buttons: 'rounded',
+        background: 'plain',
+        font: 'system',
+      }),
 
     socials: socials.default({}),
 
@@ -360,15 +412,34 @@ export const configSchema = z
       .default({ credit: true, share: false }),
   })
   .superRefine((config, ctx) => {
-    const featured = config.blocks.flatMap((b, i) => (b.type === 'link' && b.featured ? [i] : []));
-    for (const i of featured.slice(1)) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['blocks', i, 'featured'],
-        message: 'only one link can be featured',
-        params: { folio: 'second-featured', first: (featured[0] ?? 0) + 1 },
-      });
-    }
+    config.blocks.forEach((b, i) => {
+      if (b.from && b.until && b.until < b.from) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['blocks', i, 'until'],
+          message: `is before its "from" date (${b.from}), so the block would never show`,
+        });
+      }
+    });
+
+    // Two featured links clash only if both could be on the page on the same day. ISO dates sort
+    // as text, so a featured "pre-save" until release day can hand over to a "listen" from then.
+    const featured = config.blocks.flatMap((b, i) =>
+      b.type === 'link' && b.featured && !b.hidden
+        ? [{ i, from: b.from ?? '0000-00-00', until: b.until ?? '9999-99-99' }]
+        : [],
+    );
+    featured.forEach((b, n) => {
+      const first = featured.slice(0, n).find((a) => a.from <= b.until && b.from <= a.until);
+      if (first) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['blocks', b.i, 'featured'],
+          message: 'only one link can be featured',
+          params: { folio: 'second-featured', first: first.i + 1 },
+        });
+      }
+    });
   });
 
 export type FolioConfig = z.output<typeof configSchema>;

@@ -81,6 +81,7 @@ describe('config builder output', () => {
       accent: '#ff375f',
       buttons: 'pill',
       background: 'plain',
+      font: 'system',
     });
     expect(config.socials.map((s) => s.url)).toEqual([
       'https://instagram.com/rileymakes',
@@ -141,6 +142,21 @@ describe('config builder output', () => {
       }),
     );
     expect(config.blocks).toMatchObject([{ title: 'Shop', featured: false }]);
+  });
+});
+
+describe('fonts in the builder', () => {
+  it('writes a font only when it isn’t the default', () => {
+    expect(toYaml(state({ name: 'Sam' }))).not.toContain('font:');
+    expect(build(state({ name: 'Sam', font: 'rounded' })).theme.font).toBe('rounded');
+  });
+
+  it('ignores a font it doesn’t know when loading', () => {
+    const { state: loaded } = fromConfig(
+      parseYamlLite('profile:\n  name: Sam\ntheme:\n  font: comic\n'),
+      platforms,
+    );
+    expect(loaded.font).toBe('system');
   });
 });
 
@@ -323,16 +339,53 @@ describe('loading an existing config', () => {
     const { state: loaded, skipped } = fromConfig(parseYamlLite(full), platforms);
     expect(skipped).toEqual([]);
     expect(loaded.avatar).toBe('avatar.svg');
+    expect(loaded.font).toBe('serif');
     expect(loaded.items.map((i) => i.kind)).toEqual([
       'link',
       'link',
       'kept',
+      'link',
+      'header',
+      'link',
+      'link',
       'header',
       'embed',
       'embed',
       'image',
     ]);
+    // Hidden and dated blocks come back with their settings, not switched on.
+    expect(loaded.items.slice(3, 7)).toMatchObject([
+      { title: 'Holiday market (draft)', hidden: true },
+      { title: 'Events' },
+      { title: 'Winter open studio 2025', until: '2025-12-31' },
+      { title: 'Kiln opening 2099', from: '2099-01-01' },
+    ]);
     expect(build(loaded)).toEqual(parseConfig(full, { publicDir }));
+  });
+
+  it('keeps two featured links that take turns by date', () => {
+    const source = [
+      'profile:',
+      '  name: Sam',
+      'blocks:',
+      '  - type: link',
+      '    title: Pre-save',
+      '    url: https://a.com',
+      '    featured: true',
+      '    until: 2026-12-04',
+      '  - type: link',
+      '    title: Listen',
+      '    url: https://b.com',
+      '    featured: true',
+      '    from: 2026-12-05',
+      '',
+    ].join('\n');
+    const { state: loaded } = fromConfig(parseYamlLite(source), platforms);
+    for (const now of [new Date('2026-12-01'), new Date('2026-12-10')]) {
+      expect(parseConfig(toYaml(loaded), { publicDir, now })).toEqual(
+        parseConfig(source, { publicDir, now }),
+      );
+    }
   });
 
   it('says what it had to leave out, and rejects things that aren’t configs', () => {

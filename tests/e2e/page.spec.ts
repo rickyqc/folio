@@ -145,6 +145,19 @@ test.describe('every option switched on', () => {
     await expect(featured).toHaveCSS('border-radius', '28px');
   });
 
+  test('uses the serif font and leaves hidden and out-of-date blocks off', async ({ page }) => {
+    await page.goto('/full/');
+    await expect(page.locator('body')).toHaveCSS('font-family', /^ui-serif/);
+    for (const title of [
+      'Holiday market (draft)',
+      'Events',
+      'Winter open studio 2025',
+      'Kiln opening 2099',
+    ]) {
+      await expect(page.getByText(title)).toHaveCount(0);
+    }
+  });
+
   test('loads embeds only when tapped', async ({ page }) => {
     await page.goto('/full/');
     const frame = page.locator('iframe[title="Throwing a mug"]');

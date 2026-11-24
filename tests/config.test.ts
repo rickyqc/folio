@@ -51,7 +51,9 @@ describe('defaults', () => {
       accent: '#0071e3',
       buttons: 'rounded',
       background: 'plain',
+      font: 'system',
     });
+    expect(config.site.timezone).toBe('UTC');
     expect(config.blocks).toEqual([]);
     expect(config.footer.credit).toBe(true);
     expect(config.contact.vcard).toBe(false);
@@ -404,5 +406,82 @@ describe('short links', () => {
     expect(errorFor(`${MINIMAL}redirects:\n  press: https://a.com\n`)).toContain(
       'has the same name as public/press',
     );
+  });
+});
+
+describe('fonts', () => {
+  it('accepts each font', () => {
+    for (const font of ['system', 'serif', 'rounded', 'mono']) {
+      expect(parse(`${MINIMAL}theme:\n  font: ${font}\n`).theme.font).toBe(font);
+    }
+  });
+
+  it('suggests the closest font', () => {
+    expect(errorFor(`${MINIMAL}theme:\n  font: serf\n`)).toContain(
+      '"font" in theme must be one of: system, serif, rounded, mono. You wrote "serf".',
+    );
+  });
+});
+
+describe('hidden and scheduled blocks', () => {
+  const now = new Date('2026-12-10T12:00:00Z');
+  const at = (yaml: string, when = now) => parseConfig(yaml, { publicDir, now: when });
+  const titles = (yaml: string, when = now) =>
+    at(yaml, when).blocks.map((b) => ('title' in b ? b.title : b.type));
+  const link = (title: string, extra = '') =>
+    `  - type: link\n    title: ${title}\n    url: https://a.com\n${extra}`;
+
+  it('leaves hidden blocks off the page', () => {
+    const yaml = `${MINIMAL}blocks:\n${link('Shown')}${link('Draft', '    hidden: true\n')}  - type: youtube\n    url: https://youtu.be/aqz-KE-bpKQ\n    hidden: true\n`;
+    expect(titles(yaml)).toEqual(['Shown']);
+  });
+
+  it('shows a block only between its from and until days', () => {
+    const yaml = `${MINIMAL}blocks:\n${link('Past', '    until: 2026-12-09\n')}${link('Now', '    from: 2026-12-10\n    until: 2026-12-10\n')}${link('Soon', "    from: '2026-12-11'\n")}`;
+    expect(titles(yaml)).toEqual(['Now']);
+    expect(titles(yaml, new Date('2026-12-11T00:00:00Z'))).toEqual(['Soon']);
+  });
+
+  it('reads dates in the owner’s time zone', () => {
+    const yaml = `site:\n  timezone: America/Los_Angeles\n${MINIMAL}blocks:\n${link('Sale', '    from: 2026-12-11\n')}`;
+    // 2026-12-11T05:00Z is still the evening of the 10th in Los Angeles.
+    expect(titles(yaml, new Date('2026-12-11T05:00:00Z'))).toEqual([]);
+    expect(titles(yaml, new Date('2026-12-11T08:00:00Z'))).toEqual(['Sale']);
+  });
+
+  it('drops a header when everything under it is off the page', () => {
+    const yaml = `${MINIMAL}blocks:\n  - type: header\n    title: Tour\n${link('Tickets', '    until: 2026-12-01\n')}  - type: header\n    title: Work\n${link('Portfolio')}  - type: header\n    title: Empty on purpose\n`;
+    expect(titles(yaml)).toEqual(['Work', 'Portfolio', 'Empty on purpose']);
+  });
+
+  it('still checks hidden blocks, so turning one back on can’t break the page', () => {
+    expect(
+      errorFor(`${MINIMAL}blocks:\n  - type: link\n    title: Draft\n    hidden: true\n`),
+    ).toContain('is missing "url"');
+  });
+
+  it('explains dates, ranges and time zones it can’t use', () => {
+    expect(errorFor(`${MINIMAL}blocks:\n${link('A', '    from: Dec 1\n')}`)).toContain(
+      'must be a date written year-month-day, like 2026-12-01',
+    );
+    expect(errorFor(`${MINIMAL}blocks:\n${link('A', '    from: 2026-02-30\n')}`)).toContain(
+      'must be a date written year-month-day',
+    );
+    expect(
+      errorFor(`${MINIMAL}blocks:\n${link('A', '    from: 2026-12-10\n    until: 2026-12-01\n')}`),
+    ).toContain('"until" in Block 1 (link “A”) is before its "from" date');
+    expect(errorFor(`site:\n  timezone: PST\n${MINIMAL}`)).toContain(
+      'must be a time zone name like America/New_York or Europe/London',
+    );
+  });
+
+  it('allows two featured links whose dates don’t overlap', () => {
+    const featured = (title: string, dates: string) => link(title, `    featured: true\n${dates}`);
+    const swap = `${MINIMAL}blocks:\n${featured('Pre-save', '    until: 2026-12-04\n')}${featured('Listen', '    from: 2026-12-05\n')}`;
+    expect(titles(swap)).toEqual(['Listen']);
+    const hiddenSecond = `${MINIMAL}blocks:\n${featured('A', '')}${featured('B', '    hidden: true\n')}`;
+    expect(titles(hiddenSecond)).toEqual(['A']);
+    const overlap = `${MINIMAL}blocks:\n${featured('A', '    until: 2026-12-05\n')}${featured('B', '    from: 2026-12-05\n')}`;
+    expect(errorFor(overlap)).toContain('Block 2 (link “B”) is featured, but Block 1 already is');
   });
 });

@@ -10,6 +10,7 @@ import {
   spotifyHeight,
   type SpotifyKind,
 } from '../lib/embeds.ts';
+import { onPage } from '../lib/schedule.ts';
 import { signupForm, type SignupForm } from '../lib/signup.ts';
 import { PLATFORMS, isEmoji, isPlatform, resolveSocial, type Icon } from '../lib/socials.ts';
 import { FolioConfigError, issueToProblems, lineOf, type Problem } from './errors.ts';
@@ -45,7 +46,7 @@ export type ResolvedBlock =
 
 /** Everything the page needs, with defaults filled in and links resolved. */
 export interface ResolvedConfig {
-  site: { url?: string; title: string; description?: string; lang: string };
+  site: { url?: string; title: string; description?: string; lang: string; timezone: string };
   /** avatar is an image path or URL; emoji is set instead when the avatar is an emoji. */
   profile: { name: string; bio?: string; avatar?: string; emoji?: string; location?: string };
   theme: FolioConfig['theme'];
@@ -132,7 +133,13 @@ function checkImage(
 /** Validates and resolves config text. Throws FolioConfigError with every problem found. */
 export function parseConfig(
   source: string,
-  options: { publicDir: string; fileName?: string; fallbackUrl?: string | undefined },
+  options: {
+    publicDir: string;
+    fileName?: string;
+    fallbackUrl?: string | undefined;
+    /** When the page is built, which decides blocks with from and until dates. */
+    now?: Date;
+  },
 ): ResolvedConfig {
   const fileName = options.fileName ?? CONFIG_FILE;
   const counter = new LineCounter();
@@ -197,7 +204,7 @@ export function parseConfig(
   const fileProblems = [...imageProblems, ...clashes];
   if (fileProblems.length > 0) throw new FolioConfigError(fileProblems, fileName);
 
-  return resolveConfig(config, options.fallbackUrl);
+  return resolveConfig(config, options.fallbackUrl, options.now ?? new Date());
 }
 
 /** Puts the YAML parser's error into everyday words, with the fix for that slip. */
@@ -291,7 +298,11 @@ function imageUrl(src: string): string {
   return isRemote(src) ? src : publicPath(src);
 }
 
-function resolveConfig(config: FolioConfig, fallbackUrl?: string): ResolvedConfig {
+function resolveConfig(
+  config: FolioConfig,
+  fallbackUrl: string | undefined,
+  now: Date,
+): ResolvedConfig {
   const socials: Social[] = [];
   for (const [id, value] of Object.entries(config.socials)) {
     if (!isPlatform(id)) continue;
@@ -301,7 +312,9 @@ function resolveConfig(config: FolioConfig, fallbackUrl?: string): ResolvedConfi
     }
   }
 
-  const blocks = config.blocks.map((b): ResolvedBlock => {
+  // Hidden and out-of-date blocks were still checked above, so turning one on can't break the page.
+  const showing = onPage(config.blocks, now.getTime(), config.site.timezone);
+  const blocks = showing.map((b): ResolvedBlock => {
     switch (b.type) {
       case 'link':
         return {
@@ -320,7 +333,7 @@ function resolveConfig(config: FolioConfig, fallbackUrl?: string): ResolvedConfi
                 })),
         };
       case 'header':
-        return b;
+        return { type: 'header', title: b.title };
       case 'youtube':
         return {
           type: 'youtube',
@@ -382,6 +395,7 @@ function resolveConfig(config: FolioConfig, fallbackUrl?: string): ResolvedConfi
     site: {
       title: config.site.title ?? config.profile.name,
       lang: config.site.lang,
+      timezone: config.site.timezone,
       ...(siteUrl && { url: siteUrl.replace(/\/?$/, '/') }),
       ...(description && { description }),
     },

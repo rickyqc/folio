@@ -375,7 +375,7 @@ export function issueToProblems(
           {
             line,
             message: `${owner} is featured, but Block ${params.first} already is. Only one link can be featured.`,
-            fix: `Remove "featured: true" from one of them.`,
+            fix: `Remove "featured: true" from one of them, or give them from and until dates that don't overlap.`,
           },
         ];
       }

@@ -11,6 +11,7 @@ import SocialRow from '../components/SocialRow.astro';
 import { resolve } from 'node:path';
 import { loadConfig } from '../config/load.ts';
 import { PLAUSIBLE_SRC, UMAMI_SRC, clickAttributes } from '../lib/analytics.ts';
+import { fontStyle } from '../lib/fonts.ts';
 import { accentRing, expandHex, pageBackground, readableTextOn } from '../lib/color.ts';
 import { soundCloudPlayer } from '../lib/embeds.ts';
 import { optimize } from '../lib/images.ts';
@@ -70,7 +71,8 @@ const extras = [
   data-mode={theme.mode}
   data-buttons={theme.buttons}
   data-background={theme.background}
-  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}; --accent-ring: ${accentRing(accent, theme.background)}`}
+  data-font={theme.font}
+  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}; --accent-ring: ${accentRing(accent, theme.background)}${fontStyle(theme.font)}`}
 >
   <head>
     <meta charset="utf-8" />

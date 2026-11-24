@@ -1,0 +1,48 @@
+# Rebuilds your page when a block's from or until date starts, so scheduled links appear and
+# disappear on time. Checks once an hour and does nothing unless one of your dates just started.
+#
+# Vercel or Netlify: make a deploy hook, then save it as a repository secret named FOLIO_DEPLOY_HOOK
+# (Settings → Secrets and variables → Actions → New repository secret).
+#   Vercel:  Project → Settings → Git → Deploy Hooks, branch main
+#   Netlify: Site configuration → Build & deploy → Build hooks
+# GitHub Pages: nothing to set up. It reruns the GitHub Pages workflow.
+#
+# GitHub pauses hourly workflows in repos with no commits for 60 days. If yours is paused, the
+# Actions tab shows a button to turn it back on.
+name: Scheduled blocks
+
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_HOOK: ${{ secrets.FOLIO_DEPLOY_HOOK }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - id: check
+        run: node scripts/schedule-due.ts
+      - name: Rebuild on Vercel or Netlify
+        if: steps.check.outputs.due == 'true' && env.DEPLOY_HOOK != ''
+        run: curl --fail --silent --show-error --request POST "$DEPLOY_HOOK" > /dev/null
+      - name: Rebuild on GitHub Pages
+        if: steps.check.outputs.due == 'true' && vars.FOLIO_PAGES == 'true'
+        run: gh workflow run pages.yml --ref "${{ github.event.repository.default_branch }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Explain the missing setup
+        if: steps.check.outputs.due == 'true' && env.DEPLOY_HOOK == '' && vars.FOLIO_PAGES != 'true'
+        run: >-
+          echo "::warning title=Your scheduled blocks didn't update::A from or until date
+          just started, but there's no FOLIO_DEPLOY_HOOK secret to rebuild your page with.
+          See the top of .github/workflows/schedule.yml to set it up."

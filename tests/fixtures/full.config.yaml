@@ -2,6 +2,7 @@
 site:
   title: Sam Rivera · Ceramics
   description: Handmade ceramics from Portland.
+  timezone: America/Los_Angeles
 profile:
   name: Sam Rivera
   bio: Ceramicist. Small-batch mugs and planters.
@@ -12,6 +13,7 @@ theme:
   accent: '#ffd60a'
   buttons: pill
   background: tinted
+  font: serif
 socials:
   instagram: samrivera
   email: hi@example.com
@@ -29,6 +31,21 @@ blocks:
     provider: buttondown
     account: samrivera
     title: Hear about the next batch first
+  - type: link
+    title: Holiday market (draft)
+    url: https://example.com/market
+    hidden: true
+  # Everything in this section is out of its dates, so the header goes too.
+  - type: header
+    title: Events
+  - type: link
+    title: Winter open studio 2025
+    url: https://example.com/open-studio
+    until: 2025-12-31
+  - type: link
+    title: Kiln opening 2099
+    url: https://example.com/kiln
+    from: 2099-01-01
   - type: header
     title: Watch
   - type: youtube

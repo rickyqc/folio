@@ -1,6 +1,7 @@
 ---
 // Fill in a form, watch a live preview, copy a finished folio.config.yaml.
 // Platform names, examples and icons come from Folio itself, so the builder can't drift.
+import { FONT_STACKS } from '../../../src/lib/fonts.ts';
 import { PLATFORMS } from '../../../src/lib/socials.ts';
 import { ACCENTS, AVATARS } from '../builder/model';
 import { GUIDE_URL, NETLIFY_DEPLOY_URL, VERCEL_DEPLOY_URL } from '../site';
@@ -119,6 +120,20 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
             <input type="radio" name="buttons" value="pill" />
             <span>Pill</span>
           </label>
+        </div>
+      </div>
+      <div class="field">
+        <span id="font-label">Font</span>
+        <div class="segmented segmented--fonts" role="radiogroup" aria-labelledby="font-label">
+          {Object.entries(FONT_STACKS).map(([font, stack]) => (
+            <label>
+              <input type="radio" name="font" value={font} checked={font === 'system'} />
+              <span style={`font-family: ${stack}`}>
+                {font[0]?.toUpperCase()}
+                {font.slice(1)}
+              </span>
+            </label>
+          ))}
         </div>
       </div>
       <label class="check">
@@ -641,6 +656,11 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
     background: var(--surface);
     box-shadow: 0 0 0 1px var(--hairline);
     color: var(--text);
+  }
+
+  /* Four choices fit a small phone. */
+  .segmented--fonts span {
+    padding: 8px 12px;
   }
 
   .segmented input:focus-visible + span {
@@ -1184,6 +1204,15 @@ const platforms = Object.entries(PLATFORMS).map(([id, p]) => ({
 
   .bp:global([data-mode='dark']) {
     color-scheme: dark;
+  }
+
+  /* As on the page: monospaced letters keep their own spacing. */
+  .bp:global([data-font='mono']) {
+    font-size-adjust: 0.48;
+  }
+
+  .bp:global([data-font='mono']) :global(*) {
+    letter-spacing: 0;
   }
 
   .bp:global([data-buttons='pill']) {

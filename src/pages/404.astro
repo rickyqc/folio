@@ -2,6 +2,7 @@
 // Shown by Vercel, Netlify and GitHub Pages for any address on the site that doesn't exist,
 // e.g. a mistyped short link, so visitors land on something that's clearly yours.
 import { loadConfig } from '../config/load.ts';
+import { fontStyle } from '../lib/fonts.ts';
 import { accentRing, expandHex, readableTextOn } from '../lib/color.ts';
 import '../themes/tokens.css';
 
@@ -17,7 +18,8 @@ const home = site.url ?? '/';
   data-mode={theme.mode}
   data-buttons={theme.buttons}
   data-background={theme.background}
-  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}; --accent-ring: ${accentRing(accent, theme.background)}`}
+  data-font={theme.font}
+  style={`--accent: ${accent}; --on-accent: ${readableTextOn(accent)}; --accent-ring: ${accentRing(accent, theme.background)}${fontStyle(theme.font)}`}
 >
   <head>
     <meta charset="utf-8" />

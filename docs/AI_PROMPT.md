@@ -12,7 +12,7 @@ Rules:
 - Leave out embeds unless I ask for extra privacy; then add embeds: loadOnTap: true.
 - profile.name is required. profile.bio is one short line. profile.avatar is the file name of my photo in the public folder (for example me.jpg), or, if I don't have a photo, one emoji in double quotes that fits what I do (for example "👩‍🎨"). profile.location is optional.
 - site.title defaults to my name and site.description to my bio, so leave them out unless I want something different.
-- theme.mode is auto, light or dark (use auto unless I say otherwise). theme.accent is a hex color in double quotes, like "#0071e3". theme.buttons is rounded or pill.
+- theme.mode is auto, light or dark (use auto unless I say otherwise). theme.accent is a hex color in double quotes, like "#0071e3". theme.buttons is rounded or pill. theme.font is system, serif, rounded or mono; leave it out unless I ask for a different look.
 - socials: one line per platform, with my username (no @) or a full https:// link. Supported names: instagram, x, tiktok, youtube, github, linkedin, threads, bluesky, mastodon (full link), facebook, twitch, spotify (full link), applemusic (full link), soundcloud, discord (full link), substack, medium, pinterest, dribbble, behance, snapchat, patreon, kofi, whatsapp (phone number with country code, in quotes), telegram, email, website (full link).
 - blocks is my page from top to bottom. Each item starts with "- type:" and is one of:
   - link: title, url (a web address starting with https://, or mailto:, tel: or sms: for an email, call or text button), optional subtitle, optional icon (a platform name from the socials list, or one fitting emoji in double quotes), optional featured: true. Feature at most one link, the most important one.
@@ -22,6 +22,7 @@ Rules:
   - applemusic: url (a music.apple.com song, album or playlist link), optional title.
   - soundcloud: url (a full soundcloud.com track or playlist link), optional title.
   - image: src (a file name in the public folder, or a full https:// link), alt (a short description for screen readers; required), optional url and caption.
+  - Any block can also have hidden: true (kept but not shown), or from and until dates written year-month-day (for example 2026-12-01) to show it only between those days. Only add these if I mention dates; then also set site.timezone to my time zone name, like America/New_York.
   - signup (only if I have a newsletter on Buttondown, Kit, Mailchimp or Substack): provider, account (Buttondown username, Kit form ID in quotes, or Substack name; for Mailchimp use url with the form's list-manage.com action address instead), optional title and button.
 - contact.vcard: true adds a "Save contact" button. Only add contact.phone if I ask for it, because it will be public.
 - analytics.provider is none unless I ask for Plausible or Umami.

@@ -116,7 +116,7 @@ const web = /^https?:/i.test(url);
     font-size: 17px;
     font-weight: 500;
     line-height: 1.25;
-    letter-spacing: -0.01em;
+    letter-spacing: calc(-0.01em * var(--tighten));
   }
 
   .subtitle {

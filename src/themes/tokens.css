@@ -16,6 +16,8 @@
 
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, system-ui, sans-serif;
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  /* Multiplies the slightly tight tracking on headings and buttons. */
+  --tighten: 1;
 
   --column: 480px;
   --gutter: 20px;
@@ -48,4 +50,13 @@
   );
   /* A slightly darker grey keeps secondary text above 4.5:1 on every light tint. */
   --muted: light-dark(#636368, #a1a1a6);
+}
+
+/* Monospaced letters are evenly spaced by design; tightening them makes them touch.
+   The font itself comes from folio.config.yaml as --font on <html>. */
+:root[data-font='mono'] {
+  --tighten: 0;
+  /* Monospaced letters are wide and tall; matching x-heights sets them about 10% smaller,
+     so titles and subtitles wrap about as often as in the other fonts. */
+  font-size-adjust: 0.48;
 }

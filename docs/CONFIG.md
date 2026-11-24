@@ -8,7 +8,7 @@ In VS Code with the [YAML extension](https://marketplace.visualstudio.com/items?
 - [profile](#profile)
 - [theme](#theme)
 - [socials](#socials)
-- [blocks](#blocks): [link](#link) · [header](#header) · [youtube](#youtube) · [spotify](#spotify) · [image](#image)
+- [blocks](#blocks): [link](#link) · [header](#header) · [youtube](#youtube) · [spotify](#spotify) · [image](#image) · [hiding and scheduling](#hiding-and-scheduling)
 - [embeds](#embeds)
 - [contact](#contact)
 - [redirects](#redirects)
@@ -21,12 +21,13 @@ In VS Code with the [YAML extension](https://marketplace.visualstudio.com/items?
 
 How your page appears in search results, browser tabs and link previews.
 
-| Option        | Default             | What it does                                                                                                                                  |
-| ------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `url`         | your host's address | Your page's address, e.g. `https://jane.dev`. Vercel, Netlify and GitHub Pages fill it in automatically; set it when you use your own domain. |
-| `title`       | your name           | Browser tab and search result title.                                                                                                          |
-| `description` | your bio            | Search result and link preview text.                                                                                                          |
-| `lang`        | `en`                | The page's language code, e.g. `fr` or `pt-BR`.                                                                                               |
+| Option        | Default             | What it does                                                                                                                                       |
+| ------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `url`         | your host's address | Your page's address, e.g. `https://jane.dev`. Vercel, Netlify and GitHub Pages fill it in automatically; set it when you use your own domain.      |
+| `title`       | your name           | Browser tab and search result title.                                                                                                               |
+| `description` | your bio            | Search result and link preview text.                                                                                                               |
+| `lang`        | `en`                | The page's language code, e.g. `fr` or `pt-BR`.                                                                                                    |
+| `timezone`    | `UTC`               | Your time zone, like `America/New_York` or `Europe/London`. Blocks with [`from` or `until`](#hiding-and-scheduling) dates change at midnight here. |
 
 ```yaml
 site:
@@ -62,6 +63,7 @@ profile:
 | `accent`     | `"#0071e3"` | Any hex color, in quotes. Used for your featured link. Folio picks white or black text automatically, whichever is easier to read. |
 | `buttons`    | `rounded`   | `rounded` or `pill`.                                                                                                               |
 | `background` | `plain`     | `tinted` gives the page a soft wash of your accent color, in light and dark mode.                                                  |
+| `font`       | `system`    | `system`, `serif`, `rounded` or `mono`. See below.                                                                                 |
 
 ```yaml
 theme:
@@ -69,7 +71,17 @@ theme:
   accent: '#ff375f'
   buttons: pill
   background: tinted
+  font: serif
 ```
+
+Every font is one the visitor's device already has, so changing it adds nothing to download:
+
+- `system`: the device's own font (San Francisco on Apple devices, Segoe UI on Windows, Roboto on Android).
+- `serif`: a book-like serif (New York on Apple devices, Georgia or Noto Serif elsewhere).
+- `rounded`: soft, rounded letters on Apple devices. Other devices show the `system` font.
+- `mono`: a typewriter-style font where every letter is the same width.
+
+Your [share card](#sharing-extras) keeps its own font, so it looks the same everywhere.
 
 ## socials
 
@@ -240,6 +252,41 @@ Where to find what each service needs:
 - **Kit:** the form ID, the number in your form's share link (`…kit.com/forms/1234567/…`). Put it in quotes: `account: '1234567'`.
 - **Mailchimp:** in Mailchimp, open **Audience → Signup forms → Embedded forms** and copy the address after `action="` in the code. It looks like `https://….list-manage.com/subscribe/post?u=…&id=…`. Use it as `url:`.
 - **Substack:** your Substack name, the part before `.substack.com`. Visitors land on your Substack's subscribe page with their email filled in, one tap from done.
+
+### Hiding and scheduling
+
+Any block can be kept off your page without deleting it, or shown only between two days. Add these lines to the block:
+
+| Option   | What it does                                                               |
+| -------- | -------------------------------------------------------------------------- |
+| `hidden` | `true` keeps the block in your config but off your page, e.g. a draft.     |
+| `from`   | The first day to show it, written year-month-day: `2026-12-01`.            |
+| `until`  | The last day to show it. It disappears at midnight at the end of that day. |
+
+```yaml
+blocks:
+  - type: link
+    title: Pre-save the new album
+    url: https://example.com/presave
+    featured: true
+    until: 2026-12-04
+  - type: link
+    title: Listen to the new album
+    url: https://example.com/listen
+    featured: true
+    from: 2026-12-05
+```
+
+Two links can both be featured when their days don't overlap, like the pair above. A [header](#header) whose blocks are all hidden or out of their dates is hidden too.
+
+Days start at midnight in [`site.timezone`](#site), which is UTC unless you set it.
+
+**Making dates happen on time.** Your page only changes when it's rebuilt. The **Scheduled blocks** workflow checks every hour and rebuilds your page shortly after one of your dates starts:
+
+- **GitHub Pages:** works by itself.
+- **Vercel or Netlify:** make a deploy hook (Vercel: **Project → Settings → Git → Deploy Hooks**; Netlify: **Site configuration → Build & deploy → Build hooks**), copy its address, and save it in your repo as a secret named `FOLIO_DEPLOY_HOOK` (**Settings → Secrets and variables → Actions → New repository secret**).
+
+Without that, a date still takes effect the next time you commit. GitHub pauses hourly workflows in repos with no commits for 60 days; the Actions tab has a button to turn it back on. Copies of Folio made before this feature need `.github/workflows/schedule.yml` copied from the Folio repo.
 
 ## embeds
 

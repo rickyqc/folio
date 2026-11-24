@@ -36,6 +36,10 @@ All notable changes to Folio. Folio uses [semantic versioning](https://semver.or
 - The website is easier to take in at a glance: illustrated steps, a side-by-side view of the config and the page it makes, a page-weight chart, a who-owns-what diagram, and the AI prompt folded behind a button with one-tap copy. It's now light mode for everyone.
 - The website is now several pages instead of one long scroll: a short home page, How it works (with what to do after you're live), Features, Why Folio, Questions, the config builder at `/build/` and the AI prompt at `/ai/`. Old links to the sections (like `/#build`, which every copy's setup note uses) forward to the new pages.
 - Each website page explains a little more: what a link-in-bio page is, what you need before you start, what each part of the config does, how to turn on each feature, the honest trade-off of owning your page, more FAQ answers, and tips for the builder and the AI prompt.
+- Pick a font: `theme.font: serif`, `rounded` or `mono` (or the default, `system`). Each is built into your visitors' devices, so your page stays just as fast. The config builder has a picker with a live preview.
+- Keep a block off your page without deleting it: `hidden: true`.
+- Show a block only between two days: `from: 2026-12-01` and `until: 2026-12-24`, at midnight in your `site.timezone`. Two featured links can take turns, like "Pre-save" until release day and "Listen" from then. A header with nothing left under it hides too. A new **Scheduled blocks** workflow rebuilds your page when a date starts (GitHub Pages: automatic; Vercel and Netlify: add a `FOLIO_DEPLOY_HOOK` secret, see docs/CONFIG.md). Existing copies: copy `.github/workflows/schedule.yml` from the Folio repo, since updates don't change workflow files.
+- The config builder keeps `hidden`, `from` and `until` when it loads your config.
 
 ## 1.0.0 (2026-10-27)
 
